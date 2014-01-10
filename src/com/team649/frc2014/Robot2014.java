@@ -8,7 +8,7 @@
 package com.team649.frc2014;
 
 
-import autonomous.HotGoalAuto;
+import autonomous.SupaHotFire;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -42,7 +42,7 @@ public class Robot2014 extends IterativeRobot {
     public void autonomousInit() {
         // schedule the autonomous command (example)
         autonomousCommand.start();
-        new HotGoalAuto();
+        new SupaHotFire();
     }
 
     /**

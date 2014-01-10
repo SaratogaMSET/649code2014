@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.image.RGBImage;
  *
  * @author Alex
  */
-public class HotGoalAuto extends CommandGroup {
+public class SupaHotFire extends CommandGroup {
 
     //Camera constants used for distance calculation
     final int Y_IMAGE_RES = 480;		//X Image resolution in pixels, should be 120, 240 or 480
@@ -61,7 +61,7 @@ public class HotGoalAuto extends CommandGroup {
         double verticalScore;
     }
 
-    public HotGoalAuto() {
+    public SupaHotFire() {
 
         try {
             cc = new CriteriaCollection();      // create the criteria for the particle filter
