@@ -1,7 +1,6 @@
 package com.team649.frc2014.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;

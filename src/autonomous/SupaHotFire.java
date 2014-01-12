@@ -5,6 +5,9 @@
 package autonomous;
 
 import com.team649.frc2014.commands.CommandBase;
+import edu.wpi.first.wpilibj.Dashboard;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.camera.AxisCameraException;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -39,7 +42,6 @@ public class SupaHotFire extends CommandGroup {
     final int AREA_MINIMUM = 150;
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
-    AxisCamera camera;          // the axis camera object (connected to the switch)
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
 
     public class Scores {
@@ -62,10 +64,13 @@ public class SupaHotFire extends CommandGroup {
     }
 
     public SupaHotFire() {
+        cc = new CriteriaCollection();      // create the criteria for the particle filter
+        cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
 
+    }
+
+    public void getTargets() {
         try {
-            cc = new CriteriaCollection();      // create the criteria for the particle filter
-            cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];
             int horizontalTargets[] = new int[MAX_PARTICLES];
@@ -80,12 +85,13 @@ public class SupaHotFire extends CommandGroup {
              */
             //ColorImage image = camera.getImage();     // comment if using stored images
             ColorImage image;                           // next 2 lines read image from flash on cRIO
-            image = new RGBImage("/Center18ft_On2.jpg");		// get the sample image from the cRIO flash
+            image = CommandBase.cameraSubsystem.getImage();		// get the sample image from the cRIO flash
+            image.write("/baseimg.bmp");
 //            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
-            BinaryImage thresholdImage = image.thresholdHSV(53, 134, 98, 255, 24,191 );
+            BinaryImage thresholdImage = image.thresholdHSV(70,100, 225, 255, 60, 255);
             thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
-            filteredImage.write("/filteredImage.bmp");
+//            filteredImage.write("/filteredImage.bmp");
 
             //iterate through each particle and score to see if it is a target
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
@@ -183,6 +189,7 @@ public class SupaHotFire extends CommandGroup {
 //            } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
 //                ex.printStackTrace();
         } catch (Exception e) {
+            System.out.println("exception tho: " + e.getMessage());
         }
 
     }
