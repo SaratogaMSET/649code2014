@@ -2,11 +2,7 @@ package com.team649.frc2014.commands;
 
 import com.sun.squawk.util.MathUtils;
 import com.team649.frc2014.DisplayLCD;
-import static com.team649.frc2014.pid_control.PIDController649.LINREG_A;
-import static com.team649.frc2014.pid_control.PIDController649.LINREG_B;
-import com.team649.frc2014.pid_control.PIDVelocitySource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Vector;
 
 /**
  *
@@ -15,14 +11,23 @@ import java.util.Vector;
 public class DriveSetDistanceCommand extends CommandBase {
     //9 m/s^2 = 354.33 in/s^2
 
-    private static double ACCELERATION = 100;
-    private final double speed;
+    private static double ACCELERATION = 275;
+    public static double LINREG_A = 131;
+    public static double LINREG_B = 62;
+    private final double driveSpeed;
     private final double distance;
-
+    private double accelTime;
+    private double holdTime;
+    private long startTime;
+    private int stage;
+    private double accelDist;
+    private String minoutput;
+    private double minSpeed;
+    
     public DriveSetDistanceCommand(double speed, double distance) {
         requires(driveTrainSubsystem);
-        this.speed = distance > 0 ? speed : -speed;
-        this.distance = distance;
+        this.driveSpeed = distance > 0 ? speed : -speed;
+        this.distance = Math.abs(distance);
     }
 
     // Called just before this Command runs the first time
@@ -31,47 +36,42 @@ public class DriveSetDistanceCommand extends CommandBase {
         ACCELERATION = SmartDashboard.getNumber("accelconst");
         driveTrainSubsystem.resetEncoders();
         driveTrainSubsystem.startEncoders();
-        double accelTime = Math.abs(speed) / ACCELERATION;
-        double holdTime = (Math.abs(distance) - ACCELERATION * accelTime * accelTime) / Math.abs(speed);
-        driveTrainSubsystem.startVelocityPid(accelTime * 1000, holdTime * 1000, speed, distance);
+        accelTime = Math.abs(driveSpeed) / ACCELERATION;
+        holdTime = (distance - ACCELERATION * accelTime * accelTime) / Math.abs(driveSpeed);
+        accelTime *= 1000;
+        holdTime *= 1000;
+        startTime = System.currentTimeMillis();
+        stage = 0;
+        minSpeed = SmartDashboard.getNumber(minoutput);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         try {
-
-            input = ((PIDVelocitySource) pidInput).getRate();
-            final long timeSpent = System.currentTimeMillis() - m_startTime;
-            if (m_stage == 0) {
-                if (timeSpent > m_accelTime) {
-                    m_stage = 1;
-                    accelDist = Math.abs(pidInput.pidGet());
-                    setPIDFromDriverStation(2);
-
-                    double speed = MathUtils.pow(Math.E, (Math.abs(m_speed) - LINREG_A) / LINREG_B) * (m_speed > 0 ? 1 : -1);
-                    setOutputRange(speed, speed);
+            
+            final long timeSpent = System.currentTimeMillis() - startTime;
+            if (stage == 0) {
+                if (timeSpent > accelTime) {
+                    stage = 1;
+                    accelDist = Math.abs(driveTrainSubsystem.pidGet());
+                    double output = MathUtils.pow(Math.E, (Math.abs(driveSpeed) - LINREG_A) / LINREG_B) * (driveSpeed > 0 ? 1 : -1);
+                    driveTrainSubsystem.driveFwdRot(output, 0);
                 } else {
-                    double velocityTarget = m_speed * ((double) timeSpent) / m_accelTime;
-                    double speed = MathUtils.pow(Math.E, (Math.abs(velocityTarget) - LINREG_A) / LINREG_B) * (m_speed > 0 ? 1 : -1);
-                    setSetpoint(m_speed * ((double) timeSpent) / m_accelTime);
+                    double driveSpeedTarget = driveSpeed * ((double) timeSpent) / accelTime;
+                    double output = getDrivePower(driveSpeedTarget);
+                    driveTrainSubsystem.driveFwdRot(output, 0);
                 }
-            } else if (m_stage == 1) {
-                final boolean pastADist = m_distGoal - pidInput.pidGet() <= accelDist;
-                final boolean overHTime = System.currentTimeMillis() - m_startTime > m_accelTime + m_holdTime;
+            } else if (stage == 1) {
+                final boolean pastADist = distance - driveTrainSubsystem.pidGet() <= accelDist;
+                final boolean overHTime = System.currentTimeMillis() - startTime > accelTime + holdTime;
                 if (overHTime || pastADist) {
-                    m_stage = 2;
-                    if (m_speed > 0) {
-                        setOutputRange(SmartDashboard.getNumber("minoutput"), 1);
-                    } else {
-                        setOutputRange(-1, -SmartDashboard.getNumber("minoutput"));
-                    }
+                    stage = 2;
                 }
             }
             if (stage == 2) {
-
-                final double velocityTarget = speed * ((double) holdTime + 2 * accelTime - timeSpent) / accelTime;
-                double speed = MathUtils.pow(Math.E, (Math.abs(velocityTarget) - LINREG_A) / LINREG_B) * (speed > 0 ? 1 : -1);
-                driveTrainSubsystem.driveFwdRot(speed, 0);
+                final double driveSpeedTarget = driveSpeed * ((double) holdTime + 2 * accelTime - timeSpent) / accelTime;
+                double output = getDrivePower(driveSpeedTarget);
+                driveTrainSubsystem.driveFwdRot(output, 0);
             }
         } catch (Exception e) {
         }
@@ -84,7 +84,7 @@ public class DriveSetDistanceCommand extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return driveTrainSubsystem.isVelocityPidDone();
+        return System.currentTimeMillis() - startTime > holdTime + accelTime * 2;
     }
 
     // Called once after isFinished returns true
@@ -96,5 +96,9 @@ public class DriveSetDistanceCommand extends CommandBase {
     // subsystems is scheduled to run
     protected void interrupted() {
         driveTrainSubsystem.disablePid();
+    }
+    
+    private double getDrivePower(double driveSpeedTarget) {
+        return MathUtils.pow(Math.E, (Math.abs(driveSpeedTarget) - LINREG_A) / LINREG_B) * (driveSpeedTarget > 0 ? 1 : -1)*(1-minSpeed)+minSpeed;
     }
 }

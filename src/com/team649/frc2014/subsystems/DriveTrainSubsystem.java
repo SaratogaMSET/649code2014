@@ -112,30 +112,12 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         rawDrive(output, output);
     }
 
-    public void startVelocityPid(double accelTime, double holdTime, double speed, double dist) {
-        pid.setInputRange(-MAX_DRIVETRAIN_VELOCITY, MAX_DRIVETRAIN_VELOCITY);
-        if (speed > 0) {
-            pid.setOutputRange(SmartDashboard.getNumber("minoutput"), 1);
-        } else {
-            pid.setOutputRange(-1, -SmartDashboard.getNumber("minoutput"));
-        }
-        pid.setVelocityPid(true, accelTime, holdTime, speed, dist);
-        pid.setPIDFromDriverStation(1);
-        pid.enable();
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                pid.disable();
-            }
-        }, (long) (holdTime + accelTime * 2));
-    }
+    
 
     public boolean isRegularPidOnTarget() {
         return pid.onTarget();
     }
 
-    public boolean isVelocityPidDone() {
-        return pid.isVelocityDone();
-    }
 
     public int updateAccel() {
         PERIOD = (int) SmartDashboard.getNumber("period");

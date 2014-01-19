@@ -35,8 +35,6 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
 
     public static final double kDefaultPeriod = .05;
     private static int instances = 0;
-    public static double LINREG_A = 127.74;
-    public static double LINREG_B = 61.32;
     private double m_P;			// factor for "proportional" control
     private double m_I;			// factor for "integral" control
     private double m_D;			// factor for "derivative" control
@@ -60,27 +58,12 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
     java.util.Timer m_controlLoop;
     private boolean m_usingPercentTolerance;
     private boolean m_outputDirection; //the direction of the output - true=normal, false = flip
-    private boolean m_velocityPid;
-    private double m_accelTime;
-    private double m_speed;
-    private double m_holdTime;
-    private long m_startTime;
-    private int m_stage;
-    private double m_distGoal;
-    private double accelDist;
-    private double lastSpeed;
 
     public void setPIDFromDriverStation(int index) {
         final double p = SmartDashboard.getNumber("p" + index);
         final double i = SmartDashboard.getNumber("i" + index);
         final double d = SmartDashboard.getNumber("d" + index);
         setPID(p, i, d);
-    }
-
-    public boolean isVelocityDone() {
-        final long elapsedTime = System.currentTimeMillis() - m_startTime;
-        final double expectedTime = m_accelTime * 2 + m_holdTime;
-        return elapsedTime > expectedTime;
     }
 
     /**
@@ -186,7 +169,6 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
         UsageReporting.report(UsageReporting.kResourceType_PIDController, instances);
         m_tolerance = new NullTolerance();
         m_outputDirection = true;
-        m_velocityPid = false;
     }
 
     /**
@@ -271,9 +253,6 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
         if (enabled) {
             double input;
             input = pidInput.pidGet();
-            if (m_velocityPid) {
-              
-            }
 
             double result;
             PIDOutput pidOutput = null;
@@ -305,7 +284,7 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
                     }
                 }
                 //******************************************************************************************************************
-                if (!m_velocityPid && m_error > 0 && m_prevError < 0 || m_error < 0 && m_prevError > 0) {
+                if ( m_error > 0 && m_prevError < 0 || m_error < 0 && m_prevError > 0) {
                     m_totalError = 0;
                 }
                 //******************************************************************************************************************
@@ -321,20 +300,10 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
                 pidOutput = m_pidOutput;
                 result = m_result * (m_outputDirection ? 1 : -1);
             }
-            lastSpeed = result;
             pidOutput.pidWrite(result);
         }
     }
 
-    public void setVelocityPid(boolean m_velocityPid, double accelTime, double holdTime, double speed, double dist) {
-        this.m_velocityPid = m_velocityPid;
-        this.m_accelTime = accelTime;
-        this.m_speed = speed;
-        this.m_holdTime = holdTime;
-        this.m_distGoal = Math.abs(dist);
-        LINREG_A = SmartDashboard.getNumber("linrega");
-        LINREG_B = SmartDashboard.getNumber("linregb");
-    }
 
     /**
      * Set the PID Controller gain parameters. Set the proportional, integral,
@@ -584,9 +553,7 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
      * Begin running the PIDController
      */
     public synchronized void enable() {
-        m_stage = 0;
         m_enabled = true;
-        m_startTime = System.currentTimeMillis();
         if (table != null) {
             table.putBoolean("enabled", true);
         }
