@@ -26,6 +26,9 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
 
     private static final double ENCODER_DISTANCE_PER_PULSE = 0.05385587;
     public static int PERIOD = 100;
+    public static final int MAX_DRIVETRAIN_VELOCITY = 135;
+    public static final int DRIVE_SPEED = 80;
+    public static final int ACCELERATION = 275;
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;
@@ -44,11 +47,6 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
             encoders[x / 2].setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
         }
         lastRates = new Vector();
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                updateAccel();
-            }
-        }, 0);
 
     }
 
@@ -106,20 +104,29 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public double getRate() {
-        return accel;
+//        return accel;
+        return getVelocity();
     }
 
     public void pidWrite(double output) {
         rawDrive(output, output);
     }
 
-    public void startVelocityPid(double accelTime, double holdTime, double velocity) {
-        pid.setInputRange(-150, 150);
-        pid.setOutputRange(0.2, 1);
-        pid.setVelocityPid(true, accelTime, holdTime);
-        pid.setSetpoint(velocity);
+    public void startVelocityPid(double accelTime, double holdTime, double speed, double dist) {
+        pid.setInputRange(-MAX_DRIVETRAIN_VELOCITY, MAX_DRIVETRAIN_VELOCITY);
+        if (speed > 0) {
+            pid.setOutputRange(SmartDashboard.getNumber("minoutput"), 1);
+        } else {
+            pid.setOutputRange(-1, -SmartDashboard.getNumber("minoutput"));
+        }
+        pid.setVelocityPid(true, accelTime, holdTime, speed, dist);
         pid.setPIDFromDriverStation(1);
         pid.enable();
+        new Timer().schedule(new TimerTask() {
+            public void run() {
+                pid.disable();
+            }
+        }, (long) (holdTime + accelTime * 2));
     }
 
     public boolean isRegularPidOnTarget() {
@@ -130,14 +137,9 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         return pid.isVelocityDone();
     }
 
-    private void updateAccel() {
+    public int updateAccel() {
         PERIOD = (int) SmartDashboard.getNumber("period");
-        int numEncoders = encoders.length;
-        double totalRate = 0;
-        for (int i = 0; i < numEncoders; i++) {
-            totalRate += encoders[i].getRate();
-        }
-        final double rate = totalRate / numEncoders;
+        double rate = getVelocity();
 
         while (lastRates.size() >= SmartDashboard.getNumber("numPoints")) {
             lastRates.removeElementAt(0);
@@ -162,11 +164,18 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         }
 
         SmartDashboard.putNumber("veloc", rate);
-        SmartDashboard.putNumber("accel", sumTop / sumBot);
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                updateAccel();
-            }
-        }, PERIOD);
+        this.accel = 1000 * sumTop / sumBot;
+        SmartDashboard.putNumber("accel", this.accel);
+        return PERIOD;
+    }
+
+    private double getVelocity() {
+        int numEncoders = encoders.length;
+        double totalRate = 0;
+        for (int i = 0; i < numEncoders; i++) {
+            totalRate += encoders[i].getRate();
+        }
+        final double rate = totalRate / numEncoders;
+        return rate;
     }
 }

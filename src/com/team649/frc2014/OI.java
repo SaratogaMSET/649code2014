@@ -25,4 +25,8 @@ public class OI {
     public boolean getTrigger() {
         return joystick.getRawButton(1);
     }
+
+    boolean getButton(int i) {
+        return joystick.getRawButton(i);
+    }
 }

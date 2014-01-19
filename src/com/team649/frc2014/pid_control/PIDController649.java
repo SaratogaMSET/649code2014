@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package com.team649.frc2014.pid_control;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
@@ -35,6 +35,8 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
 
     public static final double kDefaultPeriod = .05;
     private static int instances = 0;
+    public static double LINREG_A = 127.74;
+    public static double LINREG_B = 61.32;
     private double m_P;			// factor for "proportional" control
     private double m_I;			// factor for "integral" control
     private double m_D;			// factor for "derivative" control
@@ -60,9 +62,13 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
     private boolean m_outputDirection; //the direction of the output - true=normal, false = flip
     private boolean m_velocityPid;
     private double m_accelTime;
+    private double m_speed;
     private double m_holdTime;
     private long m_startTime;
     private int m_stage;
+    private double m_distGoal;
+    private double accelDist;
+    private double lastSpeed;
 
     public void setPIDFromDriverStation(int index) {
         final double p = SmartDashboard.getNumber("p" + index);
@@ -266,21 +272,7 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
             double input;
             input = pidInput.pidGet();
             if (m_velocityPid) {
-                try {
-                    input = ((PIDVelocitySource) pidInput).getRate();
-                    if (m_stage == 0) {
-                        if (System.currentTimeMillis() - m_startTime > m_holdTime) {
-                            setPIDFromDriverStation(2);
-                        }
-                    } else if (m_stage == 1) {
-                        if (System.currentTimeMillis() - m_startTime > m_accelTime + m_holdTime) {
-                            setPIDFromDriverStation(1);
-                            setSetpoint(0);
-                            setOutputRange(0, 1);
-                        }
-                    }
-                } catch (Exception e) {
-                }
+              
             }
 
             double result;
@@ -329,14 +321,19 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
                 pidOutput = m_pidOutput;
                 result = m_result * (m_outputDirection ? 1 : -1);
             }
+            lastSpeed = result;
             pidOutput.pidWrite(result);
         }
     }
 
-    public void setVelocityPid(boolean m_velocityPid, double accelTime, double holdTime) {
+    public void setVelocityPid(boolean m_velocityPid, double accelTime, double holdTime, double speed, double dist) {
         this.m_velocityPid = m_velocityPid;
         this.m_accelTime = accelTime;
+        this.m_speed = speed;
         this.m_holdTime = holdTime;
+        this.m_distGoal = Math.abs(dist);
+        LINREG_A = SmartDashboard.getNumber("linrega");
+        LINREG_B = SmartDashboard.getNumber("linregb");
     }
 
     /**

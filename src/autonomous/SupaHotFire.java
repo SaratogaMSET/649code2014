@@ -6,10 +6,6 @@ package autonomous;
 
 import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.Dashboard;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStationLCD;
-import edu.wpi.first.wpilibj.camera.AxisCamera;
-import edu.wpi.first.wpilibj.camera.AxisCameraException;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
@@ -18,6 +14,7 @@ import edu.wpi.first.wpilibj.image.NIVision;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
 import edu.wpi.first.wpilibj.image.RGBImage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -86,10 +83,10 @@ public class SupaHotFire extends CommandGroup {
             //ColorImage image = camera.getImage();     // comment if using stored images
             ColorImage image;                           // next 2 lines read image from flash on cRIO
             image = CommandBase.cameraSubsystem.getImage();		// get the sample image from the cRIO flash
-            image.write("/baseimg.bmp");
+//            image.write("/baseimg.bmp");
 //            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
-            BinaryImage thresholdImage = image.thresholdHSV(70,100, 225, 255, 60, 255);
-            thresholdImage.write("/threshold.bmp");
+            BinaryImage thresholdImage = image.thresholdHSV(70, 100, 225, 255, 60, 255);
+//            thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
 //            filteredImage.write("/filteredImage.bmp");
 
