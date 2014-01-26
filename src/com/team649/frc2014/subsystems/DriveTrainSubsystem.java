@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.pid_control.PIDVelocitySource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 /**
@@ -27,8 +25,8 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     private static final double ENCODER_DISTANCE_PER_PULSE = 0.05385587;
     public static int PERIOD = 100;
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
-    public static final int DRIVE_SPEED = 80;
-    public static final int ACCELERATION = 275;
+    public static int ACCELERATION = 275;
+    public static int DRIVE_SPEED = 80;
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;
@@ -104,7 +102,6 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public double getRate() {
-//        return accel;
         return getVelocity();
     }
 
