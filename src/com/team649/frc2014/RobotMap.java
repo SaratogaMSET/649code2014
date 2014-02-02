@@ -7,7 +7,7 @@ package com.team649.frc2014;
  * floating around.
  */
 public class RobotMap {
-    public static final int[] driveTrainMotors = new int[]{1,10};
+    public static final int[] driveTrainMotors = new int[]{1,2,3,4};
     public static final int[] encoders = new int[]{1,2,3,4};
     public static final int joystick = 1;
     public static final int SOLENOID_CHANNEL = 1;
