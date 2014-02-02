@@ -14,11 +14,11 @@ public class OI {
         this.joystick = new Joystick(RobotMap.joystick);
     }
 
-    public double getForward() {
+    public double getDriveForward() {
         return -joystick.getY();
     }
 
-    public double getRot() {
+    public double getDriveRotation() {
         return joystick.getX();
     }
 

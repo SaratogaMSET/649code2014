@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.pid_control.PIDVelocitySource;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Vector;
 
@@ -35,22 +37,21 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     private PIDController649 pid;
     private Vector lastRates;
     private double accel;
-    private Solenoid sol;
+    private Solenoid shifterSolenoid;
 
     public DriveTrainSubsystem() {
-        motors = new SpeedController[RobotMap.driveTrainMotors.length];
-        for (int i = 0; i < RobotMap.driveTrainMotors.length; i++) {
-            motors[i] = new Victor(RobotMap.driveTrainMotors[i]);
+        motors = new SpeedController[RobotMap.DRIVE_TRAIN.MOTORS.length];
+        for (int i = 0; i < RobotMap.DRIVE_TRAIN.MOTORS.length; i++) {
+            motors[i] = new Victor(RobotMap.DRIVE_TRAIN.MOTORS[i]);
         }
         pid = new PIDController649(.045, .00, .00, this, this);
-        encoders = new Encoder[RobotMap.encoders.length / 2];
-        for (int x = 0; x < RobotMap.encoders.length; x += 2) {
-            encoders[x / 2] = new Encoder(RobotMap.encoders[x], RobotMap.encoders[x + 1], x == 0, EncodingType.k2X);
+        encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
+        for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {
+            encoders[x / 2] = new Encoder(RobotMap.DRIVE_TRAIN.ENCODERS[x], RobotMap.DRIVE_TRAIN.ENCODERS[x + 1], x == 0, EncodingType.k2X);
             encoders[x / 2].setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
         }
         lastRates = new Vector();
-
-        sol = new Solenoid(RobotMap.SOLENOID_CHANNEL);
+        shifterSolenoid = new Solenoid(RobotMap.DRIVE_TRAIN.SOLENOID_CHANNEL);
     }
 
     public void startEncoders() {
@@ -83,7 +84,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
     
     public void shiftDrive(boolean isOn){
-        sol.set(isOn);
+        shifterSolenoid.set(isOn);
     }
    
     public void rawDrive(double left, double right) {

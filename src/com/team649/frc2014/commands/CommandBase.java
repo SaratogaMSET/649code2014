@@ -2,8 +2,10 @@ package com.team649.frc2014.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
+import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.Compressor;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -19,6 +21,7 @@ public abstract class CommandBase extends Command {
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     
     public static void init() {
+        new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
         // This MUST be here. If the OI creates Commands (which it very likely
         // will), constructing it during the construction of CommandBase (from
         // which commands extend), subsystems are not guaranteed to be

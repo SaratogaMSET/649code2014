@@ -26,12 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot2014 extends IterativeRobot {
 
-    private DriveSetDistanceCommand driveSetDistanceCommand;
-    private boolean cancelled;
-    private long lastTime;
-    private long period;
     private int lastButton;
-    private GetAllDriveSpeedCommands getAllDriveSpeedCommands;
     private SendableChooser autonomousModeChooser;
 
 //    Command autonomousCommand;
@@ -94,11 +89,6 @@ public class Robot2014 extends IterativeRobot {
 
     public void teleopInit() {
         Display.clearMarquees();
-        startDriveSetDistanceCommand();
-        getAllDriveSpeedCommands = new GetAllDriveSpeedCommands(-0.2, -1, -.1, 2);
-        cancelled = false;
-        lastTime = 0;
-        period = 0;
 
         Display.marquee(1, "#YOLOSWAG", 5, 5, true);
         Display.marquee(2, "#SWOLO", 4, 5, false);
@@ -115,33 +105,16 @@ public class Robot2014 extends IterativeRobot {
         getWatchdog().feed();
         Display.clear();
         Scheduler.getInstance().run();
-        if (System.currentTimeMillis() > lastTime + period) {
-            lastTime = System.currentTimeMillis();
-            period = CommandBase.driveTrainSubsystem.updateAccel();
-        }
 //        Display.println(0, "1/18/2014;2:25");
 //        Display.println(1, "rate: " + CommandBase.driveTrainSubsystem.getRate());
 //        Display.println(2, "pos: " + CommandBase.driveTrainSubsystem.pidGet());
 
-        if (lastButton != 3 && CommandBase.oi.getButton(3)) {
-            lastButton = 3;
-            driveSetDistanceCommand.cancel();
-            getAllDriveSpeedCommands.start();
-        } else if (lastButton != 4 && CommandBase.oi.getButton(4)) {
-            lastButton = 4;
-            getAllDriveSpeedCommands.cancel();
-            driveSetDistanceCommand.start();
-        } else if (CommandBase.oi.getTrigger()) {
-            cancelled = true;
-            driveSetDistanceCommand.cancel();
-            CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getForward(), 0);
-            System.out.println(CommandBase.oi.getForward() + ": " + CommandBase.driveTrainSubsystem.getRate());
-        } else if (cancelled) {
-//            CommandBase.driveTrainSubsystem.rawDrive(0, 0);
-        }
-        if (!cancelled && !driveSetDistanceCommand.isRunning()) {
-            System.out.println(DriverStation.getInstance().getBatteryVoltage() + ": " + (CommandBase.driveTrainSubsystem.pidGet() - 300));
-            startDriveSetDistanceCommand();
+        CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getDriveForward(), CommandBase.oi.getDriveRotation());
+        System.out.println(CommandBase.oi.getDriveForward() + ": " + CommandBase.driveTrainSubsystem.getRate());
+        if (CommandBase.oi.getTrigger()) {
+            CommandBase.driveTrainSubsystem.shiftDrive(true);
+        } else {
+            CommandBase.driveTrainSubsystem.shiftDrive(false);
         }
         Display.update();
     }
@@ -151,15 +124,5 @@ public class Robot2014 extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
-    }
-
-    private void startDriveSetDistanceCommand() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-//        autonomousCommand.cancel();
-        driveSetDistanceCommand = new DriveSetDistanceCommand(SmartDashboard.getNumber("speed"), SmartDashboard.getNumber("distance"));
-        driveSetDistanceCommand.start();
     }
 }
