@@ -64,11 +64,19 @@ public class Robot2014 extends IterativeRobot {
     }
 
     public void disabledInit() {
+        Display.clearMarquees();
+        Display.marquee(1, "DISABLED MODE", 0, 5, true);
         CommandBase.driveTrainSubsystem.disablePid();
     }
 
-    public void autonomousInit() {
+    public void disabledPeriodic() {
+        Display.clear();
+        Display.update();
+    }
 
+    public void autonomousInit() {
+        Display.clearMarquees();
+        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
         System.out.println(autonomousModeChooser.getSelected());
         // schedule the autonomous command (example)
 //        autonomousCommand.start();
@@ -79,17 +87,25 @@ public class Robot2014 extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
-//        supaHotFire.getTargets();
+        Display.clear();
         Scheduler.getInstance().run();
+        Display.update();
     }
 
     public void teleopInit() {
+        Display.clearMarquees();
         startDriveSetDistanceCommand();
         getAllDriveSpeedCommands = new GetAllDriveSpeedCommands(-0.2, -1, -.1, 2);
         cancelled = false;
         lastTime = 0;
         period = 0;
+
+        Display.marquee(1, "#YOLOSWAG", 5, 5, true);
+        Display.marquee(2, "#SWOLO", 4, 5, false);
+        Display.marquee(3, "#YOLOSWAG", 3, 5, true);
+        Display.marquee(4, "#SWOLO", 2, 5, false);
+        Display.marquee(5, "#YOLOSWAG", 1, 5, true);
+        Display.marquee(6, "#SWOLO", 0, 5, false);
     }
 
     /**
@@ -97,15 +113,15 @@ public class Robot2014 extends IterativeRobot {
      */
     public void teleopPeriodic() {
         getWatchdog().feed();
-        DisplayLCD.clear();
+        Display.clear();
         Scheduler.getInstance().run();
         if (System.currentTimeMillis() > lastTime + period) {
             lastTime = System.currentTimeMillis();
             period = CommandBase.driveTrainSubsystem.updateAccel();
         }
-        DisplayLCD.println(0, "1/18/2014;2:25");
-        DisplayLCD.println(1, "rate: " + CommandBase.driveTrainSubsystem.getRate());
-        DisplayLCD.println(2, "pos: " + CommandBase.driveTrainSubsystem.pidGet());
+//        Display.println(0, "1/18/2014;2:25");
+//        Display.println(1, "rate: " + CommandBase.driveTrainSubsystem.getRate());
+//        Display.println(2, "pos: " + CommandBase.driveTrainSubsystem.pidGet());
 
         if (lastButton != 3 && CommandBase.oi.getButton(3)) {
             lastButton = 3;
@@ -127,7 +143,7 @@ public class Robot2014 extends IterativeRobot {
             System.out.println(DriverStation.getInstance().getBatteryVoltage() + ": " + (CommandBase.driveTrainSubsystem.pidGet() - 300));
             startDriveSetDistanceCommand();
         }
-        DisplayLCD.update();
+        Display.update();
     }
 
     /**

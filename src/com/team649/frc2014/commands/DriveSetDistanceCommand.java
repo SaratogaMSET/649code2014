@@ -1,7 +1,7 @@
 package com.team649.frc2014.commands;
 
 import com.sun.squawk.util.MathUtils;
-import com.team649.frc2014.DisplayLCD;
+import com.team649.frc2014.Display;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -120,9 +120,9 @@ public class DriveSetDistanceCommand extends CommandBase {
         }
         //print output based on dist travelled
         if (driveTrainSubsystem.pidGet() <= distance / 2) {
-            DisplayLCD.queue("VROOMVROOMVROOM");
+            Display.queue("VROOMVROOMVROOM");
         } else {
-            DisplayLCD.queue("GET GASOLINE");
+            Display.queue("GET GASOLINE");
         }
     }
 

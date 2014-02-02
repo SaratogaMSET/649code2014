@@ -1,6 +1,6 @@
 package com.team649.frc2014.commands;
 
-import com.team649.frc2014.DisplayLCD;
+import com.team649.frc2014.Display;
 import java.util.Vector;
 
 /**
