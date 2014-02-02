@@ -112,9 +112,9 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getDriveForward(), CommandBase.oi.getDriveRotation());
         System.out.println(CommandBase.oi.getDriveForward() + ": " + CommandBase.driveTrainSubsystem.getRate());
         if (CommandBase.oi.getTrigger()) {
-            CommandBase.driveTrainSubsystem.shiftDrive(true);
+            CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.LOW_SPEED);
         } else {
-            CommandBase.driveTrainSubsystem.shiftDrive(false);
+            CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.HIGH_SPEED);
         }
         Display.update();
     }
