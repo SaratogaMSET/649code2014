@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.pid_control.PIDVelocitySource;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Vector;
 
@@ -22,6 +23,8 @@ import java.util.Vector;
  */
 public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource, PIDOutput {
 
+    public static final boolean HIGH_SPEED = true;
+    public static final boolean LOW_SPEED = false;
     private static final double ENCODER_DISTANCE_PER_PULSE = 0.05385587;
     public static int PERIOD = 100;
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
@@ -32,6 +35,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     private PIDController649 pid;
     private Vector lastRates;
     private double accel;
+    private Solenoid sol;
 
     public DriveTrainSubsystem() {
         motors = new SpeedController[RobotMap.driveTrainMotors.length];
@@ -46,6 +50,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         }
         lastRates = new Vector();
 
+        sol = new Solenoid(RobotMap.SOLENOID_CHANNEL);
     }
 
     public void startEncoders() {
@@ -76,7 +81,11 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         right /= max;
         rawDrive(left, right);
     }
-
+    
+    public void shiftDrive(boolean isOn){
+        sol.set(isOn);
+    }
+   
     public void rawDrive(double left, double right) {
         int i = 0;
         for (; i < motors.length / 2; i++) {
