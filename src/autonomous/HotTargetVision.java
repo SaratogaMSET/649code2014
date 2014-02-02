@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
  */
 public class HotTargetVision {
 
+    public static boolean isHot = false;
     //Camera constants used for distance calculation
     final int Y_IMAGE_RES = 480;		//X Image resolution in pixels, should be 120, 240 or 480
     final double VIEW_ANGLE = 49;		//Axis M1013
@@ -36,7 +37,6 @@ public class HotTargetVision {
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
-    public static boolean isHot = false;
 
     public class Scores {
 
@@ -63,7 +63,7 @@ public class HotTargetVision {
 
     }
 
-    public void setIsHot() {
+    public void getTargets() {
         try {
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];

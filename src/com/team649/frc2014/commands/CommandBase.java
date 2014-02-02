@@ -6,6 +6,7 @@ import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -36,5 +37,21 @@ public abstract class CommandBase extends Command {
 
     public CommandBase() {
         super();
+        
     }
+    public static Command getAutonomousCommand() {
+        //drive forward to shooting position
+        //after 0.5 seconds, see if goal is hot
+        //if goal is hot, shoot
+        //if goal is not hot, wait then shoot
+        CommandGroup AutonomousCommand = new CommandGroup();
+        AutonomousCommand.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 300));
+        CommandGroup WaitAndVision = new CommandGroup();
+        WaitAndVision.addSequential(new WaitCommand(500));
+        WaitAndVision.addSequential(new VisionCommand());
+        AutonomousCommand.addParallel(WaitAndVision);
+        //shoot
+        return AutonomousCommand;
+        
+}
 }

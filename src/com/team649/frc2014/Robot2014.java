@@ -73,6 +73,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
         System.out.println(autonomousModeChooser.getSelected());
+        CommandBase.getAutonomousCommand().start();
         // schedule the autonomous command (example)
 //        autonomousCommand.start();
 //        supaHotFire = new SupaHotFire();
