@@ -62,7 +62,7 @@ public class HotTargetVision {
 
     }
 
-    public void getTargets() {
+    public boolean getTargets() {
         try {
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];
@@ -102,16 +102,16 @@ public class HotTargetVision {
 
                     //Check if the particle is a horizontal target, if not, check if it's a vertical target
                     if (scoreCompare(scores[i], false)) {
-                        System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+//                        System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                     } else if (scoreCompare(scores[i], true)) {
-                        System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+//                        System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                     } else {
-                        System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+//                        System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                     }
-                    System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
-                    System.out.println("ARVert: " + scores[i].aspectRatioVertical);
+//                    System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
+//                    System.out.println("ARVert: " + scores[i].aspectRatioVertical);
                 }
 
                 //Zero out scores and set verticalIndex to first target in case there are no horizontal targets
@@ -161,11 +161,12 @@ public class HotTargetVision {
                     ParticleAnalysisReport distanceReport = filteredImage.getParticleAnalysisReport(target.verticalIndex);
                     double distance = computeDistance(filteredImage, distanceReport, target.verticalIndex);
                     if (target.Hot) {
-                        System.out.println("Hot target located");
-                        System.out.println("Distance: " + distance);
+                        return true;
+//                        System.out.println("Hot target located");
+//                        System.out.println("Distance: " + distance);
                     } else {
-                        System.out.println("No hot target present");
-                        System.out.println("Distance: " + distance);
+//                        System.out.println("No hot target present");
+//                        System.out.println("Distance: " + distance);
                     }
                 }
             }
@@ -184,7 +185,7 @@ public class HotTargetVision {
         } catch (Exception e) {
             System.out.println("exception tho: " + e.getMessage());
         }
-
+return false;
     }
 
     private boolean isHot() {
