@@ -36,6 +36,7 @@ public class HotTargetVision {
     //Maximum number of particles to process
     final int MAX_PARTICLES = 8;
     CriteriaCollection cc;      // the criteria for doing the particle filter operation
+    public static boolean isHot = false;
 
     public class Scores {
 
@@ -62,7 +63,7 @@ public class HotTargetVision {
 
     }
 
-    public boolean getTargets() {
+    public void setIsHot() {
         try {
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];
@@ -161,7 +162,7 @@ public class HotTargetVision {
                     ParticleAnalysisReport distanceReport = filteredImage.getParticleAnalysisReport(target.verticalIndex);
                     double distance = computeDistance(filteredImage, distanceReport, target.verticalIndex);
                     if (target.Hot) {
-                        return true;
+                        isHot = true;
 //                        System.out.println("Hot target located");
 //                        System.out.println("Distance: " + distance);
                     } else {
@@ -185,7 +186,7 @@ public class HotTargetVision {
         } catch (Exception e) {
             System.out.println("exception tho: " + e.getMessage());
         }
-return false;
+        isHot = false;
     }
 
     private boolean isHot() {
