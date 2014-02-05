@@ -15,6 +15,6 @@ public class RobotMap {
         public static final int FORWARD_SOLENOID_CHANNEL = 1;
         public static final int REVERSE_SOLENOID_CHANNEL = 2;
         public static final int[] MOTORS = new int[]{1, 2, 3, 4};
-        public static final int[] ENCODERS = new int[]{1, 2, 3, 4};
+        public static final int[] ENCODERS = new int[]{2,3,4,5};
     }
 }

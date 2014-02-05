@@ -90,13 +90,8 @@ public class Robot2014 extends IterativeRobot {
 
     public void teleopInit() {
         Display.clearMarquees();
-
-        Display.marquee(1, "#YOLOSWAG", 5, 5, true);
-        Display.marquee(2, "#SWOLO", 4, 5, false);
-        Display.marquee(3, "#YOLOSWAG", 3, 5, true);
-        Display.marquee(4, "#SWOLO", 2, 5, false);
-        Display.marquee(5, "#YOLOSWAG", 1, 5, true);
-        Display.marquee(6, "#SWOLO", 0, 5, false);
+        CommandBase.driveTrainSubsystem.startEncoders();
+//        Display.marquee(1, "2014 ENABLED", 5, 5, true);
     }
 
     /**
@@ -110,13 +105,20 @@ public class Robot2014 extends IterativeRobot {
 //        Display.println(1, "rate: " + CommandBase.driveTrainSubsystem.getRate());
 //        Display.println(2, "pos: " + CommandBase.driveTrainSubsystem.pidGet());
 
-        CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getDriveForward(), CommandBase.oi.getDriveRotation());
-        System.out.println(CommandBase.oi.getDriveForward() + ": " + CommandBase.driveTrainSubsystem.getRate());
+        CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getDriveForward(), 0);
         if (CommandBase.oi.getTrigger()) {
             CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.LOW_SPEED);
         } else {
             CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.HIGH_SPEED);
         }
+        if (CommandBase.oi.getButton(3))
+            CommandBase.driveTrainSubsystem.resetEncoders();
+        CommandBase.driveTrainSubsystem.printEncoders();
+//        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());
+//        Display.println(4, "spd: " + CommandBase.driveTrainSubsystem.getRate());
+//        Display.println(3, "pos: " + CommandBase.driveTrainSubsystem.getPosition());
+        System.out.println(CommandBase.driveTrainSubsystem.getDistance() + "," +CommandBase.driveTrainSubsystem.getRate()
+        );
         Display.update();
     }
 

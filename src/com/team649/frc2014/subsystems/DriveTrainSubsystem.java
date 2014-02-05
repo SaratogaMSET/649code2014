@@ -4,6 +4,7 @@
  */
 package com.team649.frc2014.subsystems;
 
+import com.team649.frc2014.Display;
 import com.team649.frc2014.RobotMap;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
@@ -29,7 +30,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
 
     public static final boolean HIGH_SPEED = false;
     public static final boolean LOW_SPEED = true;
-    private static final double ENCODER_DISTANCE_PER_PULSE = 0.05385587;
+    private static final double ENCODER_DISTANCE_PER_PULSE = 4 * Math.PI / 128;
     public static int PERIOD = 100;
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
     public static int ACCELERATION = 275;
@@ -47,12 +48,11 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
             motors[i] = new Victor(RobotMap.DRIVE_TRAIN.MOTORS[i]);
         }
         pid = new PIDController649(.045, .00, .00, this, this);
-//        encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
-        encoders = new Encoder[0];
-//        for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {
-//            encoders[x / 2] = new Encoder(RobotMap.DRIVE_TRAIN.ENCODERS[x], RobotMap.DRIVE_TRAIN.ENCODERS[x + 1], x == 0, EncodingType.k2X);
-//            encoders[x / 2].setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
-//        }
+        encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
+        for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {
+            encoders[x / 2] = new Encoder(RobotMap.DRIVE_TRAIN.ENCODERS[x], RobotMap.DRIVE_TRAIN.ENCODERS[x + 1], x == 0, EncodingType.k2X);
+            encoders[x / 2].setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
+        }
         lastRates = new Vector();
         shifterSolenoid = new DoubleSolenoid(RobotMap.DRIVE_TRAIN.FORWARD_SOLENOID_CHANNEL, RobotMap.DRIVE_TRAIN.REVERSE_SOLENOID_CHANNEL);
     }
@@ -106,10 +106,22 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public double pidGet() {
+        return getDistance();
+    }
+
+    public double getDistance() {
         int numEncoders = encoders.length;
         double totalVal = 0;
         for (int i = 0; i < numEncoders; i++) {
             totalVal += encoders[i].getDistance();
+        }
+        return totalVal / numEncoders;
+    }
+    public double getPosition() {
+        int numEncoders = encoders.length;
+        double totalVal = 0;
+        for (int i = 0; i < numEncoders; i++) {
+            totalVal += encoders[i].get();
         }
         return totalVal / numEncoders;
     }
@@ -166,5 +178,14 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         }
         final double rate = totalRate / numEncoders;
         return rate;
+    }
+    public void printEncoders() {
+        int i = 1;
+        int numEncoders = encoders.length;
+        for (int x= 0;x < numEncoders; x++) {
+            Display.println(i++, "pos: " + encoders[x].get());
+            Display.println(i++, "dis: " + encoders[x].getDistance());
+            Display.println(i++, "spd: " + encoders[x].getRate());
+        }
     }
 }
