@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 
 public class Display {
 
-    private static final String PADDING = "             ";
+    private static final String PADDING = "                ";
     private static final boolean[] printed = new boolean[]{false, false, false, false, false, false};
     private static final String[] queuedLines = new String[6];
     private static final Marquee[] marqueedLines = new Marquee[6];

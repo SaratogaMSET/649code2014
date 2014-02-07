@@ -8,25 +8,26 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 
-    private Joystick joystick;
+    private Joystick vertical;
+    private Joystick horizontal;
+    private Joystick shooter;
+    
 
     public OI() {
-        this.joystick = new Joystick(RobotMap.joystick);
+        this.vertical = new Joystick(RobotMap.joystickLeft);
+        this.horizontal = new Joystick(RobotMap.joystickRight);
+        this.shooter = new Joystick(RobotMap.joystickShooter);
     }
 
     public double getDriveForward() {
-        return -joystick.getY();
+        return -vertical.getY();
     }
 
     public double getDriveRotation() {
-        return joystick.getX();
+        return horizontal.getX();
     }
 
     public boolean getTrigger() {
-        return joystick.getRawButton(1);
-    }
-
-    boolean getButton(int i) {
-        return joystick.getRawButton(i);
+        return horizontal.getRawButton(1) || vertical.getRawButton(1);
     }
 }
