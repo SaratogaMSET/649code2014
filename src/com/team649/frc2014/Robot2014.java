@@ -73,7 +73,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
         System.out.println(autonomousModeChooser.getSelected());
-        CommandBase.getAutonomousCommand().start();
+        CommandBase.shootHotGoalAutonomous().start();
         // schedule the autonomous command (example)
 //        autonomousCommand.start();
 //        supaHotFire = new SupaHotFire();
@@ -107,9 +107,9 @@ public class Robot2014 extends IterativeRobot {
 
         CommandBase.driveTrainSubsystem.driveFwdRot(CommandBase.oi.getDriveForward(), CommandBase.oi.getDriveRotation());
         if (CommandBase.oi.getTrigger()) {
-            CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.LOW_SPEED);
+            CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
         } else {
-            CommandBase.driveTrainSubsystem.shiftDrive(DriveTrainSubsystem.HIGH_SPEED);
+            CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
         CommandBase.driveTrainSubsystem.printEncoders();
 //        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());

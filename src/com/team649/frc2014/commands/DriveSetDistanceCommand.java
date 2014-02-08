@@ -2,6 +2,7 @@ package com.team649.frc2014.commands;
 
 import com.sun.squawk.util.MathUtils;
 import com.team649.frc2014.Display;
+import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -79,6 +80,7 @@ public class DriveSetDistanceCommand extends CommandBase {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         //this method is state-based to be as efficient as possible. By usomg the stage int, 
+        driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         try {
             final long timeSpent = System.currentTimeMillis() - startTime;
             if (stage == 0) {

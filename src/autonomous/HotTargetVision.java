@@ -18,34 +18,37 @@ import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
  */
 public class HotTargetVision {
 
-    public static boolean isHot = false;
     //Camera constants used for distance calculation
-    final int Y_IMAGE_RES = 480;		//X Image resolution in pixels, should be 120, 240 or 480
-    final double VIEW_ANGLE = 49;		//Axis M1013
+    final static int Y_IMAGE_RES = 480;		//X Image resolution in pixels, should be 120, 240 or 480
+    final static double VIEW_ANGLE = 49;		//Axis M1013
     //final double VIEW_ANGLE = 41.7;		//Axis 206 camera
     //final double VIEW_ANGLE = 37.4;  //Axis M1011 camera
-    final double PI = 3.141592653;
+    final static double PI = 3.141592653;
     //Score limits used for target identification
-    final int RECTANGULARITY_LIMIT = 40;
-    final int ASPECT_RATIO_LIMIT = 55;
+    final static int RECTANGULARITY_LIMIT = 40;
+    final static int ASPECT_RATIO_LIMIT = 55;
     //Score limits used for hot target determination
-    final int TAPE_WIDTH_LIMIT = 50;
-    final int VERTICAL_SCORE_LIMIT = 50;
-    final int LR_SCORE_LIMIT = 50;
+    final static int TAPE_WIDTH_LIMIT = 50;
+    final static int VERTICAL_SCORE_LIMIT = 50;
+    final static int LR_SCORE_LIMIT = 50;
     //Minimum area of particles to be considered
-    final int AREA_MINIMUM = 150;
+    final static int AREA_MINIMUM = 150;
     //Maximum number of particles to process
-    final int MAX_PARTICLES = 8;
-    CriteriaCollection cc;      // the criteria for doing the particle filter operation
+    final static int MAX_PARTICLES = 8;
+    static CriteriaCollection cc = new CriteriaCollection();      // create the criteria for the particle filter
 
-    public class Scores {
+    static {
+        cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);      // the criteria for doing the particle filter operation
+    }
+
+    private static class Scores {
 
         double rectangularity;
         double aspectRatioVertical;
         double aspectRatioHorizontal;
     }
 
-    public class TargetReport {
+    private static class TargetReport {
 
         int verticalIndex;
         int horizontalIndex;
@@ -57,13 +60,7 @@ public class HotTargetVision {
         double verticalScore;
     }
 
-    public HotTargetVision() {
-        cc = new CriteriaCollection();      // create the criteria for the particle filter
-        cc.addCriteria(NIVision.MeasurementType.IMAQ_MT_AREA, AREA_MINIMUM, 65535, false);
-
-    }
-
-    public void getTargets() {
+    public static boolean detectHotGoal() {
         try {
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];
@@ -162,7 +159,7 @@ public class HotTargetVision {
                     ParticleAnalysisReport distanceReport = filteredImage.getParticleAnalysisReport(target.verticalIndex);
                     double distance = computeDistance(filteredImage, distanceReport, target.verticalIndex);
                     if (target.Hot) {
-                        isHot = true;
+                        return true;
 //                        System.out.println("Hot target located");
 //                        System.out.println("Distance: " + distance);
                     } else {
@@ -186,7 +183,7 @@ public class HotTargetVision {
         } catch (Exception e) {
             System.out.println("exception tho: " + e.getMessage());
         }
-        isHot = false;
+        return false;
     }
 
     private boolean isHot() {
@@ -206,7 +203,7 @@ public class HotTargetVision {
      * false to treat it as a center target
      * @return The estimated distance to the target in Inches.
      */
-    double computeDistance(BinaryImage image, ParticleAnalysisReport report, int particleNumber) throws NIVisionException {
+    private static double computeDistance(BinaryImage image, ParticleAnalysisReport report, int particleNumber) throws NIVisionException {
         double rectLong, height;
         int targetHeight;
 
@@ -234,7 +231,7 @@ public class HotTargetVision {
      * compared to the ratio for the inner target or the outer
      * @return The aspect ratio score (0-100)
      */
-    public double scoreAspectRatio(BinaryImage image, ParticleAnalysisReport report, int particleNumber, boolean vertical) throws NIVisionException {
+    private static double scoreAspectRatio(BinaryImage image, ParticleAnalysisReport report, int particleNumber, boolean vertical) throws NIVisionException {
         double rectLong, rectShort, aspectRatio, idealAspectRatio;
 
         rectLong = NIVision.MeasureParticle(image.image, particleNumber, false, NIVision.MeasurementType.IMAQ_MT_EQUIVALENT_RECT_LONG_SIDE);
@@ -262,7 +259,7 @@ public class HotTargetVision {
      *
      * @return True if the particle meets all limits, false otherwise
      */
-    boolean scoreCompare(Scores scores, boolean vertical) {
+    private static boolean scoreCompare(Scores scores, boolean vertical) {
         boolean isTarget = true;
 
         isTarget &= scores.rectangularity > RECTANGULARITY_LIMIT;
@@ -283,7 +280,7 @@ public class HotTargetVision {
      * @param report The Particle Analysis Report for the particle to score
      * @return The rectangularity score (0-100)
      */
-    double scoreRectangularity(ParticleAnalysisReport report) {
+    private static double scoreRectangularity(ParticleAnalysisReport report) {
         if (report.boundingRectWidth * report.boundingRectHeight != 0) {
             return 100 * report.particleArea / (report.boundingRectWidth * report.boundingRectHeight);
         } else {
@@ -296,7 +293,7 @@ public class HotTargetVision {
      * is piecewise linear going from (0,0) to (1,100) to (2,0) and is 0 for all
      * inputs outside the range 0-2
      */
-    double ratioToScore(double ratio) {
+    private static double ratioToScore(double ratio) {
         return (Math.max(0, Math.min(100 * (1 - Math.abs(1 - ratio)), 100)));
     }
 
@@ -306,7 +303,7 @@ public class HotTargetVision {
      *
      * Returns True if the target is hot. False if it is not.
      */
-    boolean hotOrNot(TargetReport target) {
+    private static boolean hotOrNot(TargetReport target) {
         boolean isHot = true;
 
         isHot &= target.tapeWidthScore >= TAPE_WIDTH_LIMIT;

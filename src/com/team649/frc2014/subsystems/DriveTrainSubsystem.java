@@ -79,15 +79,15 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public void driveFwdRot(double fwd, double rot) {
-        double left = fwd + rot, right = fwd-rot;
+        double left = fwd + rot, right = fwd - rot;
         double max = Math.max(1, Math.max(Math.abs(left), Math.abs(right)));
         left /= max;
         right /= max;
         rawDrive(left, right);
     }
 
-    public void shiftDrive(boolean isOn) {
-        shifterSolenoid.set(isOn ? Value.kForward : Value.kReverse);
+    public void shiftDriveGear(boolean lowSpeed) {
+        shifterSolenoid.set(lowSpeed ? Value.kForward : Value.kReverse);
     }
 
     public void rawDrive(double left, double right) {
@@ -117,6 +117,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         }
         return totalVal / numEncoders;
     }
+
     public double getPosition() {
         int numEncoders = encoders.length;
         double totalVal = 0;
@@ -179,10 +180,11 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         final double rate = totalRate / numEncoders;
         return rate;
     }
+
     public void printEncoders() {
         int i = 1;
         int numEncoders = encoders.length;
-        for (int x= 0;x < numEncoders; x++) {
+        for (int x = 0; x < numEncoders; x++) {
             Display.println(i++, "pos: " + encoders[x].get());
             Display.println(i++, "dis: " + encoders[x].getDistance());
             Display.println(i++, "spd: " + encoders[x].getRate());
