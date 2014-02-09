@@ -5,7 +5,6 @@
 package com.team649.frc2014.commands;
 
 import autonomous.HotTargetVision;
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
@@ -18,13 +17,15 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author Alex
  */
 class HotVisionWaitCommand extends WaitCommand {
+    public static final int HOT_GOAL_WAIT_TIME = 0;
+    public static final int COLD_GOAL_WAIT_TIME = 5000;
 
     public HotVisionWaitCommand() {
         super(0);
     }
 
     protected void initialize() {
-        setWaitTime(HotTargetVision.detectHotGoal() ? 5000 : 0);
+        setWaitTime(HotTargetVision.detectHotGoal() ? HOT_GOAL_WAIT_TIME: COLD_GOAL_WAIT_TIME);
         super.initialize();
     }
 }
