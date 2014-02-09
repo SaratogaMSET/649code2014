@@ -115,8 +115,7 @@ public class Robot2014 extends IterativeRobot {
 //        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());
 //        Display.println(4, "spd: " + CommandBase.driveTrainSubsystem.getRate());
 //        Display.println(3, "pos: " + CommandBase.driveTrainSubsystem.getPosition());
-        System.out.println(CommandBase.driveTrainSubsystem.getDistance() + "," +CommandBase.driveTrainSubsystem.getRate()
-        );
+        
         Display.update();
     }
 

@@ -1,5 +1,6 @@
 package com.team649.frc2014;
 
+import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
@@ -11,7 +12,7 @@ public class OI {
     private Joystick vertical;
     private Joystick horizontal;
     private Joystick shooter;
-    
+    private double ROTATION_POWER = 1.5;
 
     public OI() {
         this.vertical = new Joystick(RobotMap.joystickLeft);
@@ -24,7 +25,9 @@ public class OI {
     }
 
     public double getDriveRotation() {
-        return horizontal.getX();
+        final double turnVal = horizontal.getX();
+        final double sign = Team649Utils.sign(turnVal);
+        return MathUtils.pow(Math.abs(turnVal), ROTATION_POWER) * sign;
     }
 
     public boolean getTrigger() {
