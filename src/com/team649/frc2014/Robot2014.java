@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.commands.DriveSetDistanceCommand;
-import com.team649.frc2014.commands.GetAllDriveSpeedCommands;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
