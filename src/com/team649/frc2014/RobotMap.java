@@ -19,4 +19,10 @@ public class RobotMap {
         public static final int[] MOTORS = new int[]{1, 2, 3, 4};
         public static final int[] ENCODERS = new int[]{2,3,4,5};
     }
+
+    public static class CLAW {
+
+        public static final int POTENTIOMETER = -1;
+        public static final int MOTOR = -1;
+    }
 }

@@ -33,4 +33,22 @@ public class OI {
     public boolean getTrigger() {
         return horizontal.getRawButton(1) || vertical.getRawButton(1);
     }
+    
+    public boolean isCatchState() {
+        return shooter.getRawButton(1);
+    }
+    
+    public boolean isShootState() {
+        return shooter.getRawButton(2);
+    }
+    
+    public boolean isPickupState() {
+        return shooter.getRawButton(3);
+    }
+    
+    public boolean isStoreState() {
+        return shooter.getRawButton(4);
+    }
+    
+   
 }
