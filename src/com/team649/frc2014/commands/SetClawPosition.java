@@ -6,7 +6,7 @@
 package com.team649.frc2014.commands;
 
 import com.team649.frc2014.pid_control.PIDController649;
-import com.team649.frc2014.subsystems.ClawSubsystem;
+import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 
 /**
  *
@@ -25,7 +25,7 @@ public class SetClawPosition extends CommandBase {
 
     protected void initialize() {
         clawPID.enable();
-        clawPID.setSetpoint(ClawSubsystem.clawState[state]);
+        clawPID.setSetpoint(ClawPivotSubsystem.clawState[state]);
 
     }
 

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.SetClawPosition;
-import com.team649.frc2014.subsystems.ClawSubsystem;
+import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -113,34 +113,34 @@ public class Robot2014 extends IterativeRobot {
         }
 
         if (CommandBase.oi.isCatchState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawSubsystem.Catch) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Catch) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawSubsystem.Catch);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Catch);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isStoreState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawSubsystem.Store) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Store) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawSubsystem.Store);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Store);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isShootState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawSubsystem.Shoot) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Shoot) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawSubsystem.Shoot);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Shoot);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isPickupState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawSubsystem.Pickup) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Pickup) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawSubsystem.Pickup);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Pickup);
             setClawPosition.start();
         }
         CommandBase.driveTrainSubsystem.printEncoders();

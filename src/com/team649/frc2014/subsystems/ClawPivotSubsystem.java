@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  *
  * @author Kabi
  */
-public class ClawSubsystem extends Subsystem {
+public class ClawPivotSubsystem extends Subsystem {
 
     private static final double kP = 0.01;
     private static final double kI = 0.0;
@@ -35,7 +35,7 @@ public class ClawSubsystem extends Subsystem {
     private final Potentiometer potentiometer;
 
     // Initialize your subsystem here
-    public ClawSubsystem() {
+    public ClawPivotSubsystem() {
         super("ClawSubsystem");
         motor = new Victor(RobotMap.CLAW.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW.POTENTIOMETER);
