@@ -71,19 +71,18 @@ public abstract class CommandBase extends Command {
     public static Command engageClawSolenoid(){
         CommandGroup engageSequence = new CommandGroup();
         engageSequence.addSequential(new RunClawMotor());
-        engageSequence.addSequential(new WaitCommand(RobotMap.CLAWWINCH.TIME_TO_ENGAGE_SOLENOID));
+        engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
         engageSequence.addSequential(new EngageClawSolenoid());
         return engageSequence;
     }
     
     public static Command shootBall() {
-        //TODO pls no break rbot
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
         fireSequence.addSequential(coilShooter());
         fireSequence.addSequential(new FireClaw());
         //allow for half a second for firing
-        fireSequence.addSequential(new WaitCommand(RobotMap.CLAWWINCH.TIME_TO_FIRE));
+        fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(coilShooter());
         return fireSequence;

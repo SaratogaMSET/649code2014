@@ -16,17 +16,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Suneel
  */
 public class ClawWinchSubsystem extends Subsystem {
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
+    private static final double MOTOR_SPEED = 1;
+    public static final int TIME_TO_FIRE = 500;
+    public static final int TIME_TO_ENGAGE_SOLENOID = 300;
+   
     private final SpeedController motor;
     private final DigitalInput limit;
-    private static final double MOTOR_SPEED = 0.5;
     private DoubleSolenoid engageClaw;
     
     public ClawWinchSubsystem(){
-        motor = new Victor(RobotMap.CLAWWINCH.MOTOR);
-        limit = new DigitalInput(RobotMap.CLAWWINCH.LIMIT_SWITCH_INPUT);
-        engageClaw = new DoubleSolenoid(RobotMap.CLAWWINCH.ENGAGED_SOLENOID_CHANNEL, RobotMap.CLAWWINCH.LOOSE_SOLENOID_CHANNEL);
+        motor = new Victor(RobotMap.CLAW_WINCH.MOTOR);
+        limit = new DigitalInput(RobotMap.CLAW_WINCH.LIMIT_SWITCH_INPUT);
+        engageClaw = new DoubleSolenoid(RobotMap.CLAW_WINCH.ENGAGED_SOLENOID_CHANNEL, RobotMap.CLAW_WINCH.LOOSE_SOLENOID_CHANNEL);
         
     }
     

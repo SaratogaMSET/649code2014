@@ -21,20 +21,18 @@ public class RobotMap {
         public static final int[] ENCODERS = new int[]{2,3,4,5};
     }
 
-    public static class CLAWPIVOT {
+    public static class CLAW_PIVOT {
 
         public static final int POTENTIOMETER = -1;
         public static final int MOTOR = -1;
         
     }
     
-    public static class CLAWWINCH {
+    public static class CLAW_WINCH {
         //all need to be changed
         public static final int MOTOR = -1;
         public static final int LIMIT_SWITCH_INPUT = -1;
-        public static final int ENGAGED_SOLENOID_CHANNEL = 1;
-        public static final int LOOSE_SOLENOID_CHANNEL = 2;
-        public static final int TIME_TO_FIRE = 500;
-        public static final int TIME_TO_ENGAGE_SOLENOID = 300;
+        public static final int ENGAGED_SOLENOID_CHANNEL = -1;
+        public static final int LOOSE_SOLENOID_CHANNEL = -1;
     }
 }

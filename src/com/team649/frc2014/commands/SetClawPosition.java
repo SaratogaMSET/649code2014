@@ -25,7 +25,7 @@ public class SetClawPosition extends CommandBase {
 
     protected void initialize() {
         clawPID.enable();
-        clawPID.setSetpoint(ClawPivotSubsystem.clawState[state]);
+        clawPID.setSetpoint(ClawPivotSubsystem.CLAW_POT_STATES[state]);
 
     }
 

@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot2014 extends IterativeRobot {
 
-    private int lastButton;
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPosition;
     private Command shoot;
@@ -92,7 +91,7 @@ public class Robot2014 extends IterativeRobot {
 
     public void teleopInit() {
         Display.clearMarquees();
-        CommandBase.clawSubsystem.setState(ClawPivotSubsystem.NoState);
+        CommandBase.clawSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
 //        Display.marquee(1, "2014 ENABLED", 5, 5, true);
     }
@@ -116,37 +115,39 @@ public class Robot2014 extends IterativeRobot {
         }
 
         if (CommandBase.oi.isCatchState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Catch) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Catch);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isStoreState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Store) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.STORE) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Store);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isShootState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Shoot) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Shoot);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
             setClawPosition.start();
         }
 
         if (CommandBase.oi.isPickupState()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.Pickup) {
+            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.Pickup);
+            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
             setClawPosition.start();
         }
-        if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.Shoot){
+        
+        
+        if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT){
             if (shoot == null || !shoot.isRunning()){
                 shoot = CommandBase.shootBall();
                 shoot.start();

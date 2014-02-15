@@ -25,13 +25,14 @@ public class ClawPivotSubsystem extends Subsystem {
     private static final double kP = 0.01;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
+    public static final int SHOOT = 2;
+    public static final int STORE = 0;
+    public static final int PICKUP = 1;
+    public static final int CATCH = 3;
+    public static final int NO_STATE = 5;
+    public static final int[] CLAW_POT_STATES = new int[] {0,0,0,0};
+    
     private PIDController649 clawPID;
-    public static final int Shoot = 2;
-    public static final int Store = 0;
-    public static final int Pickup = 1;
-    public static final int Catch = 3;
-    public static final int NoState = 5;
-    public static final int[] clawState = new int[] {0,0,0,0};
     private final SpeedController motor;
     private final Potentiometer potentiometer;
     private int state;
@@ -39,10 +40,10 @@ public class ClawPivotSubsystem extends Subsystem {
     // Initialize your subsystem here
     public ClawPivotSubsystem() {
         super("ClawSubsystem");
-        motor = new Victor(RobotMap.CLAW.MOTOR);
-        potentiometer = new AnalogPotentiometer(RobotMap.CLAW.POTENTIOMETER);
+        motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
+        potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
-        state = NoState;
+        state = NO_STATE;
 
     }
 
