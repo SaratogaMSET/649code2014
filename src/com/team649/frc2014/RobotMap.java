@@ -7,9 +7,9 @@ package com.team649.frc2014;
  * floating around.
  */
 public class RobotMap {
-    public static final int joystickLeft = 2;
-    public static final int joystickRight = 1;
-    public static final int joystickShooter = 3;
+    public static final int JOYSTICK_DRIVER_RIGHT = 1;
+    public static final int JOYSTICK_DRIVER_LEFT = 2;
+    public static final int JOYSTICK_SHOOTER = 3;
     public static final int PRESSURE_SWITCH_CHANNEL = 1;
     public static final int COMPRESSOR_RELAY_CHANNEL = 1;
     

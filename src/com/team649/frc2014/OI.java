@@ -15,9 +15,9 @@ public class OI {
     private double ROTATION_POWER = 1.5;
 
     public OI() {
-        this.vertical = new Joystick(RobotMap.joystickLeft);
-        this.horizontal = new Joystick(RobotMap.joystickRight);
-        this.shooter = new Joystick(RobotMap.joystickShooter);
+        this.vertical = new Joystick(RobotMap.JOYSTICK_DRIVER_LEFT);
+        this.horizontal = new Joystick(RobotMap.JOYSTICK_DRIVER_RIGHT);
+        this.shooter = new Joystick(RobotMap.JOYSTICK_SHOOTER);
     }
 
     public double getDriveForward() {
@@ -38,19 +38,19 @@ public class OI {
         return shooter.getRawButton(1);
     }
     
-    public boolean isCatchState() {
+    public boolean isCatchClawPositionButtonPressed() {
         return shooter.getRawButton(1);
     }
     
-    public boolean isShootState() {
+    public boolean isShootClawPositionButtonPressed() {
         return shooter.getRawButton(2);
     }
     
-    public boolean isPickupState() {
+    public boolean isPickupClawPositionButtonPressed() {
         return shooter.getRawButton(3);
     }
     
-    public boolean isStoreState() {
+    public boolean isStoreClawPositionButtonPressed() {
         return shooter.getRawButton(4);
     }
     

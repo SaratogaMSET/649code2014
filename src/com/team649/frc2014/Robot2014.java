@@ -114,7 +114,7 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
 
-        if (CommandBase.oi.isCatchState()) {
+        if (CommandBase.oi.isCatchClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
                 setClawPosition.cancel();
             }
@@ -122,7 +122,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition.start();
         }
 
-        if (CommandBase.oi.isStoreState()) {
+        if (CommandBase.oi.isStoreClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.STORE) {
                 setClawPosition.cancel();
             }
@@ -130,7 +130,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition.start();
         }
 
-        if (CommandBase.oi.isShootState()) {
+        if (CommandBase.oi.isShootClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
                 setClawPosition.cancel();
             }
@@ -138,7 +138,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition.start();
         }
 
-        if (CommandBase.oi.isPickupState()) {
+        if (CommandBase.oi.isPickupClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
