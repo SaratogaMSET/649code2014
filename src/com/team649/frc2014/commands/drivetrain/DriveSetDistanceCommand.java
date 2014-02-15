@@ -1,7 +1,8 @@
-package com.team649.frc2014.commands;
+package com.team649.frc2014.commands.drivetrain;
 
 import com.sun.squawk.util.MathUtils;
 import com.team649.frc2014.Display;
+import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

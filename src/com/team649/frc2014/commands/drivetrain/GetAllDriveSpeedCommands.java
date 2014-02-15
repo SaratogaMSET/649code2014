@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.team649.frc2014.commands;
+package com.team649.frc2014.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

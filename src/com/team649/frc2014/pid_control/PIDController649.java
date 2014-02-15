@@ -284,7 +284,7 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
                     }
                 }
                 //******************************************************************************************************************
-                if ( m_error > 0 && m_prevError < 0 || m_error < 0 && m_prevError > 0) {
+                if (m_error > 0 && m_prevError < 0 || m_error < 0 && m_prevError > 0) {
                     m_totalError = 0;
                 }
                 //******************************************************************************************************************
@@ -303,7 +303,6 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
             pidOutput.pidWrite(result);
         }
     }
-
 
     /**
      * Set the PID Controller gain parameters. Set the proportional, integral,

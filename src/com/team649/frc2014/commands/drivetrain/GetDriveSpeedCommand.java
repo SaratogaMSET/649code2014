@@ -1,6 +1,7 @@
-package com.team649.frc2014.commands;
+package com.team649.frc2014.commands.drivetrain;
 
 import com.team649.frc2014.Display;
+import com.team649.frc2014.commands.CommandBase;
 import java.util.Vector;
 
 /**

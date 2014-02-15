@@ -11,5 +11,6 @@ import edu.wpi.first.wpilibj.PIDSource;
  * @author Alex
  */
 public interface PIDVelocitySource extends PIDSource {
-   public double getRate(); 
+
+    public double getRate();
 }

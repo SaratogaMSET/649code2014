@@ -17,6 +17,7 @@ import autonomous.HotTargetVision;
  * @author Alex
  */
 class HotVisionWaitCommand extends WaitCommand {
+
     public static final int HOT_GOAL_WAIT_TIME = 0;
     public static final int COLD_GOAL_WAIT_TIME = 5000;
 
@@ -25,7 +26,7 @@ class HotVisionWaitCommand extends WaitCommand {
     }
 
     protected void initialize() {
-        setWaitTime(HotTargetVision.detectHotGoal() ? HOT_GOAL_WAIT_TIME: COLD_GOAL_WAIT_TIME);
+        setWaitTime(HotTargetVision.detectHotGoal() ? HOT_GOAL_WAIT_TIME : COLD_GOAL_WAIT_TIME);
         super.initialize();
     }
 }

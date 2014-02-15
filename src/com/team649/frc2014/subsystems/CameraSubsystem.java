@@ -23,7 +23,7 @@ public class CameraSubsystem extends Subsystem {
     public CameraSubsystem() {
 //        cam = AxisCamera.getInstance();
     }
-    
+
     public ColorImage getImage() throws AxisCameraException, NIVisionException {
         return cam.getImage();
     }

@@ -30,8 +30,7 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final int PICKUP = 1;
     public static final int CATCH = 3;
     public static final int NO_STATE = 5;
-    public static final int[] CLAW_POT_STATES = new int[] {0,0,0,0};
-    
+    public static final int[] CLAW_POT_STATES = new int[]{0, 0, 0, 0};
     private PIDController649 clawPID;
     private final SpeedController motor;
     private final Potentiometer potentiometer;
@@ -44,26 +43,24 @@ public class ClawPivotSubsystem extends Subsystem {
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
         state = NO_STATE;
-
     }
 
     protected void initDefaultCommand() {
-        
     }
-    
-       public PIDController649 getClawPID() {
+
+    public PIDController649 getClawPID() {
         return clawPID;
     }
-       public void setPower(double power) {
-           motor.set(power);
-       }
 
-    public void setState(int st) {
-         //To change body of generated methods, choose Tools | Templates.
-        state = st;
+    public void setPower(double power) {
+        motor.set(power);
     }
 
-    public int getState(){
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public int getState() {
         return state;
     }
 }

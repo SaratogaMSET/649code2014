@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.commands.SetClawPosition;
+import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
@@ -145,10 +145,10 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
             setClawPosition.start();
         }
-        
-        
-        if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT){
-            if (shoot == null || !shoot.isRunning()){
+
+
+        if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
+            if (shoot == null || !shoot.isRunning()) {
                 shoot = CommandBase.shootBall();
                 shoot.start();
             }

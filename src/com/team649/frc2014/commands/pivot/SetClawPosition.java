@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.team649.frc2014.commands;
+package com.team649.frc2014.commands.pivot;
 
+import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
+import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 
 /**
  *
@@ -44,6 +46,7 @@ public class SetClawPosition extends CommandBase {
 
     protected void interrupted() {
         killCommand();
+        clawSubsystem.setState(ClawPivotSubsystem.NO_STATE);
     }
 
     private void killCommand() {
@@ -55,6 +58,6 @@ public class SetClawPosition extends CommandBase {
     }
 
     public int getState() {
-       return state;
+        return state;
     }
 }

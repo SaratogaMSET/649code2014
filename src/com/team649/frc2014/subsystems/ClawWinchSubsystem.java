@@ -16,41 +16,41 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Suneel
  */
 public class ClawWinchSubsystem extends Subsystem {
+
     private static final double MOTOR_SPEED = 1;
     public static final int TIME_TO_FIRE = 500;
     public static final int TIME_TO_ENGAGE_SOLENOID = 300;
-   
     private final SpeedController motor;
     private final DigitalInput limit;
     private DoubleSolenoid engageClaw;
-    
-    public ClawWinchSubsystem(){
+
+    public ClawWinchSubsystem() {
         motor = new Victor(RobotMap.CLAW_WINCH.MOTOR);
         limit = new DigitalInput(RobotMap.CLAW_WINCH.LIMIT_SWITCH_INPUT);
         engageClaw = new DoubleSolenoid(RobotMap.CLAW_WINCH.ENGAGED_SOLENOID_CHANNEL, RobotMap.CLAW_WINCH.LOOSE_SOLENOID_CHANNEL);
-        
+
     }
-    
-    public void runMotor(){
+
+    public void runMotor() {
         motor.set(MOTOR_SPEED);
     }
-    
-    public void stopMotor(){
+
+    public void stopMotor() {
         motor.set(0);
     }
-    
-    public boolean isSwitchPressed(){
+
+    public boolean isSwitchPressed() {
         return limit.get();
     }
-    
-    public void setSolenoid(boolean state){
-        engageClaw.set(state ? DoubleSolenoid.Value.kForward: DoubleSolenoid.Value.kReverse);
+
+    public void setSolenoid(boolean state) {
+        engageClaw.set(state ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
     }
-    
-    public boolean getSolenoidState(){
-        return engageClaw.get() == DoubleSolenoid.Value.kForward ? true:false;
+
+    public boolean getSolenoidState() {
+        return engageClaw.get() == DoubleSolenoid.Value.kForward ? true : false;
     }
-    
+
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());

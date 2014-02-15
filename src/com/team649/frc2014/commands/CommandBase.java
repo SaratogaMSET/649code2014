@@ -1,5 +1,10 @@
 package com.team649.frc2014.commands;
 
+import com.team649.frc2014.commands.winch.EngageClawWinchSolenoid;
+import com.team649.frc2014.commands.winch.FireClawWinch;
+import com.team649.frc2014.commands.winch.RunClawWinchMotor;
+import com.team649.frc2014.commands.winch.CoilClawWinch;
+import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
@@ -26,7 +31,7 @@ public abstract class CommandBase extends Command {
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     public static ClawPivotSubsystem clawSubsystem = new ClawPivotSubsystem();
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
-    
+
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -51,7 +56,7 @@ public abstract class CommandBase extends Command {
         //after 0.5 seconds, see if goal is hot
         //if goal is hot, shoot
         //if goal is not hot, wait then shoot
-        
+
         CommandGroup driveAndCheckGoal = new CommandGroup();
         //drive while checking hot goal
         driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 300));
@@ -60,7 +65,7 @@ public abstract class CommandBase extends Command {
         checkHotGoal.addSequential(new WaitCommand(500));
         checkHotGoal.addSequential(new HotVisionWaitCommand());
         driveAndCheckGoal.addSequential(checkHotGoal);
-        
+
         CommandGroup mainAutonomousSequence = new CommandGroup();
         //drive and check goal. When both are done (checking goal and driving), shoot
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
@@ -68,19 +73,19 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    public static Command engageClawSolenoid(){
+    public static Command engageClawSolenoid() {
         CommandGroup engageSequence = new CommandGroup();
-        engageSequence.addSequential(new RunClawMotor());
+        engageSequence.addSequential(new RunClawWinchMotor());
         engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
-        engageSequence.addSequential(new EngageClawSolenoid());
+        engageSequence.addSequential(new EngageClawWinchSolenoid());
         return engageSequence;
     }
-    
+
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
         fireSequence.addSequential(coilShooter());
-        fireSequence.addSequential(new FireClaw());
+        fireSequence.addSequential(new FireClawWinch());
         //allow for half a second for firing
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
@@ -88,11 +93,11 @@ public abstract class CommandBase extends Command {
         return fireSequence;
         //return null;
     }
-    public static Command coilShooter(){
+
+    public static Command coilShooter() {
         CommandGroup coilSequence = new CommandGroup();
         coilSequence.addSequential(engageClawSolenoid());
-        coilSequence.addSequential(new CoilClaw());
+        coilSequence.addSequential(new CoilClawWinch());
         return coilSequence;
     }
-    
 }
