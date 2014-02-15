@@ -13,6 +13,7 @@ import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.SetClawPosition;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,6 +29,7 @@ public class Robot2014 extends IterativeRobot {
     private int lastButton;
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPosition;
+    private Command shoot;
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
 
@@ -90,6 +92,7 @@ public class Robot2014 extends IterativeRobot {
 
     public void teleopInit() {
         Display.clearMarquees();
+        CommandBase.clawSubsystem.setState(ClawPivotSubsystem.NoState);
         CommandBase.driveTrainSubsystem.startEncoders();
 //        Display.marquee(1, "2014 ENABLED", 5, 5, true);
     }
@@ -142,6 +145,12 @@ public class Robot2014 extends IterativeRobot {
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.Pickup);
             setClawPosition.start();
+        }
+        if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.Shoot){
+            if (shoot == null || !shoot.isRunning()){
+                shoot = CommandBase.shootBall();
+                shoot.start();
+            }
         }
         CommandBase.driveTrainSubsystem.printEncoders();
 

@@ -5,6 +5,7 @@ import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
+import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -24,6 +25,7 @@ public abstract class CommandBase extends Command {
     public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     public static ClawPivotSubsystem clawSubsystem = new ClawPivotSubsystem();
+    public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
     
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
@@ -66,8 +68,32 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    private static Command shootBall() {
-        //TODO pls no break rbot
-        return null;
+    public static Command engageClawSolenoid(){
+        CommandGroup engageSequence = new CommandGroup();
+        engageSequence.addSequential(new RunClawMotor());
+        engageSequence.addSequential(new WaitCommand(RobotMap.CLAWWINCH.TIME_TO_ENGAGE_SOLENOID));
+        engageSequence.addSequential(new EngageClawSolenoid());
+        return engageSequence;
     }
+    
+    public static Command shootBall() {
+        //TODO pls no break rbot
+        CommandGroup fireSequence = new CommandGroup();
+        //makes sure it is coiled, then fires
+        fireSequence.addSequential(coilShooter());
+        fireSequence.addSequential(new FireClaw());
+        //allow for half a second for firing
+        fireSequence.addSequential(new WaitCommand(RobotMap.CLAWWINCH.TIME_TO_FIRE));
+        //then recoils
+        fireSequence.addSequential(coilShooter());
+        return fireSequence;
+        //return null;
+    }
+    public static Command coilShooter(){
+        CommandGroup coilSequence = new CommandGroup();
+        coilSequence.addSequential(engageClawSolenoid());
+        coilSequence.addSequential(new CoilClaw());
+        return coilSequence;
+    }
+    
 }

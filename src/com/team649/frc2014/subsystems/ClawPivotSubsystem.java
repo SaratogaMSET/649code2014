@@ -30,9 +30,11 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final int Store = 0;
     public static final int Pickup = 1;
     public static final int Catch = 3;
+    public static final int NoState = 5;
     public static final int[] clawState = new int[] {0,0,0,0};
     private final SpeedController motor;
     private final Potentiometer potentiometer;
+    private int state;
 
     // Initialize your subsystem here
     public ClawPivotSubsystem() {
@@ -40,6 +42,7 @@ public class ClawPivotSubsystem extends Subsystem {
         motor = new Victor(RobotMap.CLAW.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
+        state = NoState;
 
     }
 
@@ -53,5 +56,13 @@ public class ClawPivotSubsystem extends Subsystem {
        public void setPower(double power) {
            motor.set(power);
        }
-  
+
+    public void setState(int st) {
+         //To change body of generated methods, choose Tools | Templates.
+        state = st;
+    }
+
+    public int getState(){
+        return state;
+    }
 }

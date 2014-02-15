@@ -39,6 +39,7 @@ public class SetClawPosition extends CommandBase {
 
     protected void end() {
         killCommand();
+        clawSubsystem.setState(state);
     }
 
     protected void interrupted() {

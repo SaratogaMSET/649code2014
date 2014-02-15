@@ -34,6 +34,10 @@ public class OI {
         return horizontal.getRawButton(1) || vertical.getRawButton(1);
     }
     
+    public boolean getShooterTrigger() {
+        return shooter.getRawButton(1);
+    }
+    
     public boolean isCatchState() {
         return shooter.getRawButton(1);
     }
