@@ -32,7 +32,6 @@ public class Robot2014 extends IterativeRobot {
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPosition;
     private Command shoot;
-    private ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
     private WaitCommand waitCommand;
     private Command coil;
 //    Command autonomousCommand;
@@ -127,12 +126,13 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
-            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Up) {
-                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Up);
-                waitCommand = new WaitCommand(250);
-                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Neutral);
-            }
             setClawPosition.start();
+            if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.UP) {
+                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.UP);
+                waitCommand = new WaitCommand(250);
+                waitCommand.start();
+                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.NEUTRAL);
+            }
         }
 
         if (CommandBase.oi.isStoreClawPositionButtonPressed()) {
@@ -140,10 +140,11 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
-            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
-                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
-            }
             setClawPosition.start();
+            if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
+                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+            }
+
         }
 
         if (CommandBase.oi.isShootClawPositionButtonPressed()) {
@@ -151,10 +152,11 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
-            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
-                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
-            }
             setClawPosition.start();
+
+            if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
+                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+            }
 
         }
 // If joystick button for pickup state is set then change to pickup state (if appropriate) 
@@ -163,11 +165,13 @@ public class Robot2014 extends IterativeRobot {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
+
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
-                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
-            }
             setClawPosition.start();
+            if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
+                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+            }
+
         }
 
         if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
@@ -176,12 +180,18 @@ public class Robot2014 extends IterativeRobot {
                 shoot.start();
             }
         }
-        
-        if (CommandBase.oi.getCoilButton()){
+
+        if (CommandBase.oi.getCoilButton()) {
             coil = CommandBase.coilShooter();
             coil.start();
         }
         
+        if(CommandBase.oi.getOverrideButton()) {
+            if (setClawPosition != null){
+                setClawPosition.cancel();
+            }
+            CommandBase.clawSubsystem.setPower(CommandBase.oi.getShooterJoystick());
+        }
         CommandBase.driveTrainSubsystem.printEncoders();
 
 //        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());
