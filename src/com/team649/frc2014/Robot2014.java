@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
+import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
@@ -128,7 +129,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.UP) {
-                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.UP);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.UP);
                 waitCommand = new WaitCommand(250);
                 waitCommand.start();
                 CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.NEUTRAL);
@@ -142,7 +143,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
             }
 
         }
@@ -155,7 +156,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition.start();
 
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
             }
 
         }
@@ -169,7 +170,8 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.DOWN);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
+                setFingerPosition.start()
             }
 
         }

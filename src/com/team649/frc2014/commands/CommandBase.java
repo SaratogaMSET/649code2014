@@ -8,6 +8,7 @@ import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
+import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
@@ -34,7 +35,6 @@ public abstract class CommandBase extends Command {
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
     public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
 
-
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -44,6 +44,8 @@ public abstract class CommandBase extends Command {
         // news. Don't move it.
         oi = new OI();
     }
+
+    
 
     public CommandBase(String name) {
         super(name);
@@ -102,5 +104,8 @@ public abstract class CommandBase extends Command {
         coilSequence.addParallel(new CoilClawWinch());
         coilSequence.addSequential(engageClawSolenoid());
         return coilSequence;
+    }
+    public static Command setFingerPosition(int state) {
+        return new SetFingerPosition(state);
     }
 }
