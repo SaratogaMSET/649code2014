@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author Kabi
  */
 public class ClawFingerSubsystem extends Subsystem{
-     public static final int Up = 1;
-     public static final int Down = 2;
-     public static final int Neutral = 3;
+     public static final int UP = 1;
+     public static final int DOWN = 2;
+     public static final int NEUTRAL = 3;
      private DoubleSolenoid clawSolenoid;
          private final SpeedController motor;
     private int fingerState;
@@ -40,19 +40,19 @@ public class ClawFingerSubsystem extends Subsystem{
            motor.set(power);
        }
 
-    public void SetFingerPosition(int state) {
+    public void setFingerPosition(int state) {
         fingerState = state;
         switch(state){
-            case(ClawFingerSubsystem.Up): 
+            case(ClawFingerSubsystem.UP): 
                 clawSolenoid.set(DoubleSolenoid.Value.kForward);
-            case(ClawFingerSubsystem.Down):
+            case(ClawFingerSubsystem.DOWN):
                 clawSolenoid.set(DoubleSolenoid.Value.kReverse);
-            case(ClawFingerSubsystem.Neutral):
+            case(ClawFingerSubsystem.NEUTRAL):
                 clawSolenoid.set(DoubleSolenoid.Value.kOff);
         }
     }
 
-    public int GetFingerPosition() {
+    public int getFingerPosition() {
         return fingerState;
     }
 }

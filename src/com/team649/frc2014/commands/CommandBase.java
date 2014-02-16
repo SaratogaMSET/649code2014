@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.subsystems.CameraSubsystem;
+import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
@@ -31,6 +32,8 @@ public abstract class CommandBase extends Command {
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     public static ClawPivotSubsystem clawSubsystem = new ClawPivotSubsystem();
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
+    public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
+
 
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
