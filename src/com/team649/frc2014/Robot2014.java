@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
+import com.team649.frc2014.commands.winch.CoilClawWinch;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
@@ -33,6 +34,7 @@ public class Robot2014 extends IterativeRobot {
     private Command shoot;
     private ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
     private WaitCommand waitCommand;
+    private Command coil;
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
 
@@ -84,7 +86,7 @@ public class Robot2014 extends IterativeRobot {
 //        supaHotFire = new SupaHotFire();
     }
 
-    /**
+    /*
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
@@ -98,6 +100,8 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.clawSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
 //        Display.marquee(1, "2014 ENABLED", 5, 5, true);
+        coil = CommandBase.coilShooter();
+        coil.start();
     }
 
     /**
@@ -172,6 +176,12 @@ public class Robot2014 extends IterativeRobot {
                 shoot.start();
             }
         }
+        
+        if (CommandBase.oi.getCoilButton()){
+            coil = CommandBase.coilShooter();
+            coil.start();
+        }
+        
         CommandBase.driveTrainSubsystem.printEncoders();
 
 //        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());
