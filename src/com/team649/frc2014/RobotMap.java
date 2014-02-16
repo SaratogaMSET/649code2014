@@ -36,4 +36,12 @@ public class RobotMap {
         public static final int ENGAGED_SOLENOID_CHANNEL = -1;
         public static final int LOOSE_SOLENOID_CHANNEL = -1;
     }
+
+    public static class CLAW_FINGER {
+
+        public static final int FORWARD_SOLENOID_CHANNEL = 1;
+        public static final int REVERSE_SOLENOID_CHANNEL = 2;
+        public static final int MOTOR = -1;
+    }
+
 }

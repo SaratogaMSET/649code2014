@@ -4,7 +4,7 @@
  */
 package com.team649.frc2014.commands;
 
-import autonomous.HotTargetVision;
+import com.team649.frc2014.autonomous.HotTargetVision;
 
 /**
  *

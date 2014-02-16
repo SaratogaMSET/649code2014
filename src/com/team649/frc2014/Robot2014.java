@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
+import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,6 +31,8 @@ public class Robot2014 extends IterativeRobot {
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPosition;
     private Command shoot;
+    private ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
+    private WaitCommand waitCommand;
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
 
@@ -119,6 +123,11 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
+            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Up) {
+                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Up);
+                waitCommand = new WaitCommand(250);
+                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Neutral);
+            }
             setClawPosition.start();
         }
 
@@ -127,6 +136,9 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
+            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
+                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
+            }
             setClawPosition.start();
         }
 
@@ -135,17 +147,24 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
+            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
+                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
+            }
             setClawPosition.start();
-        }
 
+        }
+// If joystick button for pickup state is set then change to pickup state (if appropriate) 
+        //also change finger state to appropriate level
         if (CommandBase.oi.isPickupClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+            if (clawFingerSubsystem.GetFingerPosition() != ClawFingerSubsystem.Down) {
+                clawFingerSubsystem.SetFingerPosition(ClawFingerSubsystem.Down);
+            }
             setClawPosition.start();
         }
-
 
         if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
             if (shoot == null || !shoot.isRunning()) {

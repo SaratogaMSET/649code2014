@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package autonomous;
+package com.team649.frc2014.autonomous;
 
 import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.image.BinaryImage;
