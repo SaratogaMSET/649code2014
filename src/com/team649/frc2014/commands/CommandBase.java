@@ -73,31 +73,31 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    public static Command engageClawSolenoid() {
+    public static Command engageClawSolenoid(){
         CommandGroup engageSequence = new CommandGroup();
-        engageSequence.addSequential(new RunClawWinchMotor());
-        engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
-        engageSequence.addSequential(new EngageClawWinchSolenoid());
+        if (!winchSubsystem.isSwitchPressed()){
+            engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
+            engageSequence.addSequential(new EngageClawWinchSolenoid());
+        }
         return engageSequence;
     }
 
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
-        fireSequence.addSequential(coilShooter());
+        //fireSequence.addSequential(coilShooter());
         fireSequence.addSequential(new FireClawWinch());
         //allow for half a second for firing
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(coilShooter());
         return fireSequence;
-        //return null;
     }
 
     public static Command coilShooter() {
         CommandGroup coilSequence = new CommandGroup();
+        coilSequence.addParallel(new CoilClawWinch());
         coilSequence.addSequential(engageClawSolenoid());
-        coilSequence.addSequential(new CoilClawWinch());
         return coilSequence;
     }
 }

@@ -42,6 +42,6 @@ public class CoilClawWinch extends CommandBase {
     // subsystems is scheduled to run
 
     protected void interrupted() {
-        winchSubsystem.runMotor();
+        winchSubsystem.stopMotor();
     }
 }

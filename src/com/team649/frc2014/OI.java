@@ -53,5 +53,9 @@ public class OI {
     public boolean isStoreClawPositionButtonPressed() {
         return shooter.getRawButton(4);
     }
+
+    public boolean getCoilButton() {
+         return shooter.getRawButton(2);
+    }
     
 }
