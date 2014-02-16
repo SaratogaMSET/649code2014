@@ -30,7 +30,7 @@ public class OI {
         return MathUtils.pow(Math.abs(turnVal), ROTATION_POWER) * sign;
     }
 
-    public boolean getTrigger() {
+    public boolean getDrivetrainLowGearButtonPressed() {
         return horizontal.getRawButton(1) || vertical.getRawButton(1);
     }
 
@@ -39,23 +39,30 @@ public class OI {
     }
 
     public boolean isCatchClawPositionButtonPressed() {
-        return shooter.getRawButton(1);
+        return shooter.getRawButton(11);
     }
 
     public boolean isShootClawPositionButtonPressed() {
-        return shooter.getRawButton(2);
+        return shooter.getRawButton(12);
     }
 
     public boolean isPickupClawPositionButtonPressed() {
-        return shooter.getRawButton(3);
+        return shooter.getRawButton(9);
     }
 
     public boolean isStoreClawPositionButtonPressed() {
-        return shooter.getRawButton(4);
+        return shooter.getRawButton(10);
     }
 
     public boolean getCoilButton() {
-         return shooter.getRawButton(2);
+         return shooter.getRawButton(5);
     }
     
+    public double getShooterJoystick() {
+        return shooter.getY();
+    }
+
+    boolean getOverrideButton() {
+        return shooter.getRawButton(2);
+    }
 }
