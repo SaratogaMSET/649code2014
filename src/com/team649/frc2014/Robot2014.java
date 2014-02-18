@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
+import com.team649.frc2014.commands.rollers.RunRollers;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
+import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.WaitCommand;
@@ -35,9 +37,9 @@ public class Robot2014 extends IterativeRobot {
     private Command shoot;
     private WaitCommand waitCommand;
     private Command coil;
+
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
-
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -167,11 +169,11 @@ public class Robot2014 extends IterativeRobot {
                 setClawPosition.cancel();
             }
         }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-            setClawPosition.start();
-            if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
-        
+        setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+        setClawPosition.start();
+        if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
+            CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
+
         }
 
         if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
@@ -181,17 +183,32 @@ public class Robot2014 extends IterativeRobot {
             }
         }
 
-        if (CommandBase.oi.getCoilButton()) {
+        if (CommandBase.oi.getCoilButton() && !CommandBase.winchSubsystem.getLimitSwitchValue()) {
             coil = CommandBase.coilShooter();
             coil.start();
         }
-        
-        if(CommandBase.oi.getOverrideButton()) {
-            if (setClawPosition != null){
+
+        if (CommandBase.oi.getCoilButton() && CommandBase.oi.getWinchOverrideButton()) {
+            coil = CommandBase.coilShooter();
+            coil.start();
+        }
+
+        if (CommandBase.oi.getPivotOverrideButton()) {
+            if (setClawPosition != null) {
                 setClawPosition.cancel();
             }
             CommandBase.clawSubsystem.setPower(CommandBase.oi.getShooterJoystick());
         }
+
+        if (CommandBase.oi.isPurgeButtonPressed()) {
+            new RunRollers(-1).start();
+        }
+
+       else if (CommandBase.oi.isPickupButtonPressed()) {
+            new RunRollers(-1).start();
+        }
+       else 
+           new RunRollers(0).start();
         CommandBase.driveTrainSubsystem.printEncoders();
 
 //        Display.println(2, "dis: " + CommandBase.driveTrainSubsystem.getDistance());

@@ -24,24 +24,29 @@ public class RobotMap {
 
     public static class CLAW_PIVOT {
 
-        public static final int POTENTIOMETER = -1;
-        public static final int MOTOR = -1;
+        public static final int POTENTIOMETER = 1;
+        public static final int MOTOR = 6;
     }
 
     public static class CLAW_WINCH {
         //all need to be changed
 
-        public static final int MOTOR = -1;
-        public static final int LIMIT_SWITCH_INPUT = -1;
-        public static final int ENGAGED_SOLENOID_CHANNEL = -1;
-        public static final int LOOSE_SOLENOID_CHANNEL = -1;
+        public static final int MOTOR = 5;
+        public static final int LIMIT_SWITCH_INPUT = 9;
+        public static final int ENGAGED_SOLENOID_CHANNEL = 3;
+        public static final int LOOSE_SOLENOID_CHANNEL = 4;
     }
 
     public static class CLAW_FINGER {
 
-        public static final int FORWARD_SOLENOID_CHANNEL = 1;
-        public static final int REVERSE_SOLENOID_CHANNEL = 2;
-        public static final int MOTOR = -1;
+        public static final int FORWARD_SOLENOID_CHANNEL = 5;
+        public static final int REVERSE_SOLENOID_CHANNEL = 6;
+    }
+
+    public static class CLAW_ROLLER {
+        public static int MOTOR = 7;
+
+        
     }
 
 }

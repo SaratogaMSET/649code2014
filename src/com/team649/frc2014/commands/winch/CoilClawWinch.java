@@ -4,7 +4,9 @@
  */
 package com.team649.frc2014.commands.winch;
 
+import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.CommandBase;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -13,9 +15,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class CoilClawWinch extends CommandBase {
 
+
     public CoilClawWinch() {
         // Use requires() here to declare subsystem dependencies
         requires(winchSubsystem);
+
     }
 
     // Called just before this Command runs the first time

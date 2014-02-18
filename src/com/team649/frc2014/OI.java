@@ -62,7 +62,19 @@ public class OI {
         return shooter.getY();
     }
 
-    boolean getOverrideButton() {
+    public boolean getPivotOverrideButton() {
         return shooter.getRawButton(2);
+    }
+
+    boolean getWinchOverrideButton() {
+      return shooter.getRawButton(3);
+    }
+    
+    public boolean isPickupButtonPressed() {
+        return shooter.getRawButton(4);
+    }
+    
+    public boolean isPurgeButtonPressed() {
+        return shooter.getRawButton(6);
     }
 }

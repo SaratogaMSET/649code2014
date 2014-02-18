@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
+import com.team649.frc2014.commands.rollers.RunRollers;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
+import com.team649.frc2014.subsystems.ClawRollerSubsystem;
 import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
@@ -34,7 +36,8 @@ public abstract class CommandBase extends Command {
     public static ClawPivotSubsystem clawSubsystem = new ClawPivotSubsystem();
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
     public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
-
+    public static ClawRollerSubsystem clawRollerSubsystem = new ClawRollerSubsystem();
+    
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -107,5 +110,8 @@ public abstract class CommandBase extends Command {
     }
     public static Command setFingerPosition(int state) {
         return new SetFingerPosition(state);
+    }
+    public static Command runRollers(int direction) {
+        return new RunRollers(direction);
     }
 }

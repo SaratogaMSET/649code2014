@@ -21,24 +21,20 @@ public class ClawFingerSubsystem extends Subsystem{
      public static final int DOWN = 2;
      public static final int NEUTRAL = 3;
      private DoubleSolenoid clawSolenoid;
-         private final SpeedController motor;
+        
     private int fingerState;
 
      
      public ClawFingerSubsystem() {
         super("ClawFingerSubsystem");
         clawSolenoid = new DoubleSolenoid(RobotMap.CLAW_FINGER.FORWARD_SOLENOID_CHANNEL, RobotMap.DRIVE_TRAIN.REVERSE_SOLENOID_CHANNEL);
-        motor = new Victor(RobotMap.CLAW_FINGER.MOTOR);
-
+        
      }
      
      protected void initDefaultCommand() {
         
     }
      
-     public void setMotor(double power) {
-           motor.set(power);
-       }
 
     public void setFingerPosition(int state) {
         fingerState = state;

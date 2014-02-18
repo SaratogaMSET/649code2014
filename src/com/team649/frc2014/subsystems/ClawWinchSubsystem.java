@@ -50,7 +50,10 @@ public class ClawWinchSubsystem extends Subsystem {
     public boolean getSolenoidState() {
         return engageClaw.get() == DoubleSolenoid.Value.kForward ? true : false;
     }
-
+    
+    public boolean getLimitSwitchValue() {
+        return limit.get();
+    }
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
