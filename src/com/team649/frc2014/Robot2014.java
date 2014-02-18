@@ -166,14 +166,12 @@ public class Robot2014 extends IterativeRobot {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
-
+        }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
-                setFingerPosition.start()
-            }
-
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
+        
         }
 
         if (CommandBase.oi.getShooterTrigger() && CommandBase.clawSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
