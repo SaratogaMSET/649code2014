@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class ClawFingerSubsystem extends Subsystem{
      public static final int UP = 1;
      public static final int DOWN = 2;
-     public static final int NEUTRAL = 3;
      private DoubleSolenoid clawSolenoid;
-        
+     public static final int TIME_TO_ENGAGE_SOLENOID = 500;
+   
     private int fingerState;
 
      
@@ -43,8 +43,6 @@ public class ClawFingerSubsystem extends Subsystem{
                 clawSolenoid.set(DoubleSolenoid.Value.kForward);
             case(ClawFingerSubsystem.DOWN):
                 clawSolenoid.set(DoubleSolenoid.Value.kReverse);
-            case(ClawFingerSubsystem.NEUTRAL):
-                clawSolenoid.set(DoubleSolenoid.Value.kOff);
         }
     }
 

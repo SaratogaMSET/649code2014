@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class ClawRollerSubsystem extends Subsystem{
     private final SpeedController motor;
-    private double MOTOR_SPEED = 1;
+    private double MOTOR_SPEED = 0.7;
     
     public ClawRollerSubsystem() {
         motor = new Victor(RobotMap.CLAW_ROLLER.MOTOR);

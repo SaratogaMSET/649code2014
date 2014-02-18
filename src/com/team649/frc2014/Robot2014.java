@@ -131,10 +131,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.UP) {
-                CommandBase.setFingerPosition(ClawFingerSubsystem.UP);
-                waitCommand = new WaitCommand(250);
-                waitCommand.start();
-                CommandBase.clawFingerSubsystem.setFingerPosition(ClawFingerSubsystem.NEUTRAL);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.UP).start();
             }
         }
 
@@ -145,7 +142,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
             setClawPosition.start();
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
             }
 
         }
@@ -158,7 +155,7 @@ public class Robot2014 extends IterativeRobot {
             setClawPosition.start();
 
             if (CommandBase.clawFingerSubsystem.getFingerPosition() != ClawFingerSubsystem.DOWN) {
-                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN);
+                CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
             }
 
         }
@@ -183,16 +180,12 @@ public class Robot2014 extends IterativeRobot {
             }
         }
 
-        if (CommandBase.oi.getCoilButton() && !CommandBase.winchSubsystem.getLimitSwitchValue()) {
+        if (CommandBase.oi.getCoilButton() && !CommandBase.winchSubsystem.isSwitchPressed()) {
             coil = CommandBase.coilShooter();
             coil.start();
         }
 
-        if (CommandBase.oi.getCoilButton() && CommandBase.oi.getWinchOverrideButton()) {
-            coil = CommandBase.coilShooter();
-            coil.start();
-        }
-
+     
         if (CommandBase.oi.getPivotOverrideButton()) {
             if (setClawPosition != null) {
                 setClawPosition.cancel();
@@ -201,7 +194,7 @@ public class Robot2014 extends IterativeRobot {
         }
 
         if (CommandBase.oi.isPurgeButtonPressed()) {
-            new RunRollers(-1).start();
+            new RunRollers(1).start();
         }
 
        else if (CommandBase.oi.isPickupButtonPressed()) {

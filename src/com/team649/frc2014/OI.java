@@ -66,7 +66,7 @@ public class OI {
         return shooter.getRawButton(2);
     }
 
-    boolean getWinchOverrideButton() {
+    public boolean getWinchOverrideButton() {
       return shooter.getRawButton(3);
     }
     

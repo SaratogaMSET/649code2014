@@ -1,6 +1,6 @@
 package com.team649.frc2014.commands;
 
-import com.team649.frc2014.commands.winch.EngageClawWinchSolenoid;
+import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.commands.winch.FireClawWinch;
 import com.team649.frc2014.commands.winch.RunClawWinchMotor;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
@@ -37,7 +37,7 @@ public abstract class CommandBase extends Command {
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
     public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
     public static ClawRollerSubsystem clawRollerSubsystem = new ClawRollerSubsystem();
-    
+
     public static void init() {
         new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -47,8 +47,6 @@ public abstract class CommandBase extends Command {
         // news. Don't move it.
         oi = new OI();
     }
-
-    
 
     public CommandBase(String name) {
         super(name);
@@ -81,11 +79,11 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    public static Command engageClawSolenoid(){
+    public static Command engageClawSolenoid() {
         CommandGroup engageSequence = new CommandGroup();
-        if (!winchSubsystem.isSwitchPressed()){
+        if (!winchSubsystem.isSwitchPressed()) {
             engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
-            engageSequence.addSequential(new EngageClawWinchSolenoid());
+            engageSequence.addSequential(new SetClawWinchSolenoid(true));
         }
         return engageSequence;
     }
@@ -94,8 +92,9 @@ public abstract class CommandBase extends Command {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
         //fireSequence.addSequential(coilShooter());
-        fireSequence.addSequential(new FireClawWinch());
-        //allow for half a second for firing
+        fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
+        fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
+        fireSequence.addSequential(new SetClawWinchSolenoid(false));
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(coilShooter());
@@ -108,9 +107,11 @@ public abstract class CommandBase extends Command {
         coilSequence.addSequential(engageClawSolenoid());
         return coilSequence;
     }
+
     public static Command setFingerPosition(int state) {
         return new SetFingerPosition(state);
     }
+
     public static Command runRollers(int direction) {
         return new RunRollers(direction);
     }

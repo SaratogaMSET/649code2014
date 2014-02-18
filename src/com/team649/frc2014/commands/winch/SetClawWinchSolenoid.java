@@ -10,17 +10,19 @@ import com.team649.frc2014.commands.CommandBase;
  *
  * @author Suneel
  */
-public class EngageClawWinchSolenoid extends CommandBase {
+public class SetClawWinchSolenoid extends CommandBase {
+    private final boolean state;
 
-    public EngageClawWinchSolenoid() {
+    public SetClawWinchSolenoid(boolean direction) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+        state = direction;
         requires(winchSubsystem);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        winchSubsystem.setSolenoid(true);
+        winchSubsystem.setSolenoid(state);
     }
 
     // Called repeatedly when this Command is scheduled to run
