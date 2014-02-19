@@ -155,7 +155,7 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         }
 
-        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed()
+        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()
                 && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
             if (shootCommand == null || !shootCommand.isRunning()) {
                 shootCommand = CommandBase.shootBall();
