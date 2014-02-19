@@ -6,6 +6,7 @@ import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
+import com.team649.frc2014.commands.drivetrain.DriveForwardRotate;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.ManualDriveClawPivot;
 import com.team649.frc2014.commands.rollers.RunRollers;
@@ -45,6 +46,10 @@ public abstract class CommandBase extends Command {
         // yet. Thus, their requires() statements may grab null pointers. Bad
         // news. Don't move it.
         oi = new OI();
+    }
+
+    public static Command driveForwardRotate(double driveForward, double driveRotation) {
+        return new DriveForwardRotate(driveForward, driveRotation);
     }
 
     public CommandBase(String name) {
