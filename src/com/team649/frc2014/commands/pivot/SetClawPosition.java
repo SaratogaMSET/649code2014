@@ -20,8 +20,8 @@ public class SetClawPosition extends CommandBase {
     private final int state;
 
     public SetClawPosition(int state) {
-        clawPID = clawSubsystem.getClawPID();
-        requires(clawSubsystem);
+        clawPID = clawPivotSubsystem.getClawPID();
+        requires(clawPivotSubsystem);
         this.state = state;
     }
 
@@ -41,12 +41,12 @@ public class SetClawPosition extends CommandBase {
 
     protected void end() {
         killCommand();
-        clawSubsystem.setState(state);
+        clawPivotSubsystem.setState(state);
     }
 
     protected void interrupted() {
         killCommand();
-        clawSubsystem.setState(ClawPivotSubsystem.NO_STATE);
+        clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
     }
 
     private void killCommand() {
@@ -54,7 +54,7 @@ public class SetClawPosition extends CommandBase {
             clawPID.disable();
         } catch (NullPointerException e) {
         }
-        clawSubsystem.setPower(0);
+        clawPivotSubsystem.setPower(0);
     }
 
     public int getState() {

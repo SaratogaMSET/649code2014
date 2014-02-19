@@ -6,22 +6,24 @@
 package com.team649.frc2014.commands.rollers;
 
 import com.team649.frc2014.commands.CommandBase;
-
 /**
  *
  * @author Kabi
  */
 public class RunRollers extends CommandBase {
+
     private final int state;
 
-  
+    public RunRollers(int direction) {
+        requires(clawRollerSubsystem);
+        state = direction;
+    }
 
     protected void initialize() {
-         clawRollerSubsystem.runMotor(state);
+        clawRollerSubsystem.runMotor(state);
     }
 
     protected void execute() {
-       
     }
 
     protected boolean isFinished() {
@@ -29,18 +31,8 @@ public class RunRollers extends CommandBase {
     }
 
     protected void end() {
-       
     }
 
     protected void interrupted() {
-       
-
     }
-
-    public RunRollers(int direction) {
-        requires(clawRollerSubsystem);
-         state = direction;
-    }
-   
-
 }

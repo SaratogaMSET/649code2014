@@ -1,14 +1,13 @@
 package com.team649.frc2014.commands;
 
 import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
-import com.team649.frc2014.commands.winch.FireClawWinch;
-import com.team649.frc2014.commands.winch.RunClawWinchMotor;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
 import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
+import com.team649.frc2014.commands.pivot.ManualDriveClawPivot;
 import com.team649.frc2014.commands.rollers.RunRollers;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
@@ -33,7 +32,7 @@ public abstract class CommandBase extends Command {
     // Create a single static instance of all of your subsystems
     public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
-    public static ClawPivotSubsystem clawSubsystem = new ClawPivotSubsystem();
+    public static ClawPivotSubsystem clawPivotSubsystem = new ClawPivotSubsystem();
     public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
     public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
     public static ClawRollerSubsystem clawRollerSubsystem = new ClawRollerSubsystem();
@@ -79,15 +78,6 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    public static Command engageClawSolenoid() {
-        CommandGroup engageSequence = new CommandGroup();
-        if (!winchSubsystem.isSwitchPressed()) {
-            engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
-            engageSequence.addSequential(new SetClawWinchSolenoid(true));
-        }
-        return engageSequence;
-    }
-
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
@@ -104,7 +94,11 @@ public abstract class CommandBase extends Command {
     public static Command coilShooter() {
         CommandGroup coilSequence = new CommandGroup();
         coilSequence.addParallel(new CoilClawWinch());
-        coilSequence.addSequential(engageClawSolenoid());
+
+        CommandGroup engageSequence = new CommandGroup();
+        engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
+        engageSequence.addSequential(new SetClawWinchSolenoid(true));
+        coilSequence.addSequential(engageSequence);
         return coilSequence;
     }
 
@@ -114,5 +108,9 @@ public abstract class CommandBase extends Command {
 
     public static Command runRollers(int direction) {
         return new RunRollers(direction);
+    }
+
+    public static Command manualDriveClaw(double power) {
+        return new ManualDriveClawPivot(power);
     }
 }

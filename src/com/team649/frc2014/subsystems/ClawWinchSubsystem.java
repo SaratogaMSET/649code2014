@@ -41,7 +41,7 @@ public class ClawWinchSubsystem extends Subsystem {
     }
 
     public boolean isSwitchPressed() {
-        return (limit.get() || CommandBase.oi.getWinchOverrideButton());
+        return limit.get() || CommandBase.oi.shooter.isWinchCancelButtonPressed();
     }
 
     public void setSolenoid(boolean state) {
@@ -51,8 +51,7 @@ public class ClawWinchSubsystem extends Subsystem {
     public boolean getSolenoidState() {
         return engageClaw.get() == DoubleSolenoid.Value.kForward ? true : false;
     }
-    
- 
+
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());

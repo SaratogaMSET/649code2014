@@ -22,7 +22,6 @@ public class ClawFingerSubsystem extends Subsystem{
      private DoubleSolenoid clawSolenoid;
      public static final int TIME_TO_ENGAGE_SOLENOID = 500;
    
-    private int fingerState;
 
      
      public ClawFingerSubsystem() {
@@ -37,7 +36,6 @@ public class ClawFingerSubsystem extends Subsystem{
      
 
     public void setFingerPosition(int state) {
-        fingerState = state;
         switch(state){
             case(ClawFingerSubsystem.UP): 
                 clawSolenoid.set(DoubleSolenoid.Value.kForward);
@@ -46,7 +44,4 @@ public class ClawFingerSubsystem extends Subsystem{
         }
     }
 
-    public int getFingerPosition() {
-        return fingerState;
-    }
 }

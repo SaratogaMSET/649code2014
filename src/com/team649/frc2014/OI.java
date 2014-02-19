@@ -11,70 +11,80 @@ public class OI {
 
     private Joystick vertical;
     private Joystick horizontal;
-    private Joystick shooter;
+    private Joystick shooterJoystick;
     private double ROTATION_POWER = 1.5;
+    public final Driver driver;
+    public final Shooter shooter;
 
     public OI() {
         this.vertical = new Joystick(RobotMap.JOYSTICK_DRIVER_LEFT);
         this.horizontal = new Joystick(RobotMap.JOYSTICK_DRIVER_RIGHT);
-        this.shooter = new Joystick(RobotMap.JOYSTICK_SHOOTER);
+        this.shooterJoystick = new Joystick(RobotMap.JOYSTICK_SHOOTER);
+        driver = new Driver();
+        shooter = new Shooter();
     }
 
-    public double getDriveForward() {
-        return -vertical.getY();
+    public class Driver {
+
+        public double getDriveRotation() {
+            final double turnVal = horizontal.getX();
+            final double sign = turnVal < 0 ? -1 : 1;
+            return MathUtils.pow(Math.abs(turnVal), ROTATION_POWER) * sign;
+        }
+
+        public double getDriveForward() {
+            return -vertical.getY();
+        }
+
+        public boolean isDrivetrainLowGearButtonPressed() {
+            return horizontal.getRawButton(1) || vertical.getRawButton(1);
+        }
     }
 
-    public double getDriveRotation() {
-        final double turnVal = horizontal.getX();
-        final double sign = Team649Utils.sign(turnVal);
-        return MathUtils.pow(Math.abs(turnVal), ROTATION_POWER) * sign;
-    }
+    public class Shooter {
 
-    public boolean getDrivetrainLowGearButtonPressed() {
-        return horizontal.getRawButton(1) || vertical.getRawButton(1);
-    }
+        public boolean isShooterTriggerButtonPressed() {
+            return shooterJoystick.getRawButton(1);
+        }
 
-    public boolean getShooterTrigger() {
-        return shooter.getRawButton(1);
-    }
+        public boolean isPivotManualOverrideButtonPressed() {
+            return shooterJoystick.getRawButton(2);
+        }
 
-    public boolean isCatchClawPositionButtonPressed() {
-        return shooter.getRawButton(11);
-    }
+        public boolean isWinchSafetyButtonPressed() {
+            return shooterJoystick.getRawButton(3);
+        }
 
-    public boolean isShootClawPositionButtonPressed() {
-        return shooter.getRawButton(12);
-    }
+        public boolean isPickupButtonPressed() {
+            return shooterJoystick.getRawButton(4);
+        }
 
-    public boolean isPickupClawPositionButtonPressed() {
-        return shooter.getRawButton(9);
-    }
+        public boolean isWinchCancelButtonPressed() {
+            return shooterJoystick.getRawButton(5);
+        }
 
-    public boolean isStoreClawPositionButtonPressed() {
-        return shooter.getRawButton(10);
-    }
+        public boolean isPurgeButtonPressed() {
+            return shooterJoystick.getRawButton(6);
+        }
 
-    public boolean getCoilButton() {
-         return shooter.getRawButton(5);
-    }
-    
-    public double getShooterJoystick() {
-        return shooter.getY();
-    }
+        public boolean isPickupClawPositionButtonPressed() {
+            return shooterJoystick.getRawButton(9);
+        }
 
-    public boolean getPivotOverrideButton() {
-        return shooter.getRawButton(2);
-    }
+        public boolean isStoreClawPositionButtonPressed() {
+            return shooterJoystick.getRawButton(10);
+        }
 
-    public boolean getWinchOverrideButton() {
-      return shooter.getRawButton(3);
-    }
-    
-    public boolean isPickupButtonPressed() {
-        return shooter.getRawButton(4);
-    }
-    
-    public boolean isPurgeButtonPressed() {
-        return shooter.getRawButton(6);
+        public boolean isCatchClawPositionButtonPressed() {
+            return shooterJoystick.getRawButton(11);
+        }
+
+        public boolean isShootClawPositionButtonPressed() {
+            return shooterJoystick.getRawButton(12);
+        }
+
+        public double getShooterJoystickY() {
+            return -shooterJoystick.getY();
+        }
     }
 }
