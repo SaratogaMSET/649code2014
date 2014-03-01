@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.team649.frc2014.commands.fingers;
 
 import com.team649.frc2014.commands.CommandBase;
@@ -13,21 +12,23 @@ import com.team649.frc2014.subsystems.ClawFingerSubsystem;
  *
  * @author Kabi
  */
-public class SetFingerPosition extends CommandBase{
+public class SetFingerPosition extends CommandBase {
+
     private int fingerState;
-    
+
     public SetFingerPosition(int state) {
         fingerState = state;
         requires(clawFingerSubsystem);
     }
 
-     protected void initialize() {
+    protected void initialize() {
         clawFingerSubsystem.setFingerPosition(fingerState);
     }
-     
-     protected void execute() {
+
+    protected void execute() {
     }
 // Make this return true when this Command no longer needs to run execute()
+
     protected boolean isFinished() {
         return true;
     }
