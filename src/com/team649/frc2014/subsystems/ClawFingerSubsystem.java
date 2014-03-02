@@ -24,8 +24,7 @@ public class ClawFingerSubsystem extends Subsystem {
 
     public ClawFingerSubsystem() {
         super("ClawFingerSubsystem");
-        clawSolenoid = new DoubleSolenoid(RobotMap.CLAW_FINGER.FORWARD_SOLENOID_CHANNEL, RobotMap.DRIVE_TRAIN.REVERSE_SOLENOID_CHANNEL);
-
+        clawSolenoid = new DoubleSolenoid(RobotMap.CLAW_FINGER.FORWARD_SOLENOID_CHANNEL, RobotMap.CLAW_FINGER.REVERSE_SOLENOID_CHANNEL);
     }
 
     protected void initDefaultCommand() {
