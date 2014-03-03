@@ -53,7 +53,15 @@ public class ClawPivotSubsystem extends Subsystem {
     }
 
     public void setPower(double power) {
-        motor.set(power);
+            if (power < -.1) 
+                motor.set(power - .2);
+            
+            else if (power > .1) 
+                motor.set(power + .2);
+                      
+             else 
+                motor.set(0);
+            
     }
 
     public void setState(int state) {

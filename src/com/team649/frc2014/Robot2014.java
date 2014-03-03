@@ -117,7 +117,7 @@ public class Robot2014 extends IterativeRobot {
         } else {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
-
+        
         if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
                 setClawPosition.cancel();
@@ -127,7 +127,7 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.setFingerPosition(ClawFingerSubsystem.UP).start();
         }
 
-        if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
+        else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.STORE) {
                 setClawPosition.cancel();
             }
@@ -136,7 +136,7 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         }
 
-        if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
+       else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
                 setClawPosition.cancel();
             }
@@ -146,7 +146,7 @@ public class Robot2014 extends IterativeRobot {
         }
         // If joystick button for pickup state is set then change to pickup state (if appropriate) 
         //also change finger state to appropriate level
-        if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+        else  if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
@@ -155,14 +155,7 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         }
 
-        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()
-                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
-            if (shootCommand == null || !shootCommand.isRunning()) {
-                shootCommand = CommandBase.shootBall();
-                shootCommand.start();
-            }
-        }
-
+        else
         if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
             if (setClawPosition != null) {
                 setClawPosition.cancel();
@@ -178,6 +171,15 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.runRollers(ClawRollerSubsystem.REVERSE).start();
         } else {
             CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
+        }
+        
+        
+        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()
+                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
+            if (shootCommand == null || !shootCommand.isRunning()) {
+                shootCommand = CommandBase.shootBall();
+                shootCommand.start();
+            }
         }
 
         CommandBase.driveTrainSubsystem.printEncoders();
