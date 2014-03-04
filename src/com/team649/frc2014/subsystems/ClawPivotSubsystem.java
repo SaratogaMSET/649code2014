@@ -42,6 +42,7 @@ public class ClawPivotSubsystem extends Subsystem {
         motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
+        clawPID.setAbsoluteTolerance(10);
         state = NO_STATE;
     }
 
