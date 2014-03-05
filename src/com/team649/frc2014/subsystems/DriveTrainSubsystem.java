@@ -185,9 +185,9 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         int i = 1;
         int numEncoders = encoders.length;
         for (int x = 0; x < numEncoders; x++) {
-            Display.println(i++, "pos: " + encoders[x].get());
-            Display.println(i++, "dis: " + encoders[x].getDistance());
-            Display.println(i++, "spd: " + encoders[x].getRate());
+            Display.queue("pos: " + encoders[x].get());
+            Display.queue("dis: " + encoders[x].getDistance());
+            Display.queue("spd: " + encoders[x].getRate());
         }
     }
 }

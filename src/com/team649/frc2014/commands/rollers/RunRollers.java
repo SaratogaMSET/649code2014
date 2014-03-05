@@ -15,7 +15,6 @@ public class RunRollers extends CommandBase {
     private final int state;
 
     public RunRollers(int direction) {
-        requires(clawRollerSubsystem);
         state = direction;
     }
 

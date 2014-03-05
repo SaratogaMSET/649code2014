@@ -10,8 +10,11 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
+import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.rollers.RunRollers;
+import com.team649.frc2014.commands.winch.CoilClawWinch;
+import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.ClawRollerSubsystem;
@@ -34,6 +37,7 @@ public class Robot2014 extends IterativeRobot {
     private SetClawPosition setClawPosition;
     private Command shootCommand;
     private Command autonomousCommand;
+    private Command coilClawWinch;
 
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
@@ -79,8 +83,14 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
         System.out.println(autonomousModeChooser.getSelected());
-        autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
+        System.out.println("auto init");
+//        autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        autonomousCommand = new DriveSetDistanceCommand(SmartDashboard.getNumber("speed"), SmartDashboard.getNumber("distance"));
         autonomousCommand.start();
+
     }
 
     /*
@@ -88,6 +98,7 @@ public class Robot2014 extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Display.clear();
+        CommandBase.driveTrainSubsystem.printEncoders();
         Scheduler.getInstance().run();
         Display.update();
     }
@@ -100,7 +111,8 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
         Display.marquee(1, "2014 ENABLED", 5, 5, true);
-        CommandBase.coilShooter().start();
+        CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
+        new SetClawWinchSolenoid(true).start();
     }
 
     /**
@@ -117,46 +129,34 @@ public class Robot2014 extends IterativeRobot {
         } else {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
-        
+
         if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
             setClawPosition.start();
-            CommandBase.setFingerPosition(ClawFingerSubsystem.UP).start();
-        }
-
-        else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
+        } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.STORE) {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
             setClawPosition.start();
-            CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
-        }
-
-       else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
+        } else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
             setClawPosition.start();
-            CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
-        }
-        // If joystick button for pickup state is set then change to pickup state (if appropriate) 
+        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
         //also change finger state to appropriate level
-        else  if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
             if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
                 setClawPosition.cancel();
             }
             setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
             setClawPosition.start();
-            CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
-        }
-
-        else
-        if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
+        } else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
             if (setClawPosition != null) {
                 setClawPosition.cancel();
             }
@@ -172,18 +172,20 @@ public class Robot2014 extends IterativeRobot {
         } else {
             CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
         }
-        
-        
-        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()
-                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
+        if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinch == null || !coilClawWinch.isRunning())) {
+            coilClawWinch = CommandBase.coilClawWinch();
+            coilClawWinch.start();
+        }
+
+
+        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
+//                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
             if (shootCommand == null || !shootCommand.isRunning()) {
                 shootCommand = CommandBase.shootBall();
                 shootCommand.start();
             }
         }
-
         CommandBase.driveTrainSubsystem.printEncoders();
-
         Display.update();
 
         sleep();

@@ -15,7 +15,6 @@ public class ManualDriveClawPivot extends CommandBase {
     private final double power;
 
     public ManualDriveClawPivot(double power) {
-        requires(clawPivotSubsystem);
         this.power = power;
     }
 

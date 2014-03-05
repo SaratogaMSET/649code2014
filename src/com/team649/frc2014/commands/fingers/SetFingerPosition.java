@@ -18,7 +18,6 @@ public class SetFingerPosition extends CommandBase {
 
     public SetFingerPosition(int state) {
         fingerState = state;
-        requires(clawFingerSubsystem);
     }
 
     protected void initialize() {

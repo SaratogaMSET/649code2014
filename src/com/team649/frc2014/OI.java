@@ -59,7 +59,7 @@ public class OI {
             return shooterJoystick.getRawButton(4);
         }
 
-        public boolean isWinchCancelButtonPressed() {
+        public boolean isWinchWindButtonPressed() {
             return shooterJoystick.getRawButton(5);
         }
 
@@ -84,7 +84,7 @@ public class OI {
         }
 
         public double getShooterJoystickY() {
-            return -shooterJoystick.getY();
+            return shooterJoystick.getY();
         }
     }
 }

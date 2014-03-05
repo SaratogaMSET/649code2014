@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 
 public class Display {
 
-    private static final String PADDING = "                ";
+    private static final String PADDING = "                     ";
     private static final boolean[] printed = new boolean[]{false, false, false, false, false, false};
     private static final String[] queuedLines = new String[6];
     private static final Marquee[] marqueedLines = new Marquee[6];
     private static int queueCount = 0;
-    public static final short MAX_LINE_LENGTH = 16;
+    public static final short MAX_LINE_LENGTH = 21;
     public static final String TRUNCATE_MARKER = ">";
     private static DriverStationLCD display = DriverStationLCD.getInstance();
 
@@ -37,12 +37,13 @@ public class Display {
             if (marqueedLines[i] != null) {
                 marqueedLines[i].doIncrement();
                 println(i + 1, marqueedLines[i].getPrintableString());
+                printed[i] = true;
             }
         }
         int queuedLineIndex = 0;
         for (int i = 0; i < 6 && queuedLineIndex < queueCount; i++) {
             if (!printed[i]) {
-                println(i, queuedLines[queuedLineIndex++]);
+                println(i+1, queuedLines[queuedLineIndex++]);
             }
         }
         display.updateLCD();

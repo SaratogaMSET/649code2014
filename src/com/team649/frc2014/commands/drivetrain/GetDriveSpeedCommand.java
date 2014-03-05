@@ -20,7 +20,6 @@ public class GetDriveSpeedCommand extends CommandBase {
     public GetDriveSpeedCommand(double speed) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-        requires(driveTrainSubsystem);
         speedsVector = new Vector();
         this.speed = speed;
     }

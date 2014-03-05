@@ -52,6 +52,10 @@ public abstract class CommandBase extends Command {
         return new DriveForwardRotate(driveForward, driveRotation);
     }
 
+    public static Command coilClawWinch() {
+        return new CoilClawWinch();
+    }
+
     public CommandBase(String name) {
         super(name);
     }
@@ -67,16 +71,16 @@ public abstract class CommandBase extends Command {
         //if goal is hot, shoot
         //if goal is not hot, wait then shoot
 
-        CommandGroup driveAndCheckGoal = new CommandGroup();
+        CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
         driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 300));
         //check the hot goal after .5 seconds
-        CommandGroup checkHotGoal = new CommandGroup();
+        CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
         checkHotGoal.addSequential(new WaitCommand(500));
         checkHotGoal.addSequential(new HotVisionWaitCommand());
         driveAndCheckGoal.addSequential(checkHotGoal);
 
-        CommandGroup mainAutonomousSequence = new CommandGroup();
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         //drive and check goal. When both are done (checking goal and driving), shoot
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
         mainAutonomousSequence.addSequential(shootBall());
@@ -92,19 +96,8 @@ public abstract class CommandBase extends Command {
         fireSequence.addSequential(new SetClawWinchSolenoid(false));
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
-        fireSequence.addSequential(coilShooter());
+        fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         return fireSequence;
-    }
-
-    public static Command coilShooter() {
-        CommandGroup coilSequence = new CommandGroup();
-        coilSequence.addParallel(new CoilClawWinch());
-
-        CommandGroup engageSequence = new CommandGroup();
-        engageSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID));
-        engageSequence.addSequential(new SetClawWinchSolenoid(true));
-        coilSequence.addSequential(engageSequence);
-        return coilSequence;
     }
 
     public static Command setFingerPosition(int state) {

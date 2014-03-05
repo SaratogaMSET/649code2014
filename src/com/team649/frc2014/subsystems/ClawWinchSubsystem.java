@@ -20,7 +20,7 @@ public class ClawWinchSubsystem extends Subsystem {
 
     private static final double MOTOR_SPEED = 1;
     public static final int TIME_TO_FIRE = 500;
-    public static final int TIME_TO_ENGAGE_SOLENOID = 300;
+    public static final int TIME_TO_ENGAGE_SOLENOID = 250;
     private final SpeedController motor;
     private final DigitalInput limit;
     private DoubleSolenoid engageClaw;
@@ -41,7 +41,7 @@ public class ClawWinchSubsystem extends Subsystem {
     }
 
     public boolean isSwitchPressed() {
-        return limit.get() || CommandBase.oi.shooter.isWinchCancelButtonPressed();
+        return limit.get();
     }
 
     public void setSolenoid(boolean state) {

@@ -46,8 +46,6 @@ public class DriveSetDistanceCommand extends CommandBase {
      * backwards.
      */
     public DriveSetDistanceCommand(double speed, double distance) {
-        requires(driveTrainSubsystem);
-
         this.driveSpeed = distance > 0 ? speed : -speed;
         this.distance = Math.abs(distance);
     }
@@ -76,10 +74,13 @@ public class DriveSetDistanceCommand extends CommandBase {
         holdTime *= 1000;
         startTime = System.currentTimeMillis();
         stage = 0;
+        System.out.println("aT: " + accelTime + ", hT: " + holdTime + ", dist: " +distance + ", dS: " + driveSpeed );
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        Display.queue(distance +"");
+        
         //this method is state-based to be as efficient as possible. By usomg the stage int, 
         driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         try {
@@ -137,6 +138,7 @@ public class DriveSetDistanceCommand extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
+        System.out.println("ending");
         driveTrainSubsystem.disablePid();
         driveTrainSubsystem.driveFwdRot(0, 0);
     }

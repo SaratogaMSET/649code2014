@@ -29,8 +29,6 @@ public class RobotMap {
     }
 
     public static class CLAW_WINCH {
-        //all need to be changed
-
         public static final int MOTOR = 5;
         public static final int LIMIT_SWITCH_INPUT = 9;
         public static final int ENGAGED_SOLENOID_CHANNEL = 3;

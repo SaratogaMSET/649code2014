@@ -30,7 +30,14 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final int PICKUP = 1;
     public static final int CATCH = 3;
     public static final int NO_STATE = 5;
-    public static final int[] CLAW_POT_STATES = new int[]{0, 0, 0, 0};
+    public static final double[] CLAW_POT_STATES = new double[4];
+
+    static {
+        CLAW_POT_STATES[STORE] = 1.4;
+        CLAW_POT_STATES[PICKUP] = 1.4;
+        CLAW_POT_STATES[SHOOT] = 1.07;
+        CLAW_POT_STATES[CATCH] = 1.4;
+    }
     private PIDController649 clawPID;
     private final SpeedController motor;
     private final Potentiometer potentiometer;
@@ -42,7 +49,7 @@ public class ClawPivotSubsystem extends Subsystem {
         motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
-        clawPID.setAbsoluteTolerance(10);
+        clawPID.setAbsoluteTolerance(.05);
         state = NO_STATE;
     }
 
@@ -54,15 +61,12 @@ public class ClawPivotSubsystem extends Subsystem {
     }
 
     public void setPower(double power) {
-            if (power < -.1) 
-                motor.set(power - .2);
-            
-            else if (power > .1) 
-                motor.set(power + .2);
-                      
-             else 
-                motor.set(0);
-            
+        if (Math.abs(power) > .1) {
+            motor.set(power);
+        } else {
+            motor.set(0);
+        }
+
     }
 
     public void setState(int state) {
@@ -71,5 +75,9 @@ public class ClawPivotSubsystem extends Subsystem {
 
     public int getState() {
         return state;
+    }
+
+    public double getPotValue() {
+        return potentiometer.pidGet();
     }
 }
