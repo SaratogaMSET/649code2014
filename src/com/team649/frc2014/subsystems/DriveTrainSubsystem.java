@@ -31,10 +31,10 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     public static final boolean HIGH_SPEED = false;
     public static final boolean LOW_SPEED = true;
     private static final double ENCODER_DISTANCE_PER_PULSE = 4 * Math.PI / 128;
-    public static int PERIOD = 100;
+    private static final int UPDATE_PERIOD = 100;
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
-    public static int ACCELERATION = 275;
-    public static int DRIVE_SPEED = 80;
+    public static final int ACCELERATION = 275;
+    public static final int DRIVE_SPEED = 80;
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;
@@ -140,7 +140,6 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public int updateAccel() {
-        PERIOD = (int) SmartDashboard.getNumber("period");
         double rate = getVelocity();
 
         while (lastRates.size() >= SmartDashboard.getNumber("numPoints")) {
@@ -168,7 +167,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         SmartDashboard.putNumber("veloc", rate);
         this.accel = 1000 * sumTop / sumBot;
         SmartDashboard.putNumber("accel", this.accel);
-        return PERIOD;
+        return UPDATE_PERIOD;
     }
 
     private double getVelocity() {

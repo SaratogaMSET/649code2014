@@ -22,25 +22,23 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  */
 public class ClawPivotSubsystem extends Subsystem {
 
-    public static double kP = 0.01;
-    public static double kI = 0.0;
-    public static double kD = 0.0;
+    private static final double kP = 0.01;
+    private static final double kI = 0.0;
+    private static final double kD = 0.0;
     public static final int SHOOT = 2;
-    public static final int STORE = 0;
     public static final int PICKUP = 1;
-    public static final int CATCH = 3;
+    public static final int CATCH = 0;
     public static final int NO_STATE = 5;
-    public static final double[] CLAW_POT_STATES = new double[4];
+    public static final double[] CLAW_POT_STATES = new double[3];
 
     static {
-        CLAW_POT_STATES[STORE] = 1.4;
-        CLAW_POT_STATES[PICKUP] = 1.4;
-        CLAW_POT_STATES[SHOOT] = 1.07;
-        CLAW_POT_STATES[CATCH] = 1.4;
+        CLAW_POT_STATES[PICKUP] = 0.8;
+        CLAW_POT_STATES[SHOOT] = 2.35;
+        CLAW_POT_STATES[CATCH] = 3;
     }
     private PIDController649 clawPID;
     private final SpeedController motor;
-    private final Potentiometer potentiometer;
+    private final AnalogPotentiometer potentiometer;
     private int state;
 
     // Initialize your subsystem here
@@ -49,7 +47,8 @@ public class ClawPivotSubsystem extends Subsystem {
         motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
-        clawPID.setAbsoluteTolerance(.05);
+        clawPID.setAbsoluteTolerance(0.02);
+        clawPID.setOutputRange(-.5, .5);
         state = NO_STATE;
     }
 

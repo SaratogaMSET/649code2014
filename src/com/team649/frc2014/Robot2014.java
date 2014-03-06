@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
+import com.team649.frc2014.commands.drivetrain.GetAllDriveSpeedCommands;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.rollers.RunRollers;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
@@ -51,21 +52,9 @@ public class Robot2014 extends IterativeRobot {
 
         // Initialize all subsystems
         CommandBase.init();
-        SmartDashboard.putNumber("accelconst", DriveTrainSubsystem.ACCELERATION);
-        SmartDashboard.putNumber("period", 100);
-        SmartDashboard.putNumber("numPoints", 10);
-        SmartDashboard.putNumber("linrega", 130);
-        SmartDashboard.putNumber("linregb", 62);
-        SmartDashboard.putNumber("minoutput", .15);
-        SmartDashboard.putNumber("speed", DriveTrainSubsystem.DRIVE_SPEED);
-        SmartDashboard.putNumber("distance", 300);
-        SmartDashboard.putNumber("pickup", 1);
-        SmartDashboard.putNumber("shoot", 1);
-        SmartDashboard.putNumber("catch", 1);
-        SmartDashboard.putNumber("store", 1);
-        SmartDashboard.putNumber("kP", 0);
-        SmartDashboard.putNumber("kI", 0);
-        SmartDashboard.putNumber("kD", 0);
+        SmartDashboard.putNumber("pickup", .8);
+        SmartDashboard.putNumber("shoot", 2.35);
+        SmartDashboard.putNumber("catch", 3);
         autonomousModeChooser = new SendableChooser();
         autonomousModeChooser.addObject("a", "aob");
         autonomousModeChooser.addObject("b", "bob");
@@ -73,6 +62,10 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("d", "dob");
         autonomousModeChooser.addObject("e", "eob");
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
+        SmartDashboard.putNumber("p", .3);
+        SmartDashboard.putNumber("i", .03);
+        SmartDashboard.putNumber("d", .00);
+        SmartDashboard.putBoolean("skipHot", false);
     }
 
     public void disabledInit() {
@@ -94,9 +87,7 @@ public class Robot2014 extends IterativeRobot {
             autonomousCommand.cancel();
         }
         System.out.println("auto init");
-//        autonomousCommand = CommandBase.shootHotGoalAutonomous();
-
-        autonomousCommand = new DriveSetDistanceCommand(SmartDashboard.getNumber("speed"), SmartDashboard.getNumber("distance"));
+        autonomousCommand = CommandBase.shootHotGoalAutonomous();
         autonomousCommand.start();
 
     }
@@ -106,8 +97,9 @@ public class Robot2014 extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Display.clear();
-        CommandBase.driveTrainSubsystem.printEncoders();
         Scheduler.getInstance().run();
+        Display.queue(CommandBase.clawPivotSubsystem.getPotValue()+"");
+        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 
@@ -121,6 +113,9 @@ public class Robot2014 extends IterativeRobot {
         Display.marquee(1, "2014 ENABLED", 5, 5, true);
         CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         new SetClawWinchSolenoid(true).start();
+        if (setClawPosition != null) {
+            setClawPosition.cancel();
+        }
     }
 
     /**
@@ -131,14 +126,6 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
 
-        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.CATCH] = SmartDashboard.getNumber("catch");
-        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.PICKUP] = SmartDashboard.getNumber("pickup");
-        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.SHOOT] = SmartDashboard.getNumber("shoot");
-        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.STORE] = SmartDashboard.getNumber("store");
-        ClawPivotSubsystem.kP = SmartDashboard.getNumber("kP");
-        ClawPivotSubsystem.kI = SmartDashboard.getNumber("kI");
-        ClawPivotSubsystem.kD = SmartDashboard.getNumber("kD");
-        
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
@@ -146,33 +133,30 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
 
-        if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
-                setClawPosition.cancel();
-            }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
-            setClawPosition.start();
-        } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.STORE) {
-                setClawPosition.cancel();
-            }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.STORE);
-            setClawPosition.start();
-        } else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
-                setClawPosition.cancel();
-            }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
-            setClawPosition.start();
-        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
-        //also change finger state to appropriate level
-        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
-                setClawPosition.cancel();
-            }
-            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-            setClawPosition.start();
-        } else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
+//        if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
+//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
+//                setClawPosition.cancel();
+//            }
+//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
+//            setClawPosition.start();
+//
+//        } else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
+//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
+//                setClawPosition.cancel();
+//            }
+//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
+//            setClawPosition.start();
+//
+//        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
+//        //also change finger state to appropriate level
+//        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
+//                setClawPosition.cancel();
+//            }
+//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+//            setClawPosition.start();
+//        } else 
+        if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
             if (setClawPosition != null) {
                 setClawPosition.cancel();
             }
@@ -192,7 +176,6 @@ public class Robot2014 extends IterativeRobot {
             coilClawWinch = CommandBase.coilClawWinch();
             coilClawWinch.start();
         }
-
 
         if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
 //                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {

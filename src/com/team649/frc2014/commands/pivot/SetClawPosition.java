@@ -8,7 +8,8 @@ package com.team649.frc2014.commands.pivot;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
-import com.team649.frc2014.subsystems.ClawWinchSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -18,6 +19,7 @@ public class SetClawPosition extends CommandBase {
 
     private final PIDController649 clawPID;
     private final int state;
+    private long startTime;
 
     public SetClawPosition(int state) {
         clawPID = clawPivotSubsystem.getClawPID();
@@ -26,16 +28,20 @@ public class SetClawPosition extends CommandBase {
 
     protected void initialize() {
         clawPID.enable();
-        clawPID.setSetpoint(ClawPivotSubsystem.CLAW_POT_STATES[state]);
-
+        final double setpoint = ClawPivotSubsystem.CLAW_POT_STATES[state];
+        clawPID.setSetpoint(setpoint);
+        clawPID.setPID(SmartDashboard.getNumber("p"), SmartDashboard.getNumber("i"), SmartDashboard.getNumber("d"));
+        startTime = System.currentTimeMillis();
+        System.out.println("s: " + setpoint + ", p: " + clawPID.getP() + ", i: " + clawPID.getI() + ", d: " + clawPID.getD());
     }
 
     protected void execute() {
     }
 
     protected boolean isFinished() {
+        final long timeDiff = System.currentTimeMillis() - startTime;
         //TODO make sure things get finished (time to be on target)
-        return clawPID.onTarget();
+        return clawPID.onTarget()&&timeDiff > 2000||timeDiff>5000;
     }
 
     protected void end() {
@@ -50,6 +56,7 @@ public class SetClawPosition extends CommandBase {
 
     private void killCommand() {
         try {
+            System.out.println("end pivot: " + DriverStation.getInstance().getMatchTime());
             clawPID.disable();
         } catch (NullPointerException e) {
         }

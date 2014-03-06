@@ -19,6 +19,7 @@ import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -74,7 +75,7 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
-        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 300));
+        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 8*12));
         driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
         //check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
@@ -94,7 +95,6 @@ public abstract class CommandBase extends Command {
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
-        //fireSequence.addSequential(coilShooter());
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
         fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
         fireSequence.addSequential(new SetClawWinchSolenoid(false));

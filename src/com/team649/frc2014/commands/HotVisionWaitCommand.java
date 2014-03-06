@@ -5,6 +5,7 @@
 package com.team649.frc2014.commands;
 
 import com.team649.frc2014.autonomous.HotTargetVision;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -26,7 +27,9 @@ class HotVisionWaitCommand extends WaitCommand {
     }
 
     protected void initialize() {
-        setWaitTime(HotTargetVision.detectHotGoal() ? HOT_GOAL_WAIT_TIME : COLD_GOAL_WAIT_TIME);
+        final boolean detectHotGoal = HotTargetVision.detectHotGoal()||SmartDashboard.getBoolean("skipHot");
+        System.out.println("hot goal: " + detectHotGoal);
+        setWaitTime(detectHotGoal ? HOT_GOAL_WAIT_TIME : COLD_GOAL_WAIT_TIME);
         super.initialize();
     }
 }

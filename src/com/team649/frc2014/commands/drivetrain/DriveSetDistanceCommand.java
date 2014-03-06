@@ -4,6 +4,7 @@ import com.sun.squawk.util.MathUtils;
 import com.team649.frc2014.Display;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -21,14 +22,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSetDistanceCommand extends CommandBase {
 
     //constants used to determine the shape of the trapezoid. 
-    private static double ACCELERATION = 275;
+    private static final double ACCELERATION = 275;
     //minspeed avoids the motor deadzone, which occurs below roughly 0.2.
-    private static double MINSPEED;
+    private static final double MINSPEED = 0.2;
     //Stats stuff. I profiled the motor power vs drive speed on Tobiko, and noticed that they are related by
     //  ln(motor power) = A + B*(drivespeed). A and B are calculated using linear regression, with an r^2>99%.
     //  These values vary with battery power and robot, so they're not final and probably never should be.
-    public static double linRegA = 131;
-    public static double linRegB = 62;
+    private static final double linRegA = 205;
+    private static final double linRegB = 73;
     private final double driveSpeed;
     private final double distance;
     private double accelTime;
@@ -52,13 +53,6 @@ public class DriveSetDistanceCommand extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        //set constants fromt the smartdashboard. At some point, acceleration and minspeed should be constant, 
-        //  and the linregs should either be constant or set based on battery power
-        ACCELERATION = SmartDashboard.getNumber("accelconst");
-        MINSPEED = SmartDashboard.getNumber("minoutput");
-        linRegA = SmartDashboard.getNumber("linrega");
-        linRegB = SmartDashboard.getNumber("linregb");
-
         //reset encoders. The requires(driveTrainSubsystem) should make this safe, but if there are ever any
         //  issues with encoders being wrong, watch out for this.
         driveTrainSubsystem.resetEncoders();
@@ -74,7 +68,6 @@ public class DriveSetDistanceCommand extends CommandBase {
         holdTime *= 1000;
         startTime = System.currentTimeMillis();
         stage = 0;
-        System.out.println("aT: " + accelTime + ", hT: " + holdTime + ", dist: " +distance + ", dS: " + driveSpeed );
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -138,9 +131,9 @@ public class DriveSetDistanceCommand extends CommandBase {
 
     // Called once after isFinished returns true
     protected void end() {
-        System.out.println("ending");
         driveTrainSubsystem.disablePid();
         driveTrainSubsystem.driveFwdRot(0, 0);
+        System.out.println("finished drive: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
     }
 
     // Called when another command which requires one or more of the same

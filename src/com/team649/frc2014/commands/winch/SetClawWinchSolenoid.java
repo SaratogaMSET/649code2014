@@ -5,6 +5,7 @@
 package com.team649.frc2014.commands.winch;
 
 import com.team649.frc2014.commands.CommandBase;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  *
@@ -22,6 +23,7 @@ public class SetClawWinchSolenoid extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
         winchSubsystem.setSolenoid(state);
+        System.out.println("shot at: " + DriverStation.getInstance().getMatchTime());
     }
 
     // Called repeatedly when this Command is scheduled to run
