@@ -9,6 +9,7 @@ import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.drivetrain.DriveForwardRotate;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.ManualDriveClawPivot;
+import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.rollers.RunRollers;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
@@ -74,6 +75,7 @@ public abstract class CommandBase extends Command {
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
         driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 300));
+        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
         //check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
         checkHotGoal.addSequential(new WaitCommand(500));
@@ -82,6 +84,8 @@ public abstract class CommandBase extends Command {
 
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         //drive and check goal. When both are done (checking goal and driving), shoot
+        mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;

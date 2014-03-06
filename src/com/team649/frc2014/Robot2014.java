@@ -59,6 +59,13 @@ public class Robot2014 extends IterativeRobot {
         SmartDashboard.putNumber("minoutput", .15);
         SmartDashboard.putNumber("speed", DriveTrainSubsystem.DRIVE_SPEED);
         SmartDashboard.putNumber("distance", 300);
+        SmartDashboard.putNumber("pickup", 1);
+        SmartDashboard.putNumber("shoot", 1);
+        SmartDashboard.putNumber("catch", 1);
+        SmartDashboard.putNumber("store", 1);
+        SmartDashboard.putNumber("kP", 0);
+        SmartDashboard.putNumber("kI", 0);
+        SmartDashboard.putNumber("kD", 0);
         autonomousModeChooser = new SendableChooser();
         autonomousModeChooser.addObject("a", "aob");
         autonomousModeChooser.addObject("b", "bob");
@@ -88,6 +95,7 @@ public class Robot2014 extends IterativeRobot {
         }
         System.out.println("auto init");
 //        autonomousCommand = CommandBase.shootHotGoalAutonomous();
+
         autonomousCommand = new DriveSetDistanceCommand(SmartDashboard.getNumber("speed"), SmartDashboard.getNumber("distance"));
         autonomousCommand.start();
 
@@ -123,6 +131,14 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
 
+        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.CATCH] = SmartDashboard.getNumber("catch");
+        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.PICKUP] = SmartDashboard.getNumber("pickup");
+        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.SHOOT] = SmartDashboard.getNumber("shoot");
+        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.STORE] = SmartDashboard.getNumber("store");
+        ClawPivotSubsystem.kP = SmartDashboard.getNumber("kP");
+        ClawPivotSubsystem.kI = SmartDashboard.getNumber("kI");
+        ClawPivotSubsystem.kD = SmartDashboard.getNumber("kD");
+        
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
@@ -185,7 +201,9 @@ public class Robot2014 extends IterativeRobot {
                 shootCommand.start();
             }
         }
-        CommandBase.driveTrainSubsystem.printEncoders();
+//        CommandBase.driveTrainSubsystem.printEncoders();
+        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
+        Display.queue(CommandBase.winchSubsystem.isSwitchPressed() + "");
         Display.update();
 
         sleep();

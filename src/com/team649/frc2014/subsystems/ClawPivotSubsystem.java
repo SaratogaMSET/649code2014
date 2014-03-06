@@ -22,9 +22,9 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
  */
 public class ClawPivotSubsystem extends Subsystem {
 
-    private static final double kP = 0.01;
-    private static final double kI = 0.0;
-    private static final double kD = 0.0;
+    public static double kP = 0.01;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
     public static final int SHOOT = 2;
     public static final int STORE = 0;
     public static final int PICKUP = 1;
