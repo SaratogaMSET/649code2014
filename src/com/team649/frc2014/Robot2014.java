@@ -63,7 +63,7 @@ public class Robot2014 extends IterativeRobot {
         SmartDashboard.putNumber("p", .3);
         SmartDashboard.putNumber("i", .03);
         SmartDashboard.putNumber("d", .00);
-        SmartDashboard.putBoolean("skipHot", false);    
+        SmartDashboard.putBoolean("skipHot", false);
     }
 
     public void disabledInit() {
@@ -100,7 +100,7 @@ public class Robot2014 extends IterativeRobot {
             autonomousCommand = CommandBase.shootHotGoalAutonomous();
         }
         autonomousCommand.start();
-
+        setSolenoidsToDefault();
     }
 
     /*
@@ -125,6 +125,10 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
         Display.marquee(1, "2014 ENABLED", 5, 5, true);
+        setSolenoidsToDefault();
+    }
+
+    private void setSolenoidsToDefault() {
         CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         new SetClawWinchSolenoid(true).start();
     }
