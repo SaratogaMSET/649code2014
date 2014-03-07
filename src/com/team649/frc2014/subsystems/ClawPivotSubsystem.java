@@ -30,11 +30,15 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final int CATCH = 0;
     public static final int NO_STATE = 5;
     public static final double[] CLAW_POT_STATES = new double[3];
+    public static final String[] CLAW_POT_NAMES= new String[3];
 
     static {
         CLAW_POT_STATES[PICKUP] = 0.8;
         CLAW_POT_STATES[SHOOT] = 2.35;
         CLAW_POT_STATES[CATCH] = 3;
+        CLAW_POT_NAMES[SHOOT] = "SHOOT";
+        CLAW_POT_NAMES[CATCH] = "CATCH";
+        CLAW_POT_NAMES[PICKUP] = "PICKUP";
     }
     private PIDController649 clawPID;
     private final SpeedController motor;
@@ -78,5 +82,15 @@ public class ClawPivotSubsystem extends Subsystem {
 
     public double getPotValue() {
         return potentiometer.pidGet();
+    }
+    
+    public String getPotStateName() {
+        double val = getPotValue();
+        for (int i = 0; i < CLAW_POT_STATES.length; i++) {
+            double d = CLAW_POT_STATES[i];
+            if (Math.abs(val - d) < 0.075)
+                return CLAW_POT_NAMES[i];
+        }
+        return "NO STATE";
     }
 }

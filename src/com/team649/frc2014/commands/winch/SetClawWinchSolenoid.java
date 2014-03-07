@@ -22,7 +22,7 @@ public class SetClawWinchSolenoid extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        winchSubsystem.setSolenoid(state);
+        clawWinchSubsystem.setSolenoid(state);
         System.out.println("shot at: " + DriverStation.getInstance().getMatchTime());
     }
 

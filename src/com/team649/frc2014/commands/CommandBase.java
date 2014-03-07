@@ -36,17 +36,14 @@ public abstract class CommandBase extends Command {
     public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
     public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     public static ClawPivotSubsystem clawPivotSubsystem = new ClawPivotSubsystem();
-    public static ClawWinchSubsystem winchSubsystem = new ClawWinchSubsystem();
+    public static ClawWinchSubsystem clawWinchSubsystem = new ClawWinchSubsystem();
     public static ClawFingerSubsystem clawFingerSubsystem = new ClawFingerSubsystem();
     public static ClawRollerSubsystem clawRollerSubsystem = new ClawRollerSubsystem();
+    private static Compressor compressor;
 
     public static void init() {
-        new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL).start();
-        // This MUST be here. If the OI creates Commands (which it very likely
-        // will), constructing it during the construction of CommandBase (from
-        // which commands extend), subsystems are not guaranteed to be
-        // yet. Thus, their requires() statements may grab null pointers. Bad
-        // news. Don't move it.
+        compressor = new Compressor(RobotMap.PRESSURE_SWITCH_CHANNEL, RobotMap.COMPRESSOR_RELAY_CHANNEL);
+        compressor.start();
         oi = new OI();
     }
 
@@ -56,6 +53,10 @@ public abstract class CommandBase extends Command {
 
     public static Command coilClawWinch() {
         return new CoilClawWinch();
+    }
+
+    public static boolean isCompressorRunning() {
+        return !compressor.getPressureSwitchValue();
     }
 
     public CommandBase(String name) {
@@ -90,6 +91,17 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
+    }
+    
+    public static Command waitAndDriveAutonomous() {
+        CommandGroup group = new CommandGroup("waitAndDrive");
+        group.addSequential(new WaitCommand(5000));
+        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 8*12));
+        return group;
+    }
+    
+    public static CommandGroup doNotingAutonomous() {
+        return new CommandGroup();
     }
 
     public static Command shootBall() {

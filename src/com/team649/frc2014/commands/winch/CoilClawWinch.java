@@ -17,11 +17,11 @@ long startTime;
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        if (!winchSubsystem.isSwitchPressed()) {
-            winchSubsystem.runMotor();
+        if (!clawWinchSubsystem.isSwitchPressed()) {
+            clawWinchSubsystem.runMotor();
         }
         else
-            winchSubsystem.stopMotor();
+            clawWinchSubsystem.stopMotor();
         startTime = System.currentTimeMillis();
     }
 
@@ -33,17 +33,17 @@ long startTime;
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !oi.shooter.isWinchWindButtonPressed()||winchSubsystem.isSwitchPressed();
+        return !oi.shooter.isWinchWindButtonPressed()||clawWinchSubsystem.isSwitchPressed();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        winchSubsystem.stopMotor();
+        clawWinchSubsystem.stopMotor();
     }
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
 
     protected void interrupted() {
-        winchSubsystem.stopMotor();
+        clawWinchSubsystem.stopMotor();
     }
 }

@@ -34,11 +34,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot2014 extends IterativeRobot {
 
+    public static final String DO_NOTHING_AUTO_NAME = "doNothingAuto";
+    public static final String WAIT_AND_DRIVE_AUTO_NAME = "waitAndDriveAuto";
+    public static final String DRIVE_AND_SHOOT_AUTO_NAME = "driveAndShootAuto";
     private SendableChooser autonomousModeChooser;
-    private SetClawPosition setClawPosition;
+    private SetClawPosition setClawPositionCommand;
     private Command shootCommand;
     private Command autonomousCommand;
-    private Command coilClawWinch;
+    private Command coilClawWinchCommand;
 
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
@@ -52,20 +55,15 @@ public class Robot2014 extends IterativeRobot {
 
         // Initialize all subsystems
         CommandBase.init();
-        SmartDashboard.putNumber("pickup", .8);
-        SmartDashboard.putNumber("shoot", 2.35);
-        SmartDashboard.putNumber("catch", 3);
         autonomousModeChooser = new SendableChooser();
-        autonomousModeChooser.addObject("a", "aob");
-        autonomousModeChooser.addObject("b", "bob");
-        autonomousModeChooser.addObject("c", "cob");
-        autonomousModeChooser.addObject("d", "dob");
-        autonomousModeChooser.addObject("e", "eob");
+        autonomousModeChooser.addObject("Drive, Check Hot Goal, and Shoot Autonomous", DRIVE_AND_SHOOT_AUTO_NAME);
+        autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
         SmartDashboard.putNumber("p", .3);
         SmartDashboard.putNumber("i", .03);
         SmartDashboard.putNumber("d", .00);
-        SmartDashboard.putBoolean("skipHot", false);
+        SmartDashboard.putBoolean("skipHot", false);    
     }
 
     public void disabledInit() {
@@ -82,12 +80,25 @@ public class Robot2014 extends IterativeRobot {
     public void autonomousInit() {
         Display.clearMarquees();
         Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-        System.out.println(autonomousModeChooser.getSelected());
+        Display.marquee(2, "WOOOOOO", 0, 10, true);
+        Display.marquee(3, "GO FIISHH", 0, 2, true);
+        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+        final String selectedAuto = (String) autonomousModeChooser.getSelected();
+        System.out.println("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        System.out.println("auto init");
-        autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        if (selectedAuto.equals(DRIVE_AND_SHOOT_AUTO_NAME)) {
+            autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.waitAndDriveAutonomous();
+        } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
+            autonomousCommand = CommandBase.doNotingAutonomous();
+        } else {
+            autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        }
         autonomousCommand.start();
 
     }
@@ -98,7 +109,7 @@ public class Robot2014 extends IterativeRobot {
     public void autonomousPeriodic() {
         Display.clear();
         Scheduler.getInstance().run();
-        Display.queue(CommandBase.clawPivotSubsystem.getPotValue()+"");
+        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
         CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
@@ -107,15 +118,15 @@ public class Robot2014 extends IterativeRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+        if (setClawPositionCommand != null) {
+            setClawPositionCommand.cancel();
+        }
         Display.clearMarquees();
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
         Display.marquee(1, "2014 ENABLED", 5, 5, true);
         CommandBase.setFingerPosition(ClawFingerSubsystem.DOWN).start();
         new SetClawWinchSolenoid(true).start();
-        if (setClawPosition != null) {
-            setClawPosition.cancel();
-        }
     }
 
     /**
@@ -157,11 +168,11 @@ public class Robot2014 extends IterativeRobot {
 //            setClawPosition.start();
 //        } else 
         if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
-            if (setClawPosition != null) {
-                setClawPosition.cancel();
+            if (setClawPositionCommand != null) {
+                setClawPositionCommand.cancel();
             }
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
-        } else if (setClawPosition == null || !setClawPosition.isRunning()) {
+        } else if (setClawPositionCommand == null || !setClawPositionCommand.isRunning()) {
             CommandBase.manualDriveClaw(0).start();
         }
 
@@ -172,9 +183,9 @@ public class Robot2014 extends IterativeRobot {
         } else {
             CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
         }
-        if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinch == null || !coilClawWinch.isRunning())) {
-            coilClawWinch = CommandBase.coilClawWinch();
-            coilClawWinch.start();
+        if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
+            coilClawWinchCommand = CommandBase.coilClawWinch();
+            coilClawWinchCommand.start();
         }
 
         if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
@@ -185,8 +196,12 @@ public class Robot2014 extends IterativeRobot {
             }
         }
 //        CommandBase.driveTrainSubsystem.printEncoders();
-        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-        Display.queue(CommandBase.winchSubsystem.isSwitchPressed() + "");
+        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
+        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
+        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
+        if (CommandBase.isCompressorRunning()) {
+            Display.queue("COMPRESSOR RUNNING");
+        }
         Display.update();
 
         sleep();
