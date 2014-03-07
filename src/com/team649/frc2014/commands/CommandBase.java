@@ -100,7 +100,7 @@ public abstract class CommandBase extends Command {
         return group;
     }
     
-    public static CommandGroup doNotingAutonomous() {
+    public static CommandGroup doNothingAutonomous() {
         return new CommandGroup();
     }
 

@@ -56,7 +56,7 @@ public class Robot2014 extends IterativeRobot {
         // Initialize all subsystems
         CommandBase.init();
         autonomousModeChooser = new SendableChooser();
-        autonomousModeChooser.addObject("Drive, Check Hot Goal, and Shoot Autonomous", DRIVE_AND_SHOOT_AUTO_NAME);
+        autonomousModeChooser.addDefault("Drive, Check Hot Goal, and Shoot Autonomous", DRIVE_AND_SHOOT_AUTO_NAME);
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
@@ -95,7 +95,7 @@ public class Robot2014 extends IterativeRobot {
         } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.waitAndDriveAutonomous();
         } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
-            autonomousCommand = CommandBase.doNotingAutonomous();
+            autonomousCommand = CommandBase.doNothingAutonomous();
         } else {
             autonomousCommand = CommandBase.shootHotGoalAutonomous();
         }
