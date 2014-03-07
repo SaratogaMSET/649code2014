@@ -80,7 +80,7 @@ public abstract class CommandBase extends Command {
         driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
         //check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
-        checkHotGoal.addSequential(new WaitCommand(500));
+        checkHotGoal.addSequential(new WaitCommand(100));
         checkHotGoal.addSequential(new HotVisionWaitCommand());
         driveAndCheckGoal.addSequential(checkHotGoal);
 
