@@ -60,10 +60,8 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("p", 1);
-        SmartDashboard.putNumber("i", .1);
-        SmartDashboard.putNumber("d", .00);
-        SmartDashboard.putNumber("point", 3.1);
+        SmartDashboard.putNumber("autoSpeed", 0.15);
+        SmartDashboard.putBoolean("autoNeg", false);
         SmartDashboard.putBoolean("skipHot", false);
     }
 
@@ -111,7 +109,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
         Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-        CommandBase.driveTrainSubsystem.printEncoders();
+//        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 
@@ -125,7 +123,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
-        Display.marquee(1, "2014 ENABLED", 5, 5, true);
+//        Display.marquee(1, "2014 ENABLED", 5, 5, true);
         setSolenoidsToDefault();
     }
 
@@ -145,10 +143,11 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
+//            CommandBase.driveTrainSubsystem.resetEncoders();
         } else {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
-
+//        CommandBase.driveTrainSubsystem.printEncoders();
 //        if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
 //            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
 //                setClawPosition.cancel();

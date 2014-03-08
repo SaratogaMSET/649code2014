@@ -33,9 +33,9 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final String[] CLAW_POT_NAMES= new String[3];
 
     static {
-        CLAW_POT_STATES[PICKUP] = 0.8;
-        CLAW_POT_STATES[SHOOT] = 2.35;
-        CLAW_POT_STATES[CATCH] = 3;
+        CLAW_POT_STATES[PICKUP] = 4;
+        CLAW_POT_STATES[SHOOT] = 3.2;
+        CLAW_POT_STATES[CATCH] = 2.6;
         CLAW_POT_NAMES[SHOOT] = "SHOOT";
         CLAW_POT_NAMES[CATCH] = "CATCH";
         CLAW_POT_NAMES[PICKUP] = "PICKUP";

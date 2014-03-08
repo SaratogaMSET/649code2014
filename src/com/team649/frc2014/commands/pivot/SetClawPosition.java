@@ -28,11 +28,10 @@ public class SetClawPosition extends CommandBase {
 
     protected void initialize() {
         clawPID.enable();
-        ClawPivotSubsystem.CLAW_POT_STATES[ClawPivotSubsystem.SHOOT] = SmartDashboard.getNumber("point");
         final double setpoint = ClawPivotSubsystem.CLAW_POT_STATES[state];
         clawPID.setSetpoint(setpoint);
         //Set value to the NEGITIVE of what is in the smart dashboard!!!! IMPORTNANT!
-        clawPID.setPID(-SmartDashboard.getNumber("p"), -SmartDashboard.getNumber("i"), -SmartDashboard.getNumber("d"));
+        clawPID.setPID(-1, -0.1, 0);
         startTime = System.currentTimeMillis();
         System.out.println("s: " + setpoint + ", p: " + clawPID.getP() + ", i: " + clawPID.getI() + ", d: " + clawPID.getD());
     }
@@ -58,7 +57,7 @@ public class SetClawPosition extends CommandBase {
 
     private void killCommand() {
         try {
-            System.out.println("end pivot: " + DriverStation.getInstance().getMatchTime());
+            System.out.println("end pivot: " + DriverStation.getInstance().getMatchTime() + ": " + clawPivotSubsystem.getPotValue());
             clawPID.disable();
         } catch (NullPointerException e) {
         }

@@ -76,11 +76,11 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
-        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 12*12));
-        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
-        //check the hot goal after .5 seconds
+        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 14*12));
+//        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
+//        check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
-        checkHotGoal.addSequential(new WaitCommand(100));
+        checkHotGoal.addSequential(new WaitCommand(500));
         checkHotGoal.addSequential(new HotVisionWaitCommand());
         driveAndCheckGoal.addSequential(checkHotGoal);
 
@@ -89,14 +89,14 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
-        mainAutonomousSequence.addSequential(shootBall());
+//        mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
     
     public static Command waitAndDriveAutonomous() {
         CommandGroup group = new CommandGroup("waitAndDrive");
         group.addSequential(new WaitCommand(5000));
-        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 8*12));
+        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 16*12));
         return group;
     }
     

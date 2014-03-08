@@ -77,12 +77,13 @@ public class HotTargetVision {
             //ColorImage image = camera.getImage();     // comment if using stored images
             ColorImage image;                           // next 2 lines read image from flash on cRIO
             image = CommandBase.cameraSubsystem.getImage();		// get the sample image from the cRIO flash
+            image.write("/colorImage.bmp");
 //            image.write("/baseimg.bmp");
 //            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
             BinaryImage thresholdImage = image.thresholdHSV(70, 100, 225, 255, 60, 255);
-//            thresholdImage.write("/threshold.bmp");
+            thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
-//            filteredImage.write("/filteredImage.bmp");
+            filteredImage.write("/filteredImage.bmp");
 
             //iterate through each particle and score to see if it is a target
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
