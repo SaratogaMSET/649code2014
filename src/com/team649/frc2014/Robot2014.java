@@ -60,9 +60,10 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("p", .3);
-        SmartDashboard.putNumber("i", .03);
+        SmartDashboard.putNumber("p", 1);
+        SmartDashboard.putNumber("i", .1);
         SmartDashboard.putNumber("d", .00);
+        SmartDashboard.putNumber("point", 3.1);
         SmartDashboard.putBoolean("skipHot", false);
     }
 
@@ -155,14 +156,15 @@ public class Robot2014 extends IterativeRobot {
 //            setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
 //            setClawPosition.start();
 //
-//        } else if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
-//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.SHOOT) {
-//                setClawPosition.cancel();
-//            }
-//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.SHOOT);
-//            setClawPosition.start();
-//
-//        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
+//        } else 
+        if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
+            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.SHOOT) {
+                setClawPositionCommand.cancel();
+            }
+            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.SHOOT);
+            setClawPositionCommand.start();
+
+        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
 //        //also change finger state to appropriate level
 //        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
 //            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
@@ -171,7 +173,7 @@ public class Robot2014 extends IterativeRobot {
 //            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
 //            setClawPosition.start();
 //        } else 
-        if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
+        else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
             }

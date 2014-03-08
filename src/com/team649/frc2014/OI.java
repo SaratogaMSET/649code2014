@@ -48,7 +48,8 @@ public class OI {
         }
 
         public boolean isPivotManualOverrideButtonPressed() {
-            return shooterJoystick.getRawButton(2);
+            //return shooterJoystick.getRawButton(2);
+            return  true;
         }
 
         public boolean isWinchSafetyButtonPressed() {

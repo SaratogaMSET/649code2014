@@ -85,12 +85,12 @@ public class DriveSetDistanceCommand extends CommandBase {
                     stage = 1;
                     accelDist = Math.abs(driveTrainSubsystem.pidGet());
 
-                    driveTrainSubsystem.driveFwdRot(getDrivePower(driveSpeed), 0);
+                    driveTrainSubsystem.driveFwdRot(0.2 + 0.8*getDrivePower(driveSpeed), 0);
                 } else {
                     //if hasn't accelerated for the whole time, set the output to a fraction of the max, based on time
                     double driveSpeedTarget = driveSpeed * ((double) timeSpent) / accelTime;
                     double output = getDrivePower(driveSpeedTarget);
-                    driveTrainSubsystem.driveFwdRot(output, 0);
+                    driveTrainSubsystem.driveFwdRot(.2 + output*0.8, 0);
                 }
             } else if (stage == 1) {
                 //if stage == 1, the robot is in its max speed mode
@@ -111,7 +111,7 @@ public class DriveSetDistanceCommand extends CommandBase {
                 //set the drive speed to a fraction of the max speed, based on time.
                 final double driveSpeedTarget = driveSpeed * ((double) holdTime + 2 * accelTime - timeSpent) / accelTime;
                 double output = getDrivePower(driveSpeedTarget);
-                driveTrainSubsystem.driveFwdRot(output, 0);
+                driveTrainSubsystem.driveFwdRot(0.2 + 0.8*output, 0);
             }
         } catch (Exception e) {
         }
