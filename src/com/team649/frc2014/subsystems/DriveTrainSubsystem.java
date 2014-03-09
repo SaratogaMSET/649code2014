@@ -35,7 +35,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
     public static final int ACCELERATION = 275;
     public static final int DRIVE_SPEED = 80;
-    public static final int AUTONOMOUS_DRIVE_DISTANCE = 16 * 12;
+    public static int AUTONOMOUS_DRIVE_DISTANCE = 5 * 12;
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;

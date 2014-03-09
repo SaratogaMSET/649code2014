@@ -76,6 +76,7 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
+        DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE = (int) (SmartDashboard.getNumber("autoDist1") * 12);
         driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
 //        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
 //        check the hot goal after .5 seconds

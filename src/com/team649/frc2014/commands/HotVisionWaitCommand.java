@@ -28,7 +28,7 @@ class HotVisionWaitCommand extends WaitCommand {
     }
 
     protected void initialize() {
-        final boolean detectHotGoal = HotTargetVision.detectHotGoal()||SmartDashboard.getBoolean("skipHot");
+        final boolean detectHotGoal = HotTargetVision.detectHotGoal();
         Display.printToOutputStream("hot goal: " + detectHotGoal);
         setWaitTime(detectHotGoal ? HOT_GOAL_WAIT_TIME : COLD_GOAL_WAIT_TIME);
         super.initialize();

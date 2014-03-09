@@ -63,6 +63,7 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
+        SmartDashboard.putNumber("autoDist1", 5);
     }
 
     public void disabledInit() {
@@ -173,7 +174,7 @@ public class Robot2014 extends IterativeRobot {
 //            setClawPosition.start();
 //        } else 
         else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
-            if (setClawPositionCommand != null) {
+            if (setClawPositionCommand != null&&setClawPositionCommand.isRunning()) {
                 setClawPositionCommand.cancel();
             }
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
