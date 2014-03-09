@@ -1,0 +1,69 @@
+package com.team649.frc2014.commands.drivetrain;
+
+import com.sun.squawk.util.MathUtils;
+import com.team649.frc2014.Display;
+import com.team649.frc2014.commands.CommandBase;
+import com.team649.frc2014.pid_control.PIDController649;
+import com.team649.frc2014.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+/**
+ * DriveSetDistanceCommand
+ *
+ * Attempts to drive the robot using a trapezoidal motion profile. This means
+ * that it accelerates at a constant rate, holds that speed for a set time, and
+ * then decelerates at a constant rate. This should ideally provide a much more
+ * consistent drive (in both time and distance) than a motion profile that
+ * accelerates as fast as possible to start, and has trouble finishing (i.e. a
+ * PID loop).
+ *
+ * @author alex@renda.org
+ */
+public class DriveSetDistanceWithPIDCommand extends CommandBase {
+
+    private final double distance;
+    private PIDController649 pid;
+
+    /**
+     * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused
+     * for multiple executions of the same speed/distance.
+     *
+     * @param speed The speed to drive at. Always positive.
+     * @param distance The distance in inches to drive. Negative to drive
+     * backwards.
+     */
+    public DriveSetDistanceWithPIDCommand(double distance) {
+        this.distance = distance;
+    }
+
+    // Called just before this Command runs the first time
+    protected void initialize() {
+        this.pid = driveTrainSubsystem.getPID();
+        pid.setPID(SmartDashboard.getNumber("driveP"), SmartDashboard.getNumber("driveI"), SmartDashboard.getNumber("driveD"));
+        pid.setSetpoint(distance);
+        driveTrainSubsystem.resetEncoders();
+        driveTrainSubsystem.startEncoders();
+    }
+
+    // Called repeatedly when this Command is scheduled to run
+    protected void execute() {
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
+    protected boolean isFinished() {
+        return pid.onTarget();
+    }
+
+    // Called once after isFinished returns true
+    protected void end() {
+        Display.printToOutputStream("finished drive PID: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
+    }
+
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    protected void interrupted() {
+        end();
+    }
+}

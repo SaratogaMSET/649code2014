@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
+import com.team649.frc2014.commands.drivetrain.DriveSetDistanceByTimeCommand;
 import com.team649.frc2014.commands.drivetrain.GetAllDriveSpeedCommands;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.rollers.RunRollers;
@@ -63,7 +63,11 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("autoDist1", 5);
+        SmartDashboard.putNumber("autoDist1", 8);
+        SmartDashboard.putNumber("driveP", 0.03);
+        SmartDashboard.putNumber("driveI", 0);
+        SmartDashboard.putNumber("driveD", 0);
+        SmartDashboard.putBoolean("usePid", true);
     }
 
     public void disabledInit() {
@@ -79,12 +83,13 @@ public class Robot2014 extends IterativeRobot {
 
     public void autonomousInit() {
         Display.clearMarquees();
-        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-        Display.marquee(2, "WOOOOOO", 0, 10, true);
-        Display.marquee(3, "GO FIISHH", 0, 2, true);
-        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
-        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
-        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
+//        Display.marquee(2, "WOOOOOO", 0, 10, true);
+//        Display.marquee(3, "GO FIISHH", 0, 2, true);
+//        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+        DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE = (int) (SmartDashboard.getNumber("autoDist1") * 12);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
         Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
@@ -110,7 +115,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
         Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-//        CommandBase.driveTrainSubsystem.printEncoders();
+        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 
@@ -158,23 +163,25 @@ public class Robot2014 extends IterativeRobot {
 //
 //        } else 
         if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
-            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.SHOOT) {
-                setClawPositionCommand.cancel();
+//            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.SHOOT) {
+//                setClawPositionCommand.cancel();
+//            }
+            if (setClawPositionCommand != null && !setClawPositionCommand.isRunning()) {
+                setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.SHOOT);
+                setClawPositionCommand.start();
             }
-            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.SHOOT);
-            setClawPositionCommand.start();
 
         } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
-//        //also change finger state to appropriate level
-//        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
-//                setClawPosition.cancel();
-//            }
-//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-//            setClawPosition.start();
-//        } else 
+        //        //also change finger state to appropriate level
+        //        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+        //            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
+        //                setClawPosition.cancel();
+        //            }
+        //            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+        //            setClawPosition.start();
+        //        } else 
         else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
-            if (setClawPositionCommand != null&&setClawPositionCommand.isRunning()) {
+            if (setClawPositionCommand != null && setClawPositionCommand.isRunning()) {
                 setClawPositionCommand.cancel();
             }
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();

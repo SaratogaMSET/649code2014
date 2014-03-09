@@ -17,6 +17,7 @@ import com.team649.frc2014.pid_control.PIDVelocitySource;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -133,7 +134,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public void pidWrite(double output) {
-        rawDrive(output, output);
+        rawDrive(output, Math.max(output, 0.1));
     }
 
     public boolean isRegularPidOnTarget() {
@@ -189,5 +190,9 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
             Display.queue("dis: " + encoders[x].getDistance());
             Display.queue("spd: " + encoders[x].getRate());
         }
+    }
+
+    public PIDController649 getPID() {
+        return pid;
     }
 }

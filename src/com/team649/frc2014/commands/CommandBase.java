@@ -2,11 +2,12 @@ package com.team649.frc2014.commands;
 
 import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.commands.winch.CoilClawWinch;
-import com.team649.frc2014.commands.drivetrain.DriveSetDistanceCommand;
+import com.team649.frc2014.commands.drivetrain.DriveSetDistanceByTimeCommand;
 import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.drivetrain.DriveForwardRotate;
+import com.team649.frc2014.commands.drivetrain.DriveSetDistanceWithPIDCommand;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.ManualDriveClawPivot;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
@@ -76,9 +77,12 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
-        DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE = (int) (SmartDashboard.getNumber("autoDist1") * 12);
-        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
-//        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
+        if (SmartDashboard.getBoolean("usePid")) {
+            driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
+        } else {
+            driveAndCheckGoal.addParallel(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
+        }
+        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
 //        check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
         checkHotGoal.addSequential(new WaitCommand(1000));
@@ -90,17 +94,17 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
-//        mainAutonomousSequence.addSequential(shootBall());
+        mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
-    
+
     public static Command waitAndDriveAutonomous() {
         CommandGroup group = new CommandGroup("waitAndDrive");
         group.addSequential(new WaitCommand(5000));
-        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
+        group.addSequential(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
         return group;
     }
-    
+
     public static CommandGroup doNothingAutonomous() {
         return new CommandGroup();
     }

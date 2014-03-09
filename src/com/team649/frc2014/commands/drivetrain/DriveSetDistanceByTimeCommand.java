@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  * @author alex@renda.org
  */
-public class DriveSetDistanceCommand extends CommandBase {
+public class DriveSetDistanceByTimeCommand extends CommandBase {
 
     //constants used to determine the shape of the trapezoid. 
     private static final double ACCELERATION = 275;
@@ -46,7 +46,7 @@ public class DriveSetDistanceCommand extends CommandBase {
      * @param distance The distance in inches to drive. Negative to drive
      * backwards.
      */
-    public DriveSetDistanceCommand(double speed, double distance) {
+    public DriveSetDistanceByTimeCommand(double speed, double distance) {
         this.driveSpeed = distance > 0 ? speed : -speed;
         this.distance = Math.abs(distance);
     }
@@ -72,8 +72,6 @@ public class DriveSetDistanceCommand extends CommandBase {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        Display.queue(distance +"");
-        
         //this method is state-based to be as efficient as possible. By usomg the stage int, 
         driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         try {
