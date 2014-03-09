@@ -94,7 +94,7 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
-        mainAutonomousSequence.addSequential(shootBall());
+//        mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
 
