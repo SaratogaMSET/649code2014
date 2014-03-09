@@ -77,11 +77,11 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
-        if (SmartDashboard.getBoolean("usePid")) {
+//        if (SmartDashboard.getBoolean("usePid")) {
             driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
-        } else {
-            driveAndCheckGoal.addParallel(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
-        }
+//        } else {
+//            driveAndCheckGoal.addParallel(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
+//        }
         driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
 //        check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
@@ -94,7 +94,7 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
-//        mainAutonomousSequence.addSequential(shootBall());
+        mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
 

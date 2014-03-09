@@ -36,7 +36,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     public static final int MAX_DRIVETRAIN_VELOCITY = 135;
     public static final int ACCELERATION = 275;
     public static final int DRIVE_SPEED = 80;
-    public static int AUTONOMOUS_DRIVE_DISTANCE = 5 * 12;
+    public static final int AUTONOMOUS_DRIVE_DISTANCE = 7 * 12;
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;
@@ -50,6 +50,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
             motors[i] = new Victor(RobotMap.DRIVE_TRAIN.MOTORS[i]);
         }
         pid = new PIDController649(.045, .00, .00, this, this);
+        pid.setAbsoluteTolerance(1);
         encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
         for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {
             encoders[x / 2] = new Encoder(RobotMap.DRIVE_TRAIN.ENCODERS[x], RobotMap.DRIVE_TRAIN.ENCODERS[x + 1], x == 0, EncodingType.k2X);

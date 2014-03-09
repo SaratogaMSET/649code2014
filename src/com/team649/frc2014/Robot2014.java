@@ -63,11 +63,6 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("autoDist1", 8);
-        SmartDashboard.putNumber("driveP", 0.03);
-        SmartDashboard.putNumber("driveI", 0);
-        SmartDashboard.putNumber("driveD", 0);
-        SmartDashboard.putBoolean("usePid", true);
     }
 
     public void disabledInit() {
@@ -83,13 +78,12 @@ public class Robot2014 extends IterativeRobot {
 
     public void autonomousInit() {
         Display.clearMarquees();
-//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-//        Display.marquee(2, "WOOOOOO", 0, 10, true);
-//        Display.marquee(3, "GO FIISHH", 0, 2, true);
-//        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
-//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
-//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
-        DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE = (int) (SmartDashboard.getNumber("autoDist1") * 12);
+        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
+        Display.marquee(2, "WOOOOOO", 0, 10, true);
+        Display.marquee(3, "GO FIISHH", 0, 2, true);
+        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
         Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
@@ -115,7 +109,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
         Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-        CommandBase.driveTrainSubsystem.printEncoders();
+//        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 

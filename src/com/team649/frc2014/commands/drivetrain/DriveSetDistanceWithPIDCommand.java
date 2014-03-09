@@ -25,6 +25,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
     private final double distance;
     private PIDController649 pid;
+    private long startTime;
 
     /**
      * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused
@@ -41,10 +42,12 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
         this.pid = driveTrainSubsystem.getPID();
-        pid.setPID(SmartDashboard.getNumber("driveP"), SmartDashboard.getNumber("driveI"), SmartDashboard.getNumber("driveD"));
+        pid.setPID(0.03, 0, 0);
         pid.setSetpoint(distance);
         driveTrainSubsystem.resetEncoders();
         driveTrainSubsystem.startEncoders();
+        pid.enable();
+        startTime = System.currentTimeMillis();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -53,12 +56,14 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.onTarget();
+        return Math.abs(driveTrainSubsystem.getDistance()) > Math.abs(distance) || (System.currentTimeMillis() - startTime) > 3000;
     }
 
     // Called once after isFinished returns true
     protected void end() {
         Display.printToOutputStream("finished drive PID: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
+        pid.disable();
+        driveTrainSubsystem.driveFwdRot(0, 0);
     }
 
     // Called when another command which requires one or more of the same
