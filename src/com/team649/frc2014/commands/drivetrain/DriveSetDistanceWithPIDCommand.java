@@ -56,7 +56,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(driveTrainSubsystem.getDistance()) > Math.abs(distance) || (System.currentTimeMillis() - startTime) > 3000;
+        return Math.abs(driveTrainSubsystem.getDistance()) > Math.abs(distance) || (System.currentTimeMillis() - startTime) > 1500;
     }
 
     // Called once after isFinished returns true

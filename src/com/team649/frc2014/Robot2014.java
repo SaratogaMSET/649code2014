@@ -123,7 +123,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
-//        Display.marquee(1, "2014 ENABLED", 5, 5, true);
+        Display.marquee(1, "2014 ENABLED", 5, 5, true);
         setSolenoidsToDefault();
     }
 
