@@ -4,6 +4,7 @@
  */
 package com.team649.frc2014.commands.winch;
 
+import com.team649.frc2014.Display;
 import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Suneel
  */
 public class SetClawWinchSolenoid extends CommandBase {
+
     private final boolean state;
 
     public SetClawWinchSolenoid(boolean direction) {
@@ -23,7 +25,9 @@ public class SetClawWinchSolenoid extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
         clawWinchSubsystem.setSolenoid(state);
-        System.out.println("shot at: " + DriverStation.getInstance().getMatchTime());
+        if (state == false) {
+            Display.printToOutputStream("shot at: " + DriverStation.getInstance().getMatchTime());
+        }
     }
 
     // Called repeatedly when this Command is scheduled to run

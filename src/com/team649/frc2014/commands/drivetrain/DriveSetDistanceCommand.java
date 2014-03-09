@@ -124,7 +124,8 @@ public class DriveSetDistanceCommand extends CommandBase {
     }
 
     private void drive(double output) {
-        driveTrainSubsystem.driveFwdRot(0.2 + 0.8*output, -0.09);
+        //-0.09
+        driveTrainSubsystem.driveFwdRot(0.2 + 0.8*output, 0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -137,7 +138,7 @@ public class DriveSetDistanceCommand extends CommandBase {
     protected void end() {
         driveTrainSubsystem.disablePid();
         driveTrainSubsystem.driveFwdRot(0, 0);
-        System.out.println("finished drive: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
+        Display.printToOutputStream("finished drive: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
     }
 
     // Called when another command which requires one or more of the same

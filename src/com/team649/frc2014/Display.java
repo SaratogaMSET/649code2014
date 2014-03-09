@@ -1,6 +1,10 @@
 package com.team649.frc2014;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.DriverStationLCD;
+import java.io.IOException;
+import java.io.OutputStream;
+import javax.microedition.io.Connector;
 
 public class Display {
 
@@ -12,6 +16,17 @@ public class Display {
     public static final short MAX_LINE_LENGTH = 21;
     public static final String TRUNCATE_MARKER = ">";
     private static DriverStationLCD display = DriverStationLCD.getInstance();
+    private static OutputStream FILE_OUTPUT_STREAM;
+
+    static {
+        try {
+            FileConnection conn = (FileConnection) Connector.open("file:///output" + System.currentTimeMillis() + ".txt", Connector.READ_WRITE);
+            conn.create();
+            FILE_OUTPUT_STREAM = conn.openOutputStream();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * Queue a line of text to be displayed. Does not guarantee any consistent
@@ -29,6 +44,18 @@ public class Display {
         return true;
     }
 
+    public static void printToOutputStream(Object text) {
+        System.out.println(text);
+        if (FILE_OUTPUT_STREAM != null) {
+            try {
+                FILE_OUTPUT_STREAM.write(text.toString().getBytes());
+                FILE_OUTPUT_STREAM.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     /**
      * Print all output to the driver station
      */
@@ -43,7 +70,7 @@ public class Display {
         int queuedLineIndex = 0;
         for (int i = 0; i < 6 && queuedLineIndex < queueCount; i++) {
             if (!printed[i]) {
-                println(i+1, queuedLines[queuedLineIndex++]);
+                println(i + 1, queuedLines[queuedLineIndex++]);
             }
         }
         display.updateLCD();

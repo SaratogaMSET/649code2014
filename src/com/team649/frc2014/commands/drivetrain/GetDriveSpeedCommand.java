@@ -50,7 +50,7 @@ public class GetDriveSpeedCommand extends CommandBase {
         for (int i = 0; i < speedsVector.size(); i++) {
             avg += ((Double) speedsVector.elementAt(i)).doubleValue();
         }
-        System.out.println(speed + ": " + avg / speedsVector.size());
+        Display.printToOutputStream(speed + ": " + avg / speedsVector.size());
         driveTrainSubsystem.driveFwdRot(0, 0);
         speedsVector.removeAllElements();
     }

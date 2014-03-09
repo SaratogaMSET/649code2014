@@ -76,11 +76,11 @@ public abstract class CommandBase extends Command {
 
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         //drive while checking hot goal
-        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 14*12));
+        driveAndCheckGoal.addParallel(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
 //        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.SHOOT));
 //        check the hot goal after .5 seconds
         CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
-        checkHotGoal.addSequential(new WaitCommand(500));
+        checkHotGoal.addSequential(new WaitCommand(1000));
         checkHotGoal.addSequential(new HotVisionWaitCommand());
         driveAndCheckGoal.addSequential(checkHotGoal);
 
@@ -96,7 +96,7 @@ public abstract class CommandBase extends Command {
     public static Command waitAndDriveAutonomous() {
         CommandGroup group = new CommandGroup("waitAndDrive");
         group.addSequential(new WaitCommand(5000));
-        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, 16*12));
+        group.addSequential(new DriveSetDistanceCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
         return group;
     }
     

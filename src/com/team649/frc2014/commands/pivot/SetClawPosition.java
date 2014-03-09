@@ -5,6 +5,7 @@
  */
 package com.team649.frc2014.commands.pivot;
 
+import com.team649.frc2014.Display;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
@@ -33,7 +34,7 @@ public class SetClawPosition extends CommandBase {
         //Set value to the NEGITIVE of what is in the smart dashboard!!!! IMPORTNANT!
         clawPID.setPID(-1, -0.1, 0);
         startTime = System.currentTimeMillis();
-        System.out.println("s: " + setpoint + ", p: " + clawPID.getP() + ", i: " + clawPID.getI() + ", d: " + clawPID.getD());
+        Display.printToOutputStream("s: " + setpoint + ", p: " + clawPID.getP() + ", i: " + clawPID.getI() + ", d: " + clawPID.getD());
     }
 
     protected void execute() {
@@ -57,7 +58,7 @@ public class SetClawPosition extends CommandBase {
 
     private void killCommand() {
         try {
-            System.out.println("end pivot: " + DriverStation.getInstance().getMatchTime() + ": " + clawPivotSubsystem.getPotValue());
+            Display.printToOutputStream("end pivot: " + DriverStation.getInstance().getMatchTime() + ": " + clawPivotSubsystem.getPotValue());
             clawPID.disable();
         } catch (NullPointerException e) {
         }

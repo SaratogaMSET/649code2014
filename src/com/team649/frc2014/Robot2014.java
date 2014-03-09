@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package com.team649.frc2014;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -24,6 +25,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.io.IOException;
+import javax.microedition.io.Connector;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -60,9 +63,6 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("autoSpeed", 0.15);
-        SmartDashboard.putBoolean("autoNeg", false);
-        SmartDashboard.putBoolean("skipHot", false);
     }
 
     public void disabledInit() {
@@ -78,14 +78,14 @@ public class Robot2014 extends IterativeRobot {
 
     public void autonomousInit() {
         Display.clearMarquees();
-        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-        Display.marquee(2, "WOOOOOO", 0, 10, true);
-        Display.marquee(3, "GO FIISHH", 0, 2, true);
-        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
-        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
-        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
+//        Display.marquee(2, "WOOOOOO", 0, 10, true);
+//        Display.marquee(3, "GO FIISHH", 0, 2, true);
+//        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
-        System.out.println("selected auto: " + selectedAuto);
+        Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
