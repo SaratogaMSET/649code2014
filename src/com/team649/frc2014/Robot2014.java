@@ -78,12 +78,12 @@ public class Robot2014 extends IterativeRobot {
 
     public void autonomousInit() {
         Display.clearMarquees();
-//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-//        Display.marquee(2, "WOOOOOO", 0, 10, true);
-//        Display.marquee(3, "GO FIISHH", 0, 2, true);
-//        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
-//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
-//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
+        Display.marquee(2, "WOOOOOO", 0, 10, true);
+        Display.marquee(3, "GO FIISHH", 0, 2, true);
+        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
         Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
