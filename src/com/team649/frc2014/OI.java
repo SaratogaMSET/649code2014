@@ -26,14 +26,25 @@ public class OI {
 
     public class Driver {
 
+        public static final double MIN_DRIVE_POWER = 0.05;
+
         public double getDriveRotation() {
-            final double turnVal = horizontal.getX();
+            final double turnVal = joystickDeadzone(horizontal.getX(), MIN_DRIVE_POWER);
             final double sign = turnVal < 0 ? -1 : 1;
             return MathUtils.pow(Math.abs(turnVal), ROTATION_POWER) * sign;
         }
 
         public double getDriveForward() {
-            return -vertical.getY();
+            double value = -vertical.getY();
+            value = joystickDeadzone(value, MIN_DRIVE_POWER);
+            return value;
+        }
+
+        private double joystickDeadzone(double value, double deadzone) {
+            if (Math.abs(value) < deadzone) {
+                value = 0;
+            }
+            return value;
         }
 
         public boolean isDrivetrainLowGearButtonPressed() {
@@ -49,7 +60,7 @@ public class OI {
 
         public boolean isPivotManualOverrideButtonPressed() {
             //return shooterJoystick.getRawButton(2);
-            return  true;
+            return true;
         }
 
         public boolean isWinchSafetyButtonPressed() {
