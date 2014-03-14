@@ -23,9 +23,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
+    public static final int ON_TARGET_TIME = 250;
     private final double distance;
     private PIDController649 pid;
-    private long startTime;
+    private long onTargetStartTime;
 
     /**
      * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused
@@ -42,12 +43,12 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     // Called just before this Command runs the first time
     protected void initialize() {
         this.pid = driveTrainSubsystem.getPID();
-        pid.setPID(0.03, 0, 0);
+        pid.setPID(DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_P, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_I, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_D);
         pid.setSetpoint(distance);
         driveTrainSubsystem.resetEncoders();
         driveTrainSubsystem.startEncoders();
         pid.enable();
-        startTime = System.currentTimeMillis();
+        onTargetStartTime = -1;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -56,10 +57,20 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Math.abs(driveTrainSubsystem.getDistance()) > Math.abs(distance) || (System.currentTimeMillis() - startTime) > 1500;
+        if (pid.onTarget()) {
+            if (onTargetStartTime == -1) {
+                onTargetStartTime = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() - onTargetStartTime > ON_TARGET_TIME) {
+                return true;
+            }
+        } else {
+            onTargetStartTime = -1;
+        }
+
+        return false;
     }
 
-    // Called once after isFinished returns true
+// Called once after isFinished returns true
     protected void end() {
         Display.printToOutputStream("finished drive PID: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
         pid.disable();

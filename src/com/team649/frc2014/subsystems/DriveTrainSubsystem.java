@@ -31,12 +31,27 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
 
     public static final boolean HIGH_SPEED = false;
     public static final boolean LOW_SPEED = true;
-    private static final double ENCODER_DISTANCE_PER_PULSE = 4 * Math.PI / 128;
     private static final int UPDATE_PERIOD = 100;
-    public static final int MAX_DRIVETRAIN_VELOCITY = 135;
-    public static final int ACCELERATION = 275;
-    public static final int DRIVE_SPEED = 80;
-    public static final int AUTONOMOUS_DRIVE_DISTANCE = 4 * 12;
+
+    public static class EncoderBasedDriving {
+
+        private static final double MAX_MOTOR_POWER = 0.5;
+        private static final double ENCODER_DISTANCE_PER_PULSE = -4 * Math.PI / 128;
+        public static final int AUTONOMOUS_DRIVE_DISTANCE = 4 * 12;
+        public static final double AUTO_DRIVE_P = .03;
+        public static final double AUTO_DRIVE_I = 0;
+        public static final double AUTO_DRIVE_D = 0;
+
+    }
+
+    public static class TimeBasedDriving {
+
+        public static final int MAX_DRIVETRAIN_VELOCITY = 135;
+        public static final int ACCELERATION = 275;
+        public static final int DRIVE_SPEED = 80;
+
+    }
+
     private SpeedController[] motors;
     private Encoder[] encoders;
     private PIDController649 pid;
@@ -49,13 +64,13 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         for (int i = 0; i < RobotMap.DRIVE_TRAIN.MOTORS.length; i++) {
             motors[i] = new Victor(RobotMap.DRIVE_TRAIN.MOTORS[i]);
         }
-        pid = new PIDController649(.03, .00, .00, this, this);
-        pid.setAbsoluteTolerance(1);
-        pid.setOutputRange(-0.3, 0.3);
+        pid = new PIDController649(EncoderBasedDriving.AUTO_DRIVE_P, EncoderBasedDriving.AUTO_DRIVE_I, EncoderBasedDriving.AUTO_DRIVE_D, this, this);
+        pid.setAbsoluteTolerance(5);
+        pid.setOutputRange(-EncoderBasedDriving.MAX_MOTOR_POWER, EncoderBasedDriving.MAX_MOTOR_POWER);
         encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
         for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {
             encoders[x / 2] = new Encoder(RobotMap.DRIVE_TRAIN.ENCODERS[x], RobotMap.DRIVE_TRAIN.ENCODERS[x + 1], x == 0, EncodingType.k2X);
-            encoders[x / 2].setDistancePerPulse(ENCODER_DISTANCE_PER_PULSE);
+            encoders[x / 2].setDistancePerPulse(EncoderBasedDriving.ENCODER_DISTANCE_PER_PULSE);
         }
         lastRates = new Vector();
         shifterSolenoid = new DoubleSolenoid(RobotMap.DRIVE_TRAIN.FORWARD_SOLENOID_CHANNEL, RobotMap.DRIVE_TRAIN.REVERSE_SOLENOID_CHANNEL);
@@ -136,7 +151,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public void pidWrite(double output) {
-        rawDrive(output, Math.max(output, 0.1));
+        rawDrive(output, output);
     }
 
     public boolean isRegularPidOnTarget() {
@@ -185,7 +200,6 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     }
 
     public void printEncoders() {
-        int i = 1;
         int numEncoders = encoders.length;
         for (int x = 0; x < numEncoders; x++) {
             Display.queue("pos: " + encoders[x].get());
