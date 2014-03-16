@@ -70,6 +70,9 @@ public class Robot2014 extends IterativeRobot {
         SmartDashboard.putNumber("minPower", 0.3);
         SmartDashboard.putNumber("maxPower", 0.6);
         SmartDashboard.putNumber("tolerance", 4);
+        SmartDashboard.putNumber("rollerSpeed", 0.35);
+        SmartDashboard.putBoolean("doFingerUp", true);
+        SmartDashboard.putNumber("fingerUpTime", ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID);
     }
 
     public void disabledInit() {
@@ -154,7 +157,7 @@ public class Robot2014 extends IterativeRobot {
         getWatchdog().feed();
         Display.clear();
         Scheduler.getInstance().run();
-
+        ClawRollerSubsystem.MOTOR_SPEED = SmartDashboard.getNumber("rollerSpeed");
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
@@ -198,13 +201,13 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.manualDriveClaw(0).start();
         }
 
-        if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
-            CommandBase.runRollers(ClawRollerSubsystem.FORWARD).start();
-        } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
-            CommandBase.runRollers(ClawRollerSubsystem.REVERSE).start();
-        } else {
-            CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
-        }
+//        if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
+//            CommandBase.runRollers(ClawRollerSubsystem.FORWARD).start();
+//        } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
+//            CommandBase.runRollers(ClawRollerSubsystem.REVERSE).start();
+//        } else {
+//            CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
+//        }
         if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
             coilClawWinchCommand = CommandBase.coilClawWinch();
             coilClawWinchCommand.start();
@@ -217,13 +220,13 @@ public class Robot2014 extends IterativeRobot {
                 shootCommand.start();
             }
         }
-        CommandBase.driveTrainSubsystem.printEncoders();
-//        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
-//        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
-//        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
-//        if (CommandBase.isCompressorRunning()) {
-//            Display.queue("COMPRESSOR RUNNING");
-//        }
+//        CommandBase.driveTrainSubsystem.printEncoders();
+        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
+        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
+        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
+        if (CommandBase.isCompressorRunning()) {
+            Display.queue("COMPRESSOR RUNNING");
+        }
         Display.update();
 
         sleep();

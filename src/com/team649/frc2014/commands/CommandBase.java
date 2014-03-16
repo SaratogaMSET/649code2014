@@ -115,12 +115,18 @@ public abstract class CommandBase extends Command {
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
-        fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
-        fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
+        if (SmartDashboard.getBoolean("doFingerUp")) {
+            fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
+//            fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
+            fireSequence.addSequential(new WaitCommand((int) SmartDashboard.getNumber("fingerUpTime")));
+        }
+        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.FORWARD));
         fireSequence.addSequential(new SetClawWinchSolenoid(false));
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        fireSequence.addSequential(new WaitCommand(500));
+        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.OFF));
         return fireSequence;
     }
 

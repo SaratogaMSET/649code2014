@@ -20,7 +20,7 @@ public class ClawRollerSubsystem extends Subsystem {
     public static final int FORWARD = 1;
     public static final int REVERSE = -1;
     private final SpeedController motor;
-    private double MOTOR_SPEED = 0.7;
+    public static double MOTOR_SPEED = 0.35;
 
     public ClawRollerSubsystem() {
         motor = new Victor(RobotMap.CLAW_ROLLER.MOTOR);
