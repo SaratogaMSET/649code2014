@@ -20,7 +20,7 @@ public class ClawFingerSubsystem extends Subsystem {
     public static final int UP = 1;
     public static final int DOWN = 2;
     private DoubleSolenoid clawSolenoid;
-    public static final int TIME_TO_ENGAGE_SOLENOID = 250;
+    public static final int TIME_TO_ENGAGE_SOLENOID = 0;
 
     public ClawFingerSubsystem() {
         super("ClawFingerSubsystem");

@@ -43,7 +43,6 @@ public class RobotMap {
 
     public static class CLAW_ROLLER {
         public static int MOTOR = 7;
-
         
     }
 

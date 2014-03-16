@@ -29,11 +29,8 @@ import java.io.IOException;
 import javax.microedition.io.Connector;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the IterativeRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the manifest file in the resource directory.
  */
 public class Robot2014 extends IterativeRobot {
 
@@ -49,8 +46,7 @@ public class Robot2014 extends IterativeRobot {
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
     /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
+     * This function is run when the robot is first started up and should be used for any initialization code.
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
@@ -157,7 +153,7 @@ public class Robot2014 extends IterativeRobot {
         getWatchdog().feed();
         Display.clear();
         Scheduler.getInstance().run();
-        ClawRollerSubsystem.MOTOR_SPEED = SmartDashboard.getNumber("rollerSpeed");
+        //ClawRollerSubsystem.MOTOR_SPEED = SmartDashboard.getNumber("rollerSpeed");
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
@@ -166,31 +162,31 @@ public class Robot2014 extends IterativeRobot {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
 //        CommandBase.driveTrainSubsystem.printEncoders();
-//        if (CommandBase.oi.shooter.isCatchClawPositionButtonPressed()) {
-//            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.CATCH) {
-//                setClawPosition.cancel();
+
+        if (CommandBase.oi.shooter.isBackwardShootClawPositionButtonPressed()) {
+//            if (setClawPositionCommand != null && !setClawPositionCommand.isRunning()) {
+//                setClawPositionCommand.cancel();
 //            }
-//            setClawPosition = new SetClawPosition(ClawPivotSubsystem.CATCH);
-//            setClawPosition.start();
-//
-//        } else 
-        if (CommandBase.oi.shooter.isShootClawPositionButtonPressed()) {
+            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT);
+            setClawPositionCommand.start();
+
+        } else if (CommandBase.oi.shooter.isForwardShootClawPositionButtonPressed()) {
 //            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.SHOOT) {
 //                setClawPositionCommand.cancel();
 //            }
             if (setClawPositionCommand != null && !setClawPositionCommand.isRunning()) {
-                setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.SHOOT);
+                setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.FORWARD_SHOOT);
                 setClawPositionCommand.start();
             }
 
         } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
         //        //also change finger state to appropriate level
         //        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-        //            if (setClawPosition != null && setClawPosition.getState() != ClawPivotSubsystem.PICKUP) {
-        //                setClawPosition.cancel();
+        //            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.PICKUP) {
+        //                setClawPositionCommand.cancel();
         //            }
-        //            setClawPosition = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-        //            setClawPosition.start();
+        //            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+        //            setClawPositionCommand.start();
         //        } else 
         else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
             if (setClawPositionCommand != null && setClawPositionCommand.isRunning()) {
@@ -200,21 +196,21 @@ public class Robot2014 extends IterativeRobot {
         } else if (setClawPositionCommand == null || !setClawPositionCommand.isRunning()) {
             CommandBase.manualDriveClaw(0).start();
         }
-
-//        if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
-//            CommandBase.runRollers(ClawRollerSubsystem.FORWARD).start();
-//        } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
-//            CommandBase.runRollers(ClawRollerSubsystem.REVERSE).start();
-//        } else {
-//            CommandBase.runRollers(ClawRollerSubsystem.OFF).start();
-//        }
+        if (shootCommand == null || !shootCommand.isRunning()) {
+            if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
+                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_PURGE_SPEED).start();
+            } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
+                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED).start();
+            } else {
+                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED).start();
+            }
+        }
         if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
             coilClawWinchCommand = CommandBase.coilClawWinch();
             coilClawWinchCommand.start();
         }
 
         if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
-//                && CommandBase.clawPivotSubsystem.getState() == ClawPivotSubsystem.SHOOT) {
             if (shootCommand == null || !shootCommand.isRunning()) {
                 shootCommand = CommandBase.shootBall();
                 shootCommand.start();

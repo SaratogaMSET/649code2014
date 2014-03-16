@@ -87,11 +87,11 @@ public class OI {
             return shooterJoystick.getRawButton(10);
         }
 
-        public boolean isCatchClawPositionButtonPressed() {
+        public boolean isBackwardShootClawPositionButtonPressed() {
             return shooterJoystick.getRawButton(11);
         }
 
-        public boolean isShootClawPositionButtonPressed() {
+        public boolean isForwardShootClawPositionButtonPressed() {
             return shooterJoystick.getRawButton(12);
         }
 

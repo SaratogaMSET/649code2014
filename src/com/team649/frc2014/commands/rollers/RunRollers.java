@@ -12,14 +12,14 @@ import com.team649.frc2014.commands.CommandBase;
  */
 public class RunRollers extends CommandBase {
 
-    private final int state;
+    private final double speed;
 
-    public RunRollers(int direction) {
-        state = direction;
+    public RunRollers(double choosenSpeed) {
+        speed = choosenSpeed;
     }
 
     protected void initialize() {
-        clawRollerSubsystem.runMotor(state);
+        clawRollerSubsystem.runMotor(speed);
     }
 
     protected void execute() {

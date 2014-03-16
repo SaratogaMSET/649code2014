@@ -120,13 +120,13 @@ public abstract class CommandBase extends Command {
 //            fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
             fireSequence.addSequential(new WaitCommand((int) SmartDashboard.getNumber("fingerUpTime")));
         }
-        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.FORWARD));
+        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_SHOOT_SPEED));
         fireSequence.addSequential(new SetClawWinchSolenoid(false));
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         fireSequence.addSequential(new WaitCommand(500));
-        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.OFF));
+        fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
         return fireSequence;
     }
 
@@ -134,8 +134,8 @@ public abstract class CommandBase extends Command {
         return new SetFingerPosition(state);
     }
 
-    public static Command runRollers(int direction) {
-        return new RunRollers(direction);
+    public static Command runRollers(double choosenSpeed) {
+        return new RunRollers(choosenSpeed);
     }
 
     public static Command manualDriveClaw(double power) {

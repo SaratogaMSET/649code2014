@@ -25,19 +25,19 @@ public class ClawPivotSubsystem extends Subsystem {
     private static final double kP = 0.01;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
-    public static final int SHOOT = 2;
+    public static final int FORWARD_SHOOT = 2;
     public static final int PICKUP = 1;
-    public static final int CATCH = 0;
+    public static final int  BACKWARD_SHOOT= 0;
     public static final int NO_STATE = 5;
     public static final double[] CLAW_POT_STATES = new double[3];
     public static final String[] CLAW_POT_NAMES= new String[3];
 
     static {
         CLAW_POT_STATES[PICKUP] = 4;
-        CLAW_POT_STATES[SHOOT] = 3.2;
-        CLAW_POT_STATES[CATCH] = 2.6;
-        CLAW_POT_NAMES[SHOOT] = "SHOOT";
-        CLAW_POT_NAMES[CATCH] = "CATCH";
+        CLAW_POT_STATES[FORWARD_SHOOT] = 3.2;
+        CLAW_POT_STATES[BACKWARD_SHOOT] = 2.6;
+        CLAW_POT_NAMES[FORWARD_SHOOT] = "FWD SHOOT";
+        CLAW_POT_NAMES[BACKWARD_SHOOT] = "BCK SHOOT";
         CLAW_POT_NAMES[PICKUP] = "PICKUP";
     }
     private PIDController649 clawPID;
@@ -52,7 +52,7 @@ public class ClawPivotSubsystem extends Subsystem {
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
         clawPID.setAbsoluteTolerance(0.02);
-        clawPID.setOutputRange(-.5, .5);
+        clawPID.setOutputRange(-.35, .35);
         state = NO_STATE;
     }
 
