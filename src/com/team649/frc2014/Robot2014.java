@@ -63,6 +63,13 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
+        SmartDashboard.putNumber("driveFeet", 2);
+        SmartDashboard.putNumber("driveP", 0.005);
+        SmartDashboard.putNumber("driveI", 0.00);
+        SmartDashboard.putNumber("driveD", 0.00);
+        SmartDashboard.putNumber("minPower", 0.3);
+        SmartDashboard.putNumber("maxPower", 0.6);
+        SmartDashboard.putNumber("tolerance", 4);
     }
 
     public void disabledInit() {
@@ -77,13 +84,21 @@ public class Robot2014 extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE = 12 * SmartDashboard.getNumber("driveFeet");
+        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_P = SmartDashboard.getNumber("driveP");
+        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_I = SmartDashboard.getNumber("driveI");
+        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_D = SmartDashboard.getNumber("driveD");
+        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = SmartDashboard.getNumber("minPower");
+        final double maxPower = SmartDashboard.getNumber("maxPower");
+        CommandBase.driveTrainSubsystem.getPID().setOutputRange(-maxPower, maxPower);
+        CommandBase.driveTrainSubsystem.getPID().setAbsoluteTolerance(SmartDashboard.getNumber("tolerance"));
         Display.clearMarquees();
-        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
-        Display.marquee(2, "WOOOOOO", 0, 10, true);
-        Display.marquee(3, "GO FIISHH", 0, 2, true);
-        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
-        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
-        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
+//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
+//        Display.marquee(2, "WOOOOOO", 0, 10, true);
+//        Display.marquee(3, "GO FIISHH", 0, 2, true);
+//        Display.marquee(4, "YEEAAHHHH", 0, 7, true);
+//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true);
+//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
         Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
@@ -108,8 +123,8 @@ public class Robot2014 extends IterativeRobot {
     public void autonomousPeriodic() {
         Display.clear();
         Scheduler.getInstance().run();
-        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-//        CommandBase.driveTrainSubsystem.printEncoders();
+//        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
+        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 
@@ -123,7 +138,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clearMarquees();
         CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
-        Display.marquee(1, "2014 ENABLED", 5, 5, true);
+//        Display.marquee(1, "2014 ENABLED", 5, 5, true);
         setSolenoidsToDefault();
     }
 
@@ -143,7 +158,7 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
         if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
-//            CommandBase.driveTrainSubsystem.resetEncoders();
+            CommandBase.driveTrainSubsystem.resetEncoders();
         } else {
             CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
         }
@@ -202,13 +217,13 @@ public class Robot2014 extends IterativeRobot {
                 shootCommand.start();
             }
         }
-//        CommandBase.driveTrainSubsystem.printEncoders();
-        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
-        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
-        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
-        if (CommandBase.isCompressorRunning()) {
-            Display.queue("COMPRESSOR RUNNING");
-        }
+        CommandBase.driveTrainSubsystem.printEncoders();
+//        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
+//        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
+//        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
+//        if (CommandBase.isCompressorRunning()) {
+//            Display.queue("COMPRESSOR RUNNING");
+//        }
         Display.update();
 
         sleep();

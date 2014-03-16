@@ -38,6 +38,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
      */
     public DriveSetDistanceWithPIDCommand(double distance) {
         this.distance = distance;
+
     }
 
     // Called just before this Command runs the first time
@@ -58,12 +59,17 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         if (pid.onTarget()) {
+            Display.printToOutputStream("On Target");
             if (onTargetStartTime == -1) {
+                Display.printToOutputStream("Set to curr time");
                 onTargetStartTime = System.currentTimeMillis();
             } else if (System.currentTimeMillis() - onTargetStartTime > ON_TARGET_TIME) {
                 return true;
             }
         } else {
+            if (onTargetStartTime != -1) {
+                Display.printToOutputStream("Off target");
+            }
             onTargetStartTime = -1;
         }
 
