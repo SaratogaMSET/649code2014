@@ -181,14 +181,13 @@ public class Robot2014 extends IterativeRobot {
 
         } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
         //        //also change finger state to appropriate level
-        //        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-        //            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.PICKUP) {
-        //                setClawPositionCommand.cancel();
-        //            }
-        //            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-        //            setClawPositionCommand.start();
-        //        } else 
-        else {
+        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+//            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.PICKUP) {
+//                setClawPositionCommand.cancel();
+//            }
+            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.PICKUP);
+            setClawPositionCommand.start();
+        } else {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
             }
