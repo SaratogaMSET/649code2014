@@ -59,13 +59,13 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("driveFeet", 2);
+        SmartDashboard.putNumber("driveFeet", -14);
         SmartDashboard.putNumber("driveP", 0.005);
         SmartDashboard.putNumber("driveI", 0.00);
         SmartDashboard.putNumber("driveD", 0.00);
         SmartDashboard.putNumber("minPower", 0.25);
         SmartDashboard.putNumber("maxPower", 0.5);
-        SmartDashboard.putNumber("tolerance", -14);
+        SmartDashboard.putNumber("tolerance", 4);
         SmartDashboard.putNumber("rollerSpeed", 0.35);
         SmartDashboard.putBoolean("doFingerUp", true);
         SmartDashboard.putNumber("fingerUpTime", ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID);
@@ -164,33 +164,26 @@ public class Robot2014 extends IterativeRobot {
 //        CommandBase.driveTrainSubsystem.printEncoders();
 
         if (CommandBase.oi.shooter.isBackwardShootClawPositionButtonPressed()) {
-//            if (setClawPositionCommand != null && !setClawPositionCommand.isRunning()) {
-//                setClawPositionCommand.cancel();
-//            }
-            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT);
-            setClawPositionCommand.start();
 
+            clawPIDSequence(ClawPivotSubsystem.BACKWARD_SHOOT);
+            
         } else if (CommandBase.oi.shooter.isForwardShootClawPositionButtonPressed()) {
-//            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.SHOOT) {
-//                setClawPositionCommand.cancel();
-//            }
-            if (setClawPositionCommand != null && !setClawPositionCommand.isRunning()) {
-                setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.FORWARD_SHOOT);
-                setClawPositionCommand.start();
-            }
 
-        } // If joystick button for pickup state is set then change to pickup state (if appropriate) 
-        //        //also change finger state to appropriate level
+            clawPIDSequence(ClawPivotSubsystem.FORWARD_SHOOT);
+        } 
+
+        // If joystick button for pickup state is set then change to pickup state (if appropriate) 
+        // also change finger state to appropriate level
+        
         else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-//            if (setClawPositionCommand != null && setClawPositionCommand.getState() != ClawPivotSubsystem.PICKUP) {
-//                setClawPositionCommand.cancel();
-//            }
-            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.PICKUP);
-            setClawPositionCommand.start();
+            clawPIDSequence(ClawPivotSubsystem.PICKUP);
+
         } else {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
+                setClawPositionCommand = null;
             }
+            
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
         }
 
@@ -224,6 +217,18 @@ public class Robot2014 extends IterativeRobot {
         Display.update();
 
         sleep();
+    }
+
+    private void clawPIDSequence(int position) {
+        if (setClawPositionCommand != null && setClawPositionCommand.getState() != position) {
+            setClawPositionCommand.cancel();
+            setClawPositionCommand = null;
+        }
+        if (setClawPositionCommand == null || !setClawPositionCommand.isRunning()) {
+
+            setClawPositionCommand = new SetClawPosition(position);
+            setClawPositionCommand.start();
+        }
     }
 
     /**

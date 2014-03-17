@@ -33,7 +33,7 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final String[] CLAW_POT_NAMES= new String[3];
 
     static {
-        CLAW_POT_STATES[PICKUP] = 4.65;
+        CLAW_POT_STATES[PICKUP] = 4.75;
         CLAW_POT_STATES[FORWARD_SHOOT] = 3.2;
         CLAW_POT_STATES[BACKWARD_SHOOT] = 1.83;
         CLAW_POT_NAMES[FORWARD_SHOOT] = "FWD SHOOT";
@@ -52,7 +52,7 @@ public class ClawPivotSubsystem extends Subsystem {
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
         clawPID.setAbsoluteTolerance(0.02);
-        clawPID.setOutputRange(-.4, .4);
+        clawPID.setOutputRange(-.6, .35);
         state = NO_STATE;
     }
 
