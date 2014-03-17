@@ -63,9 +63,9 @@ public class Robot2014 extends IterativeRobot {
         SmartDashboard.putNumber("driveP", 0.005);
         SmartDashboard.putNumber("driveI", 0.00);
         SmartDashboard.putNumber("driveD", 0.00);
-        SmartDashboard.putNumber("minPower", 0.3);
-        SmartDashboard.putNumber("maxPower", 0.6);
-        SmartDashboard.putNumber("tolerance", 4);
+        SmartDashboard.putNumber("minPower", 0.25);
+        SmartDashboard.putNumber("maxPower", 0.5);
+        SmartDashboard.putNumber("tolerance", -14);
         SmartDashboard.putNumber("rollerSpeed", 0.35);
         SmartDashboard.putBoolean("doFingerUp", true);
         SmartDashboard.putNumber("fingerUpTime", ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID);
@@ -188,14 +188,13 @@ public class Robot2014 extends IterativeRobot {
         //            setClawPositionCommand = new SetClawPosition(ClawPivotSubsystem.PICKUP);
         //            setClawPositionCommand.start();
         //        } else 
-        else if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
-            if (setClawPositionCommand != null && setClawPositionCommand.isRunning()) {
+        else {
+            if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
             }
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
-        } else if (setClawPositionCommand == null || !setClawPositionCommand.isRunning()) {
-            CommandBase.manualDriveClaw(0).start();
         }
+
         if (shootCommand == null || !shootCommand.isRunning()) {
             if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
                 CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_PURGE_SPEED).start();

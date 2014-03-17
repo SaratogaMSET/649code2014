@@ -26,7 +26,8 @@ private boolean hotGoalDetected;
     }
 
     protected void initialize() {
-        hotGoalDetected = HotTargetVision.detectHotGoal();
+        hotGoalDetected = true;
+//        hotGoalDetected = HotTargetVision.detectHotGoal();
         Display.printToOutputStream("hot goal: " + hotGoalDetected);
         super.initialize();
     }
