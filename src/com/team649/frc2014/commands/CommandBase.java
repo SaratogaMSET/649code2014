@@ -95,9 +95,9 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(shootBall());
         CommandGroup repositionAndPickup = new CommandGroup();
         repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE - 12));
-        repositionAndPickup.addParallel(autoCoilClawWinch());
         repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
         repositionAndPickup.addParallel(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
+        mainAutonomousSequence.addParallel(autoCoilClawWinch());
         mainAutonomousSequence.addSequential(repositionAndPickup);
         mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
         mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));

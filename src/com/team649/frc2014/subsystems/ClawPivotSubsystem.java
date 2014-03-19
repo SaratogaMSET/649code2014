@@ -8,15 +8,17 @@ package com.team649.frc2014.subsystems;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.pid_control.PIDController649;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  * @author Kabi
  */
-public class ClawPivotSubsystem extends Subsystem {
+public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
 
     private static final double kP = -1;
     private static final double kI = -.1;
@@ -24,7 +26,7 @@ public class ClawPivotSubsystem extends Subsystem {
     public static final double MAX_BACKWARD_SPEED = .4;
     public static final double MAX_FORWARD_SPEED = -.6;
     public static final double FULL_BACKWARD_POSITION = .9;
-    public static final double FULL_FORWARD_POSITION = 4.9;
+    public static final double FULL_FORWARD_POSITION = 4.8;
     public static final int STORE = 3;
     public static final int FORWARD_SHOOT = 2;
     public static final int PICKUP = 1;
@@ -52,7 +54,7 @@ public class ClawPivotSubsystem extends Subsystem {
         super("ClawSubsystem");
         motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
-        clawPID = new PIDController649(kP, kI, kD, potentiometer, motor);
+        clawPID = new PIDController649(kP, kI, kD, potentiometer, this);
         clawPID.setAbsoluteTolerance(0.02);
         clawPID.setOutputRange(MAX_FORWARD_SPEED, MAX_BACKWARD_SPEED);
     }
@@ -65,14 +67,11 @@ public class ClawPivotSubsystem extends Subsystem {
     }
 
     public void setPower(double power) {
-        if (power < 0 && getPotValue() >= FULL_FORWARD_POSITION || power > 0 && getPotValue() < FULL_BACKWARD_POSITION) {
+        if (power < 0 && getPotValue() >= FULL_FORWARD_POSITION || power > 0 && getPotValue() < FULL_BACKWARD_POSITION || Math.abs(power) < .1) {
             power = 0;
         }
-        if (Math.abs(power) > .1) {
-            motor.set(power);
-        } else {
-            motor.set(0);
-        }
+        SmartDashboard.putNumber("clawPower", power);
+        motor.set(power);
 
     }
 
@@ -89,5 +88,9 @@ public class ClawPivotSubsystem extends Subsystem {
             }
         }
         return "NO STATE";
+    }
+
+    public void pidWrite(double d) {
+        setPower(d);
     }
 }
