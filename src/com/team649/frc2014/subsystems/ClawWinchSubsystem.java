@@ -5,7 +5,6 @@
 package com.team649.frc2014.subsystems;
 
 import com.team649.frc2014.RobotMap;
-import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;

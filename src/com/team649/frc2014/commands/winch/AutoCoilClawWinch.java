@@ -5,35 +5,35 @@
 package com.team649.frc2014.commands.winch;
 
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.subsystems.ClawFingerSubsystem;
-import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 
 /**
  *
  * @author Suneel
  */
-public class CoilClawWinch extends CommandBase {
-long startTime;
+public class AutoCoilClawWinch extends CommandBase {
+
+    long startTime;
 
     // Called just before this Command runs the first time
     protected void initialize() {
         if (!clawWinchSubsystem.isSwitchPressed()) {
             clawWinchSubsystem.runMotor();
-        }
-        else
+        } else {
             clawWinchSubsystem.stopMotor();
+        }
         startTime = System.currentTimeMillis();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        if (System.currentTimeMillis()- startTime > ClawWinchSubsystem.TIME_TO_ENGAGE_SOLENOID)
+        if (System.currentTimeMillis() - startTime > 50) {
             new SetClawWinchSolenoid(true).start();
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !oi.shooter.isWinchWindButtonPressed()||clawWinchSubsystem.isSwitchPressed();
+        return clawWinchSubsystem.isSwitchPressed();
     }
 
     // Called once after isFinished returns true

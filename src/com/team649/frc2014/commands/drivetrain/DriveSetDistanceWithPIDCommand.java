@@ -1,19 +1,20 @@
 package com.team649.frc2014.commands.drivetrain;
 
-import com.sun.squawk.util.MathUtils;
 import com.team649.frc2014.Display;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * DriveSetDistanceCommand
  *
- * Attempts to drive the robot using a trapezoidal motion profile. This means that it accelerates at a constant rate, holds that speed for a set time, and then decelerates at a constant rate. This
- * should ideally provide a much more consistent drive (in both time and distance) than a motion profile that accelerates as fast as possible to start, and has trouble finishing (i.e. a PID loop).
+ * Attempts to drive the robot using a trapezoidal motion profile. This means
+ * that it accelerates at a constant rate, holds that speed for a set time, and
+ * then decelerates at a constant rate. This should ideally provide a much more
+ * consistent drive (in both time and distance) than a motion profile that
+ * accelerates as fast as possible to start, and has trouble finishing (i.e. a
+ * PID loop).
  *
  * @author alex@renda.org
  */
@@ -25,12 +26,14 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     private long onTargetStartTime;
 
     /**
-     * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused for multiple executions of the same speed/distance.
+     * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused
+     * for multiple executions of the same speed/distance.
      *
      * @param speed The speed to drive at. Always positive.
-     * @param distance The distance in inches to drive. Negative to drive backwards.
+     * @param distance The distance in inches to drive. Negative to drive
+     * backwards.
      */
-     public DriveSetDistanceWithPIDCommand(double distance) {
+    public DriveSetDistanceWithPIDCommand(double distance) {
         this.distance = distance;
 
     }

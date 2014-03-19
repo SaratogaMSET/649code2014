@@ -1,9 +1,5 @@
 package com.team649.frc2014.commands;
 
-import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
-import com.team649.frc2014.commands.winch.CoilClawWinch;
-import com.team649.frc2014.commands.drivetrain.DriveSetDistanceByTimeCommand;
-import edu.wpi.first.wpilibj.command.Command;
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
 import com.team649.frc2014.commands.drivetrain.DriveForwardRotate;
@@ -12,6 +8,9 @@ import com.team649.frc2014.commands.fingers.SetFingerPosition;
 import com.team649.frc2014.commands.pivot.ManualDriveClawPivot;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.rollers.RunRollers;
+import com.team649.frc2014.commands.winch.AutoCoilClawWinch;
+import com.team649.frc2014.commands.winch.ManualCoilClawWinch;
+import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.subsystems.CameraSubsystem;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
@@ -19,8 +18,8 @@ import com.team649.frc2014.subsystems.ClawRollerSubsystem;
 import com.team649.frc2014.subsystems.ClawWinchSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The base for all commands. All atomic commands should subclass CommandBase.
@@ -52,8 +51,12 @@ public abstract class CommandBase extends Command {
         return new DriveForwardRotate(driveForward, driveRotation);
     }
 
-    public static Command coilClawWinch() {
-        return new CoilClawWinch();
+    public static Command manualCoilClawWinch() {
+        return new ManualCoilClawWinch();
+    }
+
+    public static Command autoCoilClawWinch() {
+        return new AutoCoilClawWinch();
     }
 
     public static boolean isCompressorRunning() {
@@ -70,34 +73,52 @@ public abstract class CommandBase extends Command {
     }
 
     public static Command shootHotGoalAutonomous() {
-        //drive forward to shooting position
-        //after 0.5 seconds, see if goal is hot
-        //if goal is hot, shoot
-        //if goal is not hot, wait then shoot
-
-        CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
-        //drive while checking hot goal
-//        if (SmartDashboard.getBoolean("usePid")) {
-        driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
-//        } else {
-//            driveAndCheckGoal.addParallel(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.DRIVE_SPEED, DriveTrainSubsystem.AUTONOMOUS_DRIVE_DISTANCE));
-//        }
-        
-        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT));
-//        check the hot goal after .5 seconds
-        CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
-        checkHotGoal.addSequential(new WaitCommand(1000));
-        checkHotGoal.addSequential(new HotVisionWaitCommand());
-        driveAndCheckGoal.addSequential(checkHotGoal);
+        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(false);
 
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         //drive and check goal. When both are done (checking goal and driving), shoot
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
-        mainAutonomousSequence.addSequential(new WaitCommand(500));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
+    }
+
+    public static Command twoBallAutonomous() {
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
+        //drive and check goal. When both are done (checking goal and driving), shoot
+        mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(shootBall());
+        CommandGroup repositionAndPickup = new CommandGroup();
+        repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE - 12));
+        repositionAndPickup.addParallel(autoCoilClawWinch());
+        repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
+        repositionAndPickup.addParallel(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
+        mainAutonomousSequence.addSequential(repositionAndPickup);
+        mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
+        mainAutonomousSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(shootBall());
+        return mainAutonomousSequence;
+    }
+
+    private static CommandGroup driveAndPrepareToShoot(boolean checkHot) {
+        CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
+        driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
+        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT));
+//        check the hot goal after .5 seconds
+        if (checkHot) {
+            CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
+            checkHotGoal.addSequential(new WaitCommand(1000));
+            checkHotGoal.addSequential(new HotVisionWaitCommand());
+            driveAndCheckGoal.addSequential(checkHotGoal);
+        }
+        return driveAndCheckGoal;
     }
 
     public static Command waitAndDriveAutonomous() {
@@ -117,17 +138,13 @@ public abstract class CommandBase extends Command {
     public static Command shootBall() {
         CommandGroup fireSequence = new CommandGroup();
         //makes sure it is coiled, then fires
-        if (SmartDashboard.getBoolean("doFingerUp")) {
-            fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
-//            fireSequence.addSequential(new WaitCommand(ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID));
-            fireSequence.addSequential(new WaitCommand((int) SmartDashboard.getNumber("fingerUpTime")));
-        }
+        fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.UP));
         fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_SHOOT_SPEED));
         fireSequence.addSequential(new SetClawWinchSolenoid(false));
         fireSequence.addSequential(new WaitCommand(ClawWinchSubsystem.TIME_TO_FIRE));
         //then recoils
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
-        fireSequence.addSequential(new WaitCommand(500));
+        fireSequence.addSequential(new WaitCommand(300));
         fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
         return fireSequence;
     }

@@ -20,10 +20,11 @@ public class Display {
 
     static {
         try {
-            
+
             FileConnection conn = (FileConnection) Connector.open("file:///output.txt", Connector.READ_WRITE);
-            if (conn.exists())
+            if (conn.exists()) {
                 conn.delete();
+            }
             conn.create();
             FILE_OUTPUT_STREAM = conn.openOutputStream();
         } catch (IOException ex) {
@@ -51,7 +52,7 @@ public class Display {
         System.out.println(text);
         if (FILE_OUTPUT_STREAM != null) {
             try {
-                FILE_OUTPUT_STREAM.write((text.toString()+ "\r\n").getBytes());
+                FILE_OUTPUT_STREAM.write((text.toString() + "\r\n").getBytes());
                 FILE_OUTPUT_STREAM.flush();
             } catch (IOException ex) {
                 ex.printStackTrace();

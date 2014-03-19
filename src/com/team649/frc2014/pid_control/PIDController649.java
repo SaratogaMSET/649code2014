@@ -6,7 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package com.team649.frc2014.pid_control;
 
-import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
@@ -152,7 +151,6 @@ public class PIDController649 implements IUtility, LiveWindowSendable {
         }
 
         m_controlLoop = new java.util.Timer();
-
 
         m_P = Kp;
         m_I = Ki;

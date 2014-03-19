@@ -5,9 +5,7 @@
 package com.team649.frc2014.commands;
 
 import com.team649.frc2014.Display;
-import com.team649.frc2014.autonomous.HotTargetVision;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -20,7 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Alex
  */
 class HotVisionWaitCommand extends WaitCommand {
-private boolean hotGoalDetected;
+
+    private boolean hotGoalDetected;
+
     public HotVisionWaitCommand() {
         super(0);
     }
@@ -35,6 +35,5 @@ private boolean hotGoalDetected;
     protected boolean isFinished() {
         return hotGoalDetected || DriverStation.getInstance().getMatchTime() > 4.8;
     }
-    
-    
+
 }

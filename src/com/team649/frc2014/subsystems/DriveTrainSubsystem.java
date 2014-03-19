@@ -14,12 +14,8 @@ import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.pid_control.PIDVelocitySource;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.image.RGBImage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Vector;
 
@@ -36,12 +32,13 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     public static class EncoderBasedDriving {
 
         private static final double ENCODER_DISTANCE_PER_PULSE = -4 * Math.PI / 128;
-        public static double MAX_MOTOR_POWER = 0.5;
-        public static double MIN_MOTOR_POWER = 0;
-        public static double AUTONOMOUS_DRIVE_DISTANCE = 4 * 12;
-        public static double AUTO_DRIVE_P = .03;
-        public static double AUTO_DRIVE_I = 0;
-        public static double AUTO_DRIVE_D = 0;
+        public static final double MAX_MOTOR_POWER = 0.5;
+        public static final double MIN_MOTOR_POWER = 0.25;
+        public static final double AUTONOMOUS_DRIVE_DISTANCE = -14 * 12;
+        public static final double ABSOLUTE_TOLERANCE = 4;
+        public static final double AUTO_DRIVE_P = .005;
+        public static final double AUTO_DRIVE_I = 0;
+        public static final double AUTO_DRIVE_D = 0;
 
     }
 
@@ -66,7 +63,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
             motors[i] = new Victor(RobotMap.DRIVE_TRAIN.MOTORS[i]);
         }
         doubleSidedPid = new PIDController649(EncoderBasedDriving.AUTO_DRIVE_P, EncoderBasedDriving.AUTO_DRIVE_I, EncoderBasedDriving.AUTO_DRIVE_D, this, this);
-        doubleSidedPid.setAbsoluteTolerance(5);
+        doubleSidedPid.setAbsoluteTolerance(EncoderBasedDriving.ABSOLUTE_TOLERANCE);
         doubleSidedPid.setOutputRange(-EncoderBasedDriving.MAX_MOTOR_POWER, EncoderBasedDriving.MAX_MOTOR_POWER);
         encoders = new Encoder[RobotMap.DRIVE_TRAIN.ENCODERS.length / 2];
         for (int x = 0; x < RobotMap.DRIVE_TRAIN.ENCODERS.length; x += 2) {

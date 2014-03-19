@@ -6,37 +6,33 @@
 /*----------------------------------------------------------------------------*/
 package com.team649.frc2014;
 
-import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.commands.drivetrain.DriveSetDistanceByTimeCommand;
-import com.team649.frc2014.commands.drivetrain.GetAllDriveSpeedCommands;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
-import com.team649.frc2014.commands.rollers.RunRollers;
-import com.team649.frc2014.commands.winch.CoilClawWinch;
 import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
 import com.team649.frc2014.subsystems.ClawRollerSubsystem;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.io.IOException;
-import javax.microedition.io.Connector;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the IterativeRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the manifest file in the resource directory.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
  */
 public class Robot2014 extends IterativeRobot {
 
     public static final String DO_NOTHING_AUTO_NAME = "doNothingAuto";
     public static final String WAIT_AND_DRIVE_AUTO_NAME = "waitAndDriveAuto";
     public static final String DRIVE_AND_SHOOT_AUTO_NAME = "driveAndShootAuto";
+    public static final String TWO_BALL_AUTO_NAME = "twoBallAuto";
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPositionCommand;
     private Command shootCommand;
@@ -46,7 +42,8 @@ public class Robot2014 extends IterativeRobot {
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
     /**
-     * This function is run when the robot is first started up and should be used for any initialization code.
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
@@ -56,19 +53,10 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.init();
         autonomousModeChooser = new SendableChooser();
         autonomousModeChooser.addDefault("Drive, Check Hot Goal, and Shoot Autonomous", DRIVE_AND_SHOOT_AUTO_NAME);
+        autonomousModeChooser.addObject("Two Ball Autonomous", TWO_BALL_AUTO_NAME);
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
-        SmartDashboard.putNumber("driveFeet", -14);
-        SmartDashboard.putNumber("driveP", 0.005);
-        SmartDashboard.putNumber("driveI", 0.00);
-        SmartDashboard.putNumber("driveD", 0.00);
-        SmartDashboard.putNumber("minPower", 0.25);
-        SmartDashboard.putNumber("maxPower", 0.5);
-        SmartDashboard.putNumber("tolerance", 4);
-        SmartDashboard.putNumber("rollerSpeed", 0.35);
-        SmartDashboard.putBoolean("doFingerUp", true);
-        SmartDashboard.putNumber("fingerUpTime", ClawFingerSubsystem.TIME_TO_ENGAGE_SOLENOID);
     }
 
     public void disabledInit() {
@@ -83,14 +71,6 @@ public class Robot2014 extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE = 12 * SmartDashboard.getNumber("driveFeet");
-        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_P = SmartDashboard.getNumber("driveP");
-        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_I = SmartDashboard.getNumber("driveI");
-        DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_D = SmartDashboard.getNumber("driveD");
-        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = SmartDashboard.getNumber("minPower");
-        final double maxPower = SmartDashboard.getNumber("maxPower");
-        CommandBase.driveTrainSubsystem.getPID().setOutputRange(-maxPower, maxPower);
-        CommandBase.driveTrainSubsystem.getPID().setAbsoluteTolerance(SmartDashboard.getNumber("tolerance"));
         Display.clearMarquees();
 //        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true);
 //        Display.marquee(2, "WOOOOOO", 0, 10, true);
@@ -105,6 +85,8 @@ public class Robot2014 extends IterativeRobot {
         }
         if (selectedAuto.equals(DRIVE_AND_SHOOT_AUTO_NAME)) {
             autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        } else if (selectedAuto.equals(TWO_BALL_AUTO_NAME)) {
+            autonomousCommand = CommandBase.twoBallAutonomous();
         } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.waitAndDriveAutonomous();
         } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
@@ -135,7 +117,6 @@ public class Robot2014 extends IterativeRobot {
             setClawPositionCommand.cancel();
         }
         Display.clearMarquees();
-        CommandBase.clawPivotSubsystem.setState(ClawPivotSubsystem.NO_STATE);
         CommandBase.driveTrainSubsystem.startEncoders();
 //        Display.marquee(1, "2014 ENABLED", 5, 5, true);
         setSolenoidsToDefault();
@@ -164,26 +145,19 @@ public class Robot2014 extends IterativeRobot {
 //        CommandBase.driveTrainSubsystem.printEncoders();
 
         if (CommandBase.oi.shooter.isBackwardShootClawPositionButtonPressed()) {
-
             clawPIDSequence(ClawPivotSubsystem.BACKWARD_SHOOT);
-            
         } else if (CommandBase.oi.shooter.isForwardShootClawPositionButtonPressed()) {
-
             clawPIDSequence(ClawPivotSubsystem.FORWARD_SHOOT);
-        } 
-
-        // If joystick button for pickup state is set then change to pickup state (if appropriate) 
-        // also change finger state to appropriate level
-        
-        else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+        } else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
             clawPIDSequence(ClawPivotSubsystem.PICKUP);
-
+        } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
+            clawPIDSequence(ClawPivotSubsystem.STORE);
         } else {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
                 setClawPositionCommand = null;
             }
-            
+
             CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
         }
 
@@ -197,7 +171,7 @@ public class Robot2014 extends IterativeRobot {
             }
         }
         if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
-            coilClawWinchCommand = CommandBase.coilClawWinch();
+            coilClawWinchCommand = CommandBase.manualCoilClawWinch();
             coilClawWinchCommand.start();
         }
 

@@ -5,7 +5,6 @@
 package com.team649.frc2014.autonomous;
 
 import com.team649.frc2014.Display;
-import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
 import edu.wpi.first.wpilibj.image.CriteriaCollection;

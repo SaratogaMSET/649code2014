@@ -6,7 +6,6 @@
 package com.team649.frc2014.commands.fingers;
 
 import com.team649.frc2014.commands.CommandBase;
-import com.team649.frc2014.subsystems.ClawFingerSubsystem;
 
 /**
  *
@@ -14,7 +13,7 @@ import com.team649.frc2014.subsystems.ClawFingerSubsystem;
  */
 public class SetFingerPosition extends CommandBase {
 
-    private int fingerState;
+    private final int fingerState;
 
     public SetFingerPosition(int state) {
         fingerState = state;

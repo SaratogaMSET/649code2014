@@ -5,7 +5,6 @@ import com.team649.frc2014.Display;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * DriveSetDistanceCommand
@@ -123,7 +122,7 @@ public class DriveSetDistanceByTimeCommand extends CommandBase {
 
     private void drive(double output) {
         //-0.09
-        driveTrainSubsystem.driveFwdRot(0.2 + 0.8*output, 0);
+        driveTrainSubsystem.driveFwdRot(0.2 + 0.8 * output, 0);
     }
 
     // Make this return true when this Command no longer needs to run execute()

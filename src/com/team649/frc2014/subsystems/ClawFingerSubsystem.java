@@ -7,8 +7,6 @@ package com.team649.frc2014.subsystems;
 
 import com.team649.frc2014.RobotMap;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
