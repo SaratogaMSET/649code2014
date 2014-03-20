@@ -73,7 +73,8 @@ public abstract class CommandBase extends Command {
     }
 
     public static Command shootHotGoalAutonomous() {
-        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(false);
+           //Question, shouldnt we chech for the hot goal?
+        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true);
 
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         //drive and check goal. When both are done (checking goal and driving), shoot
@@ -94,11 +95,14 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(new WaitCommand(300));
         mainAutonomousSequence.addSequential(shootBall());
         CommandGroup repositionAndPickup = new CommandGroup();
+        //sign mixup auto drive distance is a negitive number, so drive its positive value (makes sense go back)
+        //but then you should add 12 rather than subtract to go an extra 12 inches back
         repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE - 12));
         repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
         repositionAndPickup.addParallel(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
         mainAutonomousSequence.addParallel(autoCoilClawWinch());
         mainAutonomousSequence.addSequential(repositionAndPickup);
+        //again sign mixup? drive 24 inches farther back and then drive forward?
         mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
         mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
         mainAutonomousSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
@@ -146,6 +150,8 @@ public abstract class CommandBase extends Command {
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         fireSequence.addSequential(new WaitCommand(300));
         fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
+        //fireSequence.addSequential(new WaitCommand(300));
+        //fireSequence.addSequential(autoCoilClawWinch(), ClawWinchSubsystem.MAX_COIL_TIME);
         return fireSequence;
     }
 
