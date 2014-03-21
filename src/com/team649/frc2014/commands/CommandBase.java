@@ -22,9 +22,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
- * The base for all commands. All atomic commands should subclass CommandBase.
- * CommandBase stores creates and stores each control system. To access a
- * subsystem elsewhere in your code in your code use
+ * The base for all commands. All atomic commands should subclass CommandBase. CommandBase stores creates and stores each control system. To access a subsystem elsewhere in your code in your code use
  * CommandBase.exampleSubsystem
  *
  * @author Author
@@ -89,8 +87,6 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
         mainAutonomousSequence.addSequential(new WaitCommand(300));
         mainAutonomousSequence.addSequential(shootBall());
-       //if choose to add auto coil to shoot command remove from here
-        mainAutonomousSequence.addParallel(autoCoilClawWinch());
         mainAutonomousSequence.addSequential(repositionAndPickup());
         //next two commands may be unnesscary with fixed gearbox
         mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
@@ -101,15 +97,17 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
+
     private static CommandGroup repositionAndPickup() {
-         CommandGroup repositionAndPickup = new CommandGroup();
-       //Extra 12 inches might be unnesscary, check that
+        CommandGroup repositionAndPickup = new CommandGroup();
+        //Extra 12 inches might be unnesscary, check that
         repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE - 12));
         repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
         repositionAndPickup.addParallel(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
 
-       return repositionAndPickup;
+        return repositionAndPickup;
     }
+
     private static CommandGroup driveAndPrepareToShoot(boolean checkHot) {
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         driveAndCheckGoal.addParallel(setFingerPosition(ClawFingerSubsystem.DOWN));
@@ -126,7 +124,6 @@ public abstract class CommandBase extends Command {
         return driveAndCheckGoal;
     }
 
-  
     public static Command waitAndDriveAutonomous() {
         CommandGroup group = new CommandGroup("waitAndDrive");
 //        group.addSequential(new WaitCommand(5000));
@@ -151,7 +148,8 @@ public abstract class CommandBase extends Command {
         fireSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         fireSequence.addSequential(new WaitCommand(300));
         fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
-        //fireSequence.addSequential(autoCoilClawWinch(), ClawWinchSubsystem.MAX_COIL_TIME);
+        fireSequence.addSequential(autoCoilClawWinch(), ClawWinchSubsystem.MAX_COIL_TIME);
+        
         return fireSequence;
     }
 

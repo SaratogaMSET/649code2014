@@ -16,7 +16,7 @@ public class AutoCoilClawWinch extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        if (!clawWinchSubsystem.isSwitchPressed()) {
+        if (!clawWinchSubsystem.isSwitchPressed() && CommandBase.oi.shooter.isAutoWinchOn()) {
             clawWinchSubsystem.runMotor();
         } else {
             clawWinchSubsystem.stopMotor();
@@ -33,7 +33,7 @@ public class AutoCoilClawWinch extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return clawWinchSubsystem.isSwitchPressed();
+        return (clawWinchSubsystem.isSwitchPressed() || !CommandBase.oi.shooter.isAutoWinchOn());
     }
 
     // Called once after isFinished returns true
