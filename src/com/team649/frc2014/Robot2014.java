@@ -21,11 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the IterativeRobot documentation. If you change the name of this class or
+ * the package after creating this project, you must also update the manifest file in the resource directory.
  */
 public class Robot2014 extends IterativeRobot {
 
@@ -42,8 +39,7 @@ public class Robot2014 extends IterativeRobot {
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
     /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
+     * This function is run when the robot is first started up and should be used for any initialization code.
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
@@ -157,8 +153,12 @@ public class Robot2014 extends IterativeRobot {
                 setClawPositionCommand.cancel();
                 setClawPositionCommand = null;
             }
+            if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
+                CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
+            } else {
+                CommandBase.manualDriveClaw(0).start();
+            }
 
-            CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
         }
 
         if (shootCommand == null || !shootCommand.isRunning()) {

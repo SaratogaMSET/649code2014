@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class ClawWinchSubsystem extends Subsystem {
 
     private static final double MOTOR_SPEED = 1;
-    public static final int TIME_TO_FIRE = 500;
+    public static final int TIME_TO_FIRE = 250;
     public static final int TIME_TO_ENGAGE_SOLENOID = 250;
     public static final int MAX_COIL_TIME = 3000;
 

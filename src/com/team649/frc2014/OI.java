@@ -87,6 +87,7 @@ public class OI {
         }
 
         public boolean isBackwardShootClawPositionButtonPressed() {
+            //Display.printToOutputStream(shooterJoystick.getThrottle()+"");
             return shooterJoystick.getRawButton(11);
         }
 

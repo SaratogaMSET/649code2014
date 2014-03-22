@@ -33,7 +33,7 @@ public class AutoCoilClawWinch extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (clawWinchSubsystem.isSwitchPressed() || !CommandBase.oi.shooter.isAutoWinchOn());
+        return (clawWinchSubsystem.isSwitchPressed() || !CommandBase.oi.shooter.isAutoWinchOn() || CommandBase.oi.shooter.isWinchWindButtonPressed());
     }
 
     // Called once after isFinished returns true
