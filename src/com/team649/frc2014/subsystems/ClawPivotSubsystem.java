@@ -37,8 +37,8 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
 
     static {
         CLAW_POT_STATES[PICKUP] = 4.75;
-        CLAW_POT_STATES[FORWARD_SHOOT] = 3.2;
-        CLAW_POT_STATES[BACKWARD_SHOOT] = 1.83;
+        CLAW_POT_STATES[FORWARD_SHOOT] = 3.21;
+        CLAW_POT_STATES[BACKWARD_SHOOT] = 1.45;
         CLAW_POT_STATES[STORE] = 2.22;
         CLAW_POT_NAMES[FORWARD_SHOOT] = "FWD SHOOT";
         CLAW_POT_NAMES[BACKWARD_SHOOT] = "BCK SHOOT";

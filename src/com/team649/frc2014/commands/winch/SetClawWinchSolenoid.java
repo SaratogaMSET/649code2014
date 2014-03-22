@@ -26,7 +26,7 @@ public class SetClawWinchSolenoid extends CommandBase {
     protected void initialize() {
         clawWinchSubsystem.setSolenoid(state);
         if (state == false) {
-            Display.printToOutputStream("shot at: " + DriverStation.getInstance().getMatchTime());
+            Display.printToOutputStream("shot at: " + DriverStation.getInstance().getMatchTime() + ", " + CommandBase.clawPivotSubsystem.getPotValue());
         }
     }
 

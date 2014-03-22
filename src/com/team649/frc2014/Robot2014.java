@@ -28,8 +28,13 @@ public class Robot2014 extends IterativeRobot {
 
     public static final String DO_NOTHING_AUTO_NAME = "doNothingAuto";
     public static final String WAIT_AND_DRIVE_AUTO_NAME = "waitAndDriveAuto";
-    public static final String DRIVE_AND_SHOOT_AUTO_NAME = "driveAndShootAuto";
-    public static final String TWO_BALL_AUTO_NAME = "twoBallAuto";
+    public static final String ONE_BALL_SHORT_DRIVE_AUTO_NAME = "oneBallShortDriveAuto";
+    public static final String ONE_BALL_LONG_DRIVE_AUTO_NAME = "oneBallLongDriveAuto";
+    public static final String ONE_BALL_RUNNING_SHOT_AUTO_NAME = "oneBallRunningAuto";
+    public static final String TWO_BALL_SHORT_DRIVE_AUTO_NAME = "twoBallShortDriveAuto";
+    public static final String TWO_BALL_LONG_DRIVE_AUTO_NAME = "twoBallToWallAuto";
+    public static final String TWO_BALL_RUNNING_SHOT_AUTO_NAME = "twoBallRunningAuto";
+
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPositionCommand;
     private Command shootCommand;
@@ -48,10 +53,14 @@ public class Robot2014 extends IterativeRobot {
         // Initialize all subsystems
         CommandBase.init();
         autonomousModeChooser = new SendableChooser();
-        autonomousModeChooser.addDefault("Drive, Check Hot Goal, and Shoot Autonomous", DRIVE_AND_SHOOT_AUTO_NAME);
-        autonomousModeChooser.addObject("Two Ball Autonomous", TWO_BALL_AUTO_NAME);
-        autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
+        autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addDefault("One Ball Short Drive Autonomous", ONE_BALL_SHORT_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addDefault("One Ball Drive to Wall Autonomous", ONE_BALL_LONG_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
+        autonomousModeChooser.addObject("Two Ball Drive to Wall Autonomous", TWO_BALL_LONG_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addObject("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
     }
 
@@ -79,16 +88,22 @@ public class Robot2014 extends IterativeRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        if (selectedAuto.equals(DRIVE_AND_SHOOT_AUTO_NAME)) {
-            autonomousCommand = CommandBase.shootHotGoalAutonomous();
-        } else if (selectedAuto.equals(TWO_BALL_AUTO_NAME)) {
-            autonomousCommand = CommandBase.twoBallAutonomous();
-        } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
-            autonomousCommand = CommandBase.waitAndDriveAutonomous();
+        if (selectedAuto.equals(ONE_BALL_LONG_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.shootHotGoalFullDriveAutonomous();
+        } else if (selectedAuto.equals(TWO_BALL_LONG_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.twoBallFullDriveAutonomous();
+        } else if (selectedAuto.equals(ONE_BALL_SHORT_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.shootHotGoalShortlDriveAutonomous();
         } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
-        } else {
-            autonomousCommand = CommandBase.shootHotGoalAutonomous();
+        } else if (selectedAuto.equals(TWO_BALL_RUNNING_SHOT_AUTO_NAME)) {
+            autonomousCommand = CommandBase.twoBallDrivingFireAutonomous();
+        } else if (selectedAuto.equals(TWO_BALL_SHORT_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.twoBallShortDriveAutonomous();
+        }else if (selectedAuto.equals(ONE_BALL_RUNNING_SHOT_AUTO_NAME)) {
+            autonomousCommand = CommandBase.shootHotGoalDrivingFireAutonomous();
+        }else {
+            autonomousCommand = CommandBase.shootHotGoalFullDriveAutonomous();
         }
         autonomousCommand.start();
         setSolenoidsToDefault();

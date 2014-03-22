@@ -2,6 +2,8 @@ package com.team649.frc2014.commands;
 
 import com.team649.frc2014.OI;
 import com.team649.frc2014.RobotMap;
+//Why are we importing something from this class into this class
+//import com.team649.frc2014.commands.CommandBase.shootBall;
 import com.team649.frc2014.commands.drivetrain.DriveForwardRotate;
 import com.team649.frc2014.commands.drivetrain.DriveSetDistanceWithPIDCommand;
 import com.team649.frc2014.commands.fingers.SetFingerPosition;
@@ -70,8 +72,8 @@ public abstract class CommandBase extends Command {
 
     }
 
-    public static Command shootHotGoalAutonomous() {
-        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true);
+    public static Command shootHotGoalFullDriveAutonomous() {
+        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG);
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         //drive and check goal. When both are done (checking goal and driving), shoot
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
@@ -82,37 +84,86 @@ public abstract class CommandBase extends Command {
         return mainAutonomousSequence;
     }
 
-    public static Command twoBallAutonomous() {
+    public static Command shootHotGoalShortlDriveAutonomous() {
+        CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT);
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
-        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
+        //drive and check goal. When both are done (checking goal and driving), shoot
+        mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
+        mainAutonomousSequence.addSequential(driveAndCheckGoal);
         mainAutonomousSequence.addSequential(new WaitCommand(300));
         mainAutonomousSequence.addSequential(shootBall());
-        mainAutonomousSequence.addSequential(repositionAndPickup());
+        return mainAutonomousSequence;
+    }
+
+    public static Command shootHotGoalDrivingFireAutonomous() {
+        //CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG);
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
+        //drive and check goal. When both are done (checking goal and driving), shoot
+        mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
+        mainAutonomousSequence.addSequential(driveAndFireForward(true, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        return mainAutonomousSequence;
+    }
+
+    public static Command twoBallShortDriveAutonomous() {
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(shootBall());
+        mainAutonomousSequence.addSequential(repositionAndPickup(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
         //next two commands may be unnesscary with fixed gearbox
         mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
         mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(-12));
-        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false));
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        mainAutonomousSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(shootBall());
+        return mainAutonomousSequence;
+    }
+    public static Command twoBallFullDriveAutonomous() {
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
+        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(shootBall());
+        mainAutonomousSequence.addSequential(repositionAndPickup(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
+        //next two commands may be unnesscary with fixed gearbox
+        mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
+        mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(-12));
+        mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
         mainAutonomousSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
         mainAutonomousSequence.addSequential(new WaitCommand(300));
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
 
-    private static CommandGroup repositionAndPickup() {
+    public static Command twoBallDrivingFireAutonomous() {
+        CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
+        mainAutonomousSequence.addSequential(driveAndFireForward(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        mainAutonomousSequence.addSequential(repositionAndPickup(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        //next two commands may be unnesscary with fixed gearbox
+        mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(24));
+        mainAutonomousSequence.addSequential(new DriveSetDistanceWithPIDCommand(-12));
+        mainAutonomousSequence.addSequential(driveAndFireForward(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
+        mainAutonomousSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
+        return mainAutonomousSequence;
+    }
+
+    private static CommandGroup repositionAndPickup(double driveDistance) {
         CommandGroup repositionAndPickup = new CommandGroup();
         //Extra 12 inches might be unnesscary, check that
-        repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE - 12));
+        repositionAndPickup.addParallel(new DriveSetDistanceWithPIDCommand(-driveDistance - 12));
         repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
         repositionAndPickup.addParallel(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
 
         return repositionAndPickup;
     }
 
-    private static CommandGroup driveAndPrepareToShoot(boolean checkHot) {
+    private static CommandGroup driveAndPrepareToShoot(boolean checkHot, double driveDistance) {
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
         driveAndCheckGoal.addParallel(setFingerPosition(ClawFingerSubsystem.DOWN));
         driveAndCheckGoal.addParallel(new SetClawWinchSolenoid(true));
-        driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
+        driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(driveDistance));
         driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT));
 //        check the hot goal after .5 seconds
         if (checkHot) {
@@ -124,13 +175,32 @@ public abstract class CommandBase extends Command {
         return driveAndCheckGoal;
     }
 
+    private static CommandGroup driveAndFireForward(boolean checkHot, double driveDistance) {
+        CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
+        //        check the hot goal after 1 second
+        if (checkHot) {
+            CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
+            checkHotGoal.addSequential(new WaitCommand(1000));
+            checkHotGoal.addSequential(new HotVisionWaitCommand());
+            driveAndCheckGoal.addSequential(checkHotGoal);
+        }
+        driveAndCheckGoal.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
+        driveAndCheckGoal.addParallel(new SetClawWinchSolenoid(true));
+        driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(driveDistance));
+        driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.FORWARD_SHOOT));
+        //as soon as reaches forward position, fire
+        driveAndCheckGoal.addSequential(shootBall());
+
+        return driveAndCheckGoal;
+    }
+
     public static Command waitAndDriveAutonomous() {
         CommandGroup group = new CommandGroup("waitAndDrive");
 //        group.addSequential(new WaitCommand(5000));
 //        group.addSequential(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.TimeBasedDriving.DRIVE_SPEED, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
 
-        group.addSequential(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
-        group.addSequential(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
+        group.addSequential(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
+        group.addSequential(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
         return group;
     }
 
@@ -149,7 +219,7 @@ public abstract class CommandBase extends Command {
         fireSequence.addSequential(new WaitCommand(300));
         fireSequence.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
         fireSequence.addSequential(autoCoilClawWinch(), ClawWinchSubsystem.MAX_COIL_TIME);
-        
+
         return fireSequence;
     }
 
