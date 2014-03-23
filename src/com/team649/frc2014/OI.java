@@ -88,13 +88,17 @@ public class OI {
 
         public boolean isBackwardShootClawPositionButtonPressed() {
             //Display.printToOutputStream(shooterJoystick.getThrottle()+"");
+            return shooterJoystick.getRawButton(10);
+        }
+
+        public boolean isGoalShootClawPositionButtonPressed() {
             return shooterJoystick.getRawButton(7);
         }
 
         public boolean isForwardShootClawPositionButtonPressed() {
             return shooterJoystick.getRawButton(9);
         }
-        
+
         public double getShooterJoystickY() {
             return shooterJoystick.getY();
         }
@@ -102,5 +106,6 @@ public class OI {
         public boolean isAutoWinchOn() {
             return (shooterJoystick.getThrottle() >= .5);
         }
+
     }
 }

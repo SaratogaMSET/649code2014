@@ -37,7 +37,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         public static double DRIVING_SHOT_MOTOR_POWER = 0.5;
 
         public static final double AUTONOMOUS_DRIVE_DISTANCE_LONG = -14 * 12;
-        public static final double AUTONOMOUS_DRIVE_DISTANCE_SHORT = -6 * 12;
+        public static final double AUTONOMOUS_DRIVE_DISTANCE_SHORT = -5.5 * 12;
         
         public static final double ABSOLUTE_TOLERANCE = 4;
         public static final double AUTO_DRIVE_P = .005;

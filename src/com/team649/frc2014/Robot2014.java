@@ -29,11 +29,9 @@ public class Robot2014 extends IterativeRobot {
     public static final String DO_NOTHING_AUTO_NAME = "doNothingAuto";
     public static final String WAIT_AND_DRIVE_AUTO_NAME = "waitAndDriveAuto";
     public static final String ONE_BALL_SHORT_DRIVE_AUTO_NAME = "oneBallShortDriveAuto";
-    public static final String ONE_BALL_LONG_DRIVE_AUTO_NAME = "oneBallLongDriveAuto";
-    public static final String ONE_BALL_RUNNING_SHOT_AUTO_NAME = "oneBallRunningAuto";
+    // public static final String ONE_BALL_RUNNING_SHOT_AUTO_NAME = "oneBallRunningAuto";
     public static final String TWO_BALL_SHORT_DRIVE_AUTO_NAME = "twoBallShortDriveAuto";
-    public static final String TWO_BALL_LONG_DRIVE_AUTO_NAME = "twoBallToWallAuto";
-    public static final String TWO_BALL_RUNNING_SHOT_AUTO_NAME = "twoBallRunningAuto";
+    //  public static final String TWO_BALL_RUNNING_SHOT_AUTO_NAME = "twoBallRunningAuto";
 
     private SendableChooser autonomousModeChooser;
     private SetClawPosition setClawPositionCommand;
@@ -49,18 +47,16 @@ public class Robot2014 extends IterativeRobot {
     public void robotInit() {
         // instantiate the command used for the autonomous period
 //        autonomousCommand = new DriveSetDistanceCommand();
-SmartDashboard.putNumber("waitTime", 1000);
+        SmartDashboard.putNumber("waitTime", 1000);
         // Initialize all subsystems
         CommandBase.init();
         autonomousModeChooser = new SendableChooser();
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addDefault("One Ball Short Drive Autonomous", ONE_BALL_SHORT_DRIVE_AUTO_NAME);
-        autonomousModeChooser.addDefault("One Ball Drive to Wall Autonomous", ONE_BALL_LONG_DRIVE_AUTO_NAME);
-        autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
-        autonomousModeChooser.addObject("Two Ball Drive to Wall Autonomous", TWO_BALL_LONG_DRIVE_AUTO_NAME);
+   //       autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
         autonomousModeChooser.addObject("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
-        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
+//        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
     }
 
@@ -88,23 +84,21 @@ SmartDashboard.putNumber("waitTime", 1000);
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        if (selectedAuto.equals(ONE_BALL_LONG_DRIVE_AUTO_NAME)) {
-            autonomousCommand = CommandBase.shootHotGoalFullDriveAutonomous();
-        } else if (selectedAuto.equals(TWO_BALL_LONG_DRIVE_AUTO_NAME)) {
-            autonomousCommand = CommandBase.twoBallFullDriveAutonomous();
-        } else if (selectedAuto.equals(ONE_BALL_SHORT_DRIVE_AUTO_NAME)) {
-            autonomousCommand = CommandBase.shootHotGoalShortDriveAutonomous();
-        } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
+
+        if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
-        } else if (selectedAuto.equals(TWO_BALL_RUNNING_SHOT_AUTO_NAME)) {
-            autonomousCommand = CommandBase.twoBallDrivingFireAutonomous();
         } else if (selectedAuto.equals(TWO_BALL_SHORT_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.twoBallShortDriveAutonomous();
-        }else if (selectedAuto.equals(ONE_BALL_RUNNING_SHOT_AUTO_NAME)) {
-            autonomousCommand = CommandBase.shootHotGoalDrivingFireAutonomous();
-        }else {
-            autonomousCommand = CommandBase.shootHotGoalFullDriveAutonomous();
+             } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
+            autonomousCommand = CommandBase.waitAndDriveAutonomous();
+//      }else if (selectedAuto.equals(ONE_BALL_RUNNING_SHOT_AUTO_NAME)) {
+//            autonomousCommand = CommandBase.shootHotGoalDrivingFireAutonomous();
+//      } else if (selectedAuto.equals(TWO_BALL_RUNNING_SHOT_AUTO_NAME)) {
+//            autonomousCommand = CommandBase.twoBallDrivingFireAutonomous();    
+        } else {
+            autonomousCommand = CommandBase.shootHotGoalShortDriveAutonomous();
         }
+
         autonomousCommand.start();
         setSolenoidsToDefault();
     }
@@ -163,7 +157,10 @@ SmartDashboard.putNumber("waitTime", 1000);
             clawPIDSequence(ClawPivotSubsystem.PICKUP);
         } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
             clawPIDSequence(ClawPivotSubsystem.STORE);
-        } else {
+        } else if(CommandBase.oi.shooter.isGoalShootClawPositionButtonPressed()) {
+            clawPIDSequence(ClawPivotSubsystem.GOAL_SHOOT);
+        } 
+        else {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
                 setClawPositionCommand = null;
