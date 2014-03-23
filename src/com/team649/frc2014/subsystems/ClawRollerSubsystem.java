@@ -22,6 +22,7 @@ public class ClawRollerSubsystem extends Subsystem {
     public static final double ROLLER_SPIN_INTAKE_SPEED = -.4;
     public static final double ROLLER_SPIN_PURGE_SPEED = .4;
     public static final double ROLLER_SPIN_OFF_SPEED = 0;
+    public static final double ROLLER_SPIN_REALIGN_SPEED = -.2;
 
     public ClawRollerSubsystem() {
         motor = new Victor(RobotMap.CLAW_ROLLER.MOTOR);

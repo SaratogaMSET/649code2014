@@ -32,10 +32,12 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
     public static class EncoderBasedDriving {
 
         private static final double ENCODER_DISTANCE_PER_PULSE = -4 * Math.PI / 128;
-        public static final double MAX_MOTOR_POWER = 0.5;
-        public static final double MIN_MOTOR_POWER = 0.25;
+        public static final double MAX_MOTOR_POWER = 0.6;
+        public static  double MIN_MOTOR_POWER = 0.25;
+        public static double DRIVING_SHOT_MOTOR_POWER = 0.5;
+
         public static final double AUTONOMOUS_DRIVE_DISTANCE_LONG = -14 * 12;
-        public static final double AUTONOMOUS_DRIVE_DISTANCE_SHORT = -7 * 12;
+        public static final double AUTONOMOUS_DRIVE_DISTANCE_SHORT = -6 * 12;
         
         public static final double ABSOLUTE_TOLERANCE = 4;
         public static final double AUTO_DRIVE_P = .005;

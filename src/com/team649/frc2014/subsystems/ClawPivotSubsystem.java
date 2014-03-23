@@ -55,7 +55,7 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
         motor = new Victor(RobotMap.CLAW_PIVOT.MOTOR);
         potentiometer = new AnalogPotentiometer(RobotMap.CLAW_PIVOT.POTENTIOMETER);
         clawPID = new PIDController649(kP, kI, kD, potentiometer, this);
-        clawPID.setAbsoluteTolerance(0.02);
+        clawPID.setAbsoluteTolerance(0.01);
         clawPID.setOutputRange(MAX_FORWARD_SPEED, MAX_BACKWARD_SPEED);
     }
 

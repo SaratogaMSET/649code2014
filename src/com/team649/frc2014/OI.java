@@ -79,22 +79,22 @@ public class OI {
         }
 
         public boolean isPickupClawPositionButtonPressed() {
-            return shooterJoystick.getRawButton(9);
+            return shooterJoystick.getRawButton(11);
         }
 
         public boolean isStoreClawPositionButtonPressed() {
-            return shooterJoystick.getRawButton(10);
+            return shooterJoystick.getRawButton(12);
         }
 
         public boolean isBackwardShootClawPositionButtonPressed() {
             //Display.printToOutputStream(shooterJoystick.getThrottle()+"");
-            return shooterJoystick.getRawButton(11);
+            return shooterJoystick.getRawButton(7);
         }
 
         public boolean isForwardShootClawPositionButtonPressed() {
-            return shooterJoystick.getRawButton(12);
+            return shooterJoystick.getRawButton(9);
         }
-
+        
         public double getShooterJoystickY() {
             return shooterJoystick.getY();
         }

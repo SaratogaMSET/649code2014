@@ -6,6 +6,7 @@
 package com.team649.frc2014.commands.pivot;
 
 import com.team649.frc2014.Display;
+import com.team649.frc2014.commands.ChangeableBoolean;
 import com.team649.frc2014.commands.CommandBase;
 import com.team649.frc2014.pid_control.PIDController649;
 import com.team649.frc2014.subsystems.ClawPivotSubsystem;
@@ -20,10 +21,17 @@ public class SetClawPosition extends CommandBase {
     private final PIDController649 clawPID;
     private final int state;
     private long startTime;
+    private ChangeableBoolean bool;
 
     public SetClawPosition(int state) {
         clawPID = clawPivotSubsystem.getClawPID();
         this.state = state;
+    }
+
+    public SetClawPosition(int state, ChangeableBoolean bool) {
+        this(state);
+        this.bool = bool;
+
     }
 
     protected void initialize() {
@@ -40,7 +48,8 @@ public class SetClawPosition extends CommandBase {
     protected boolean isFinished() {
         final long timeDiff = System.currentTimeMillis() - startTime;
         //TODO make sure things get finished (time to be on target)
-        return clawPID.onTarget() && timeDiff > 1500 || timeDiff > 2500;
+
+        return ((state != ClawPivotSubsystem.PICKUP && clawPID.onTarget() && timeDiff > 1500) || timeDiff > 4000) && (bool == null || bool.bool);
     }
 
     protected void end() {

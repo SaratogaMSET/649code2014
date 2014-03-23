@@ -49,7 +49,7 @@ public class Robot2014 extends IterativeRobot {
     public void robotInit() {
         // instantiate the command used for the autonomous period
 //        autonomousCommand = new DriveSetDistanceCommand();
-
+SmartDashboard.putNumber("waitTime", 1000);
         // Initialize all subsystems
         CommandBase.init();
         autonomousModeChooser = new SendableChooser();
@@ -93,7 +93,7 @@ public class Robot2014 extends IterativeRobot {
         } else if (selectedAuto.equals(TWO_BALL_LONG_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.twoBallFullDriveAutonomous();
         } else if (selectedAuto.equals(ONE_BALL_SHORT_DRIVE_AUTO_NAME)) {
-            autonomousCommand = CommandBase.shootHotGoalShortlDriveAutonomous();
+            autonomousCommand = CommandBase.shootHotGoalShortDriveAutonomous();
         } else if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
         } else if (selectedAuto.equals(TWO_BALL_RUNNING_SHOT_AUTO_NAME)) {
