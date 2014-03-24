@@ -21,16 +21,16 @@ public class SetClawPosition extends CommandBase {
     private final PIDController649 clawPID;
     private final int state;
     private long startTime;
-    private ChangeableBoolean bool;
+    private ChangeableBoolean driveFinishedChecker;
 
     public SetClawPosition(int state) {
         clawPID = clawPivotSubsystem.getClawPID();
         this.state = state;
     }
 
-    public SetClawPosition(int state, ChangeableBoolean bool) {
+    public SetClawPosition(int state, ChangeableBoolean driveFinishedChecker) {
         this(state);
-        this.bool = bool;
+        this.driveFinishedChecker = driveFinishedChecker;
 
     }
 
@@ -49,7 +49,7 @@ public class SetClawPosition extends CommandBase {
         final long timeDiff = System.currentTimeMillis() - startTime;
         //TODO make sure things get finished (time to be on target)
 
-        return ((state != ClawPivotSubsystem.PICKUP && clawPID.onTarget() && timeDiff > 1500) || timeDiff > 4000) && (bool == null || bool.bool);
+        return ((state != ClawPivotSubsystem.PICKUP && clawPID.onTarget() && timeDiff > 1500) || timeDiff > 4000) && (driveFinishedChecker == null || driveFinishedChecker.bool);
     }
 
     protected void end() {

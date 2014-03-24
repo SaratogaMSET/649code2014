@@ -21,7 +21,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     private final double distance;
     private PIDController649 pid;
     private long onTargetStartTime;
-    private ChangeableBoolean bool;
+    private ChangeableBoolean finishedChecker;
 
     /**
      * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused for multiple executions of the same speed/distance.
@@ -39,9 +39,9 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
         DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
     }
 
-    public DriveSetDistanceWithPIDCommand(double distance, double minDriveSpeed, ChangeableBoolean bool) {
+    public DriveSetDistanceWithPIDCommand(double distance, double minDriveSpeed, ChangeableBoolean finishedChecker) {
         this.distance = distance;
-        this.bool = bool;
+        this.finishedChecker = finishedChecker;
         DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
     }
 
@@ -87,8 +87,8 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
         pid.disable();
         driveTrainSubsystem.driveFwdRot(0, 0);
         DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = .25;
-        if (bool != null) {
-            bool.bool = true;
+        if (finishedChecker != null) {
+            finishedChecker.bool = true;
         }
     }
 
