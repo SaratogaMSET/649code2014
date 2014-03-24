@@ -88,7 +88,7 @@ public abstract class CommandBase extends Command {
    public static Command twoBallShortDriveAutonomous() {
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT, true));
-        mainAutonomousSequence.addSequential(new WaitCommand(300));
+        mainAutonomousSequence.addSequential(new WaitCommand(200));
         mainAutonomousSequence.addSequential(shootBall(false));
         mainAutonomousSequence.addParallel(autoCoilClawWinch(), ClawWinchSubsystem.MAX_COIL_TIME);
         mainAutonomousSequence.addSequential(repositionAndPickup(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT));
@@ -103,7 +103,7 @@ public abstract class CommandBase extends Command {
         CommandGroup repositionAndPickup = new CommandGroup();
         //Extra 12 inches might be unnesscary, check that
         repositionAndPickup.addParallel(new SetClawPosition(ClawPivotSubsystem.PICKUP));
-        repositionAndPickup.addSequential(new WaitCommand(500));
+        repositionAndPickup.addSequential(new WaitCommand(300));
 
         repositionAndPickup.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED));
         repositionAndPickup.addSequential(new DriveSetDistanceWithPIDCommand(-driveDistance + 16, 0.63));
