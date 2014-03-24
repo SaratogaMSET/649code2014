@@ -31,7 +31,7 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
     public static final int FORWARD_SHOOT = 2;
     public static final int PICKUP = 1;
     public static final int BACKWARD_SHOOT = 0;
-    public static final int GOAL_SHOOT = 5;
+    public static final int GOAL_SHOOT = 4;
     public static final int NO_STATE = 5;
     public static final double[] CLAW_POT_STATES = new double[5];
     public static final String[] CLAW_POT_NAMES = new String[5];
