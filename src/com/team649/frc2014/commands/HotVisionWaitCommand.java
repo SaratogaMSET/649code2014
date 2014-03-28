@@ -5,6 +5,7 @@
 package com.team649.frc2014.commands;
 
 import com.team649.frc2014.Display;
+import com.team649.frc2014.autonomous.HotTargetVision;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  *
  * @author Alex
  */
-class HotVisionWaitCommand extends WaitCommand {
+public class HotVisionWaitCommand extends WaitCommand {
 
     private boolean hotGoalDetected;
 
@@ -26,9 +27,9 @@ class HotVisionWaitCommand extends WaitCommand {
     }
 
     protected void initialize() {
-        hotGoalDetected = true;
-//        hotGoalDetected = HotTargetVision.detectHotGoal();
-        Display.printToOutputStream("hot goal: " + hotGoalDetected);
+//        hotGoalDetected = true;
+        hotGoalDetected = HotTargetVision.detectHotGoal();
+        Display.printToOutputStream("hot goal at" + DriverStation.getInstance().getMatchTime() + ": " + hotGoalDetected);
         super.initialize();
     }
 

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import com.team649.frc2014.commands.CommandBase;
+import com.team649.frc2014.commands.HotVisionWaitCommand;
 import com.team649.frc2014.commands.pivot.SetClawPosition;
 import com.team649.frc2014.commands.winch.SetClawWinchSolenoid;
 import com.team649.frc2014.subsystems.ClawFingerSubsystem;
@@ -58,6 +59,7 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
 //        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
+        SmartDashboard.putData(new HotVisionWaitCommand());
     }
 
     public void disabledInit() {
