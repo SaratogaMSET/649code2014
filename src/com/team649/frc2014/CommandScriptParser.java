@@ -36,7 +36,7 @@ import javax.microedition.io.Connector;
  */
 public class CommandScriptParser {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String COMMAND_FILE_SUFFIX = "frcscript";
 
     public static Command parseCommand(String name) {

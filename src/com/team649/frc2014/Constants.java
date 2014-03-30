@@ -19,9 +19,13 @@ import javax.microedition.io.Connector;
  */
 public class Constants {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String CONSTANTS_FILE_NAME = "constants.txt";
     private static Vector CONSTANTS = new Vector();
+
+    static {
+        loadConstants();
+    }
 
     public static void loadConstants() {
         try {
@@ -31,7 +35,7 @@ public class Constants {
             FileConnection commandFileConnection = (FileConnection) Connector.open(fileName, Connector.READ);
             DataInputStream commandFileStream = commandFileConnection.openDataInputStream();
             StringBuffer fileContentsBuffer = new StringBuffer((int) commandFileConnection.fileSize());
-            
+
             //read characters from the file until end of file is reached
             byte[] buff = new byte[255];
             while (commandFileStream.read(buff) != -1) {
