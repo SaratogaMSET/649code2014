@@ -8,12 +8,21 @@ package com.team649.frc2014;
 import com.sun.squawk.microedition.io.FileConnection;
 import com.sun.squawk.util.StringTokenizer;
 import java.io.DataInputStream;
-import java.io.EOFException;
-import java.io.IOException;
 import java.util.Vector;
 import javax.microedition.io.Connector;
 
 /**
+ *
+ * Constants Parser. Reads constants from a file named constants.txt in the root
+ * folder on the cRIO hard drive. Format is as such:
+ *
+ * consta 1 
+ * constb 2.3 
+ * constc test1
+ *
+ * All constants must be on their own line, any lines starting with "#" (no
+ * quotes) will be ignored. There must be a space separating constant name and 
+ * value, names cannot contain a space.
  *
  * @author Alex
  */
@@ -51,6 +60,9 @@ public class Constants {
             //for each line, split into space-separated tokens
             while (lineTokenizer.hasMoreTokens()) {
                 String line = lineTokenizer.nextToken().trim();
+                if (line.startsWith("#")) {
+                    continue;
+                }
                 StringTokenizer spaceTokenizer = new StringTokenizer(line, " ");
                 //map the first two tokens
                 if (spaceTokenizer.countTokens() > 1) {
