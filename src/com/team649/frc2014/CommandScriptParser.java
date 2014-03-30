@@ -1,4 +1,4 @@
-package com.team649.frc2014.commands;
+package com.team649.frc2014;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;

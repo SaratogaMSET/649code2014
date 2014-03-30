@@ -8,19 +8,28 @@ import javax.microedition.io.Connector;
 
 public class Display {
 
-    private static final String PADDING = "                     ";
     private static final boolean[] printed = new boolean[]{false, false, false, false, false, false};
     private static final String[] queuedLines = new String[6];
     private static final Marquee[] marqueedLines = new Marquee[6];
     private static int queueCount = 0;
     public static final short MAX_LINE_LENGTH = 21;
+    private static final String PADDING;
+
+    //make the padding the length of the max line length
+    static {
+        String tempPadding = "";
+        for (int i = 0; i < MAX_LINE_LENGTH; i++) {
+            tempPadding += " ";
+        }
+        PADDING = tempPadding;
+    }
     public static final String TRUNCATE_MARKER = ">";
     private static DriverStationLCD display = DriverStationLCD.getInstance();
     private static OutputStream FILE_OUTPUT_STREAM;
 
     static {
         try {
-
+            //get a connection to the output file
             FileConnection conn = (FileConnection) Connector.open("file:///output.txt", Connector.READ_WRITE);
             if (conn.exists()) {
                 conn.delete();
@@ -48,6 +57,11 @@ public class Display {
         return true;
     }
 
+    /**
+     * Print text to the output stream and save to an output file
+     *
+     * @param text The text to print (will call the toString method)
+     */
     public static void printToOutputStream(Object text) {
         System.out.println(text);
         if (FILE_OUTPUT_STREAM != null) {
@@ -109,9 +123,6 @@ public class Display {
         if (line < 1 || line > 6) {
             return;
         }
-//        if (marqueedLines[line - 1] != null) {
-//            marqueedLines[line - 1] = null;
-//        }
         //truncate the text if it's longer than the maximum length and add a marker to indicate that it was truncated
         if (text.length() > MAX_LINE_LENGTH) {
             text = text.substring(0, MAX_LINE_LENGTH - TRUNCATE_MARKER.length()) + TRUNCATE_MARKER;
@@ -152,14 +163,16 @@ public class Display {
      * second.
      * @param fullLength Whether to use the full length of the row or just the
      * String
+     * @param direction The direction to marquee. True means left-to-right,
+     * false means right-to-left
      */
-    public static void marquee(int line, String text, int startColumn, int columnsPerSecond, boolean fullLength) {
+    public static void marquee(int line, String text, int startColumn, int columnsPerSecond, boolean fullLength, boolean direction) {
         //truncate the text if it's longer than the maximum length and add a marker to indicate that it was truncated
         if (text != null && !text.equals("")) {
             if (text.length() > MAX_LINE_LENGTH) {
                 text = text.substring(0, MAX_LINE_LENGTH - TRUNCATE_MARKER.length()) + TRUNCATE_MARKER;
             }
-            marqueedLines[line - 1] = new Marquee(text, startColumn, columnsPerSecond, fullLength);
+            marqueedLines[line - 1] = new Marquee(text, startColumn, columnsPerSecond, fullLength, direction);
         } else {
             marqueedLines[line - 1] = null;
         }
@@ -178,13 +191,15 @@ public class Display {
         private int column;
         private final int columnTime;
         private final int length;
+        private int direction;
 
-        public Marquee(String text, int column, int columnsPerSecond, boolean fullLength) {
+        public Marquee(String text, int column, int columnsPerSecond, boolean fullLength, boolean forward) {
             this.text = text;
             this.column = column;
             this.columnTime = 1000 / columnsPerSecond;
             this.lastMarqueeUpdateTime = System.currentTimeMillis();
             this.length = fullLength ? MAX_LINE_LENGTH : text.length();
+            this.direction = forward ? 1 : -1;
         }
 
         public String getPrintableString() {
@@ -206,7 +221,7 @@ public class Display {
         public void doIncrement() {
             final long currTime = System.currentTimeMillis();
             if (currTime - lastMarqueeUpdateTime > columnTime) {
-                column = (column + 1) % length;
+                column = (((column + direction % length) + length) % length);
                 lastMarqueeUpdateTime = System.currentTimeMillis();
             }
         }
