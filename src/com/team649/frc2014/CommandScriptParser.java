@@ -26,6 +26,11 @@ import javax.microedition.io.Connector;
  * com.team649.frc2014.commands.AutoCoilClawWinch or can use a common package
  * with #define COMMON_PACKAGE com.team649.frc2014.commands
  *
+ * You can pass your commands constants (useful for things like waiting, or
+ * other commands that it does not make sense to have many essentially duplicate
+ * commands) by including the space-separated parameters after the command (e.g.
+ * CommandA 500 2.3)
+ *
  * Example usage:
  *
  * { CommandA CommandB ~{CommandC, CommandD, ~(CommandE, CommandF)} CommandG }
@@ -57,12 +62,41 @@ public class CommandScriptParser {
         boolean nextParallel = false;
         String commandName = "";
         CommandGroup group = new CommandGroup();
+        Vector commandParameters = new Vector();
+        boolean justAddedCommand = false;
         for (int i = 0; i < content.length(); i++) {
             char c = content.charAt(i);
             Command commandToAdd = null;
-            if ('0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || c == '.') {
-                //if the character is part of a valid command name, add it to
-                // the command name currently being constructed
+
+            //if the character is part of a valid command name, add it to
+            // the command name currently being constructed
+            if (justAddedCommand) {
+                if ('0' <= c && c <= '9' || c == '.') {
+                    commandParameters.setElementAt(commandParameters.lastElement().toString() + c, commandParameters.size() - 1);
+                } else if (c == ' ') {
+                    if (!commandParameters.lastElement().equals("")) {
+                        commandParameters.addElement("");
+                    }
+                } else {
+                    //if not constructing the command name and not a group, get the
+                    //  actual command by its name, with the possible use of a common
+                    //  package
+                    try {
+                        //TODO if you want to add special case exceptions, like a wait command
+                        //  so that you do not need to have a new command for every unique
+                        //  time that you want to wait, do so here using the parameters
+                        //  gathered
+                        commandName = (commonPackage != null ? commonPackage : "") + commandName;
+                        commandToAdd = (Command) Class.forName(commandName).newInstance();
+                        printIfDebug("Getting command " + commandName + ".");
+                        commandName = "";
+                        justAddedCommand = false;
+                    } catch (Exception e) {
+                        System.out.println("Command class " + commandName + " not found or could not be initialized due to " + e.getClass().getName() + ".");
+                        commandName = "";
+                    }
+                }
+            } else if ('0' <= c && c <= '9' || 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || c == '_' || c == '.') {
                 commandName += c;
             } else if (c == '~') {
                 nextParallel = true;
@@ -76,18 +110,10 @@ public class CommandScriptParser {
             } else if (c == '{') {
                 commandToAdd = getCommandGroup(content.substring(i + 1, i = getCommandGroupEnd(i, content, '{', '}')), commonPackage);
             } else if (!commandName.equals("")) {
-                //if not constructing the command name and not a group, get the
-                //  actual command by its name, with the possible use of a common
-                //  package
-                try {
-                    commandName = (commonPackage != null ? commonPackage : "") + commandName;
-                    commandToAdd = (Command) Class.forName(commandName).newInstance();
-                    printIfDebug("Getting command " + commandName + ".");
-                    commandName = "";
-                } catch (Exception e) {
-                    System.out.println("Command class " + commandName + " not found or could not be initialized due to " + e.getClass().getName() + ".");
-                    commandName = "";
-                }
+                printIfDebug("Finished command name : " + commandName);
+                justAddedCommand = true;
+                commandParameters.removeAllElements();
+                commandParameters.addElement("");
             }
 
             if (commandToAdd != null) {
