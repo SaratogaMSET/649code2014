@@ -29,11 +29,13 @@ import javax.microedition.io.Connector;
  * You can pass your commands constants (useful for things like waiting, or
  * other commands that it does not make sense to have many essentially duplicate
  * commands) by including the space-separated parameters after the command (e.g.
- * CommandA 500 2.3)
+ * CommandA 500 2.3). Since methods / parameters containing constructors cannot
+ * be called in the cRIO's edition of Java, you'll have to cast and hard code 
+ * the parameters yourself.
  *
  * Example usage:
  *
- * { CommandA CommandB ~{CommandC, CommandD, ~(CommandE, CommandF)} CommandG }
+ * { CommandA 15 2.3 CommandB ~{CommandC 20, CommandD, ~(CommandE 500, CommandF)} CommandG }
  * will result in a command that executes CommandA, then CommandB, then CommandG
  * and (CommandC, then CommandD and (CommandE then CommandF))
  *
