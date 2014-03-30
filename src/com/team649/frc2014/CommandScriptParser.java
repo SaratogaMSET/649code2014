@@ -1,5 +1,6 @@
 package com.team649.frc2014;
 
+import com.sun.squawk.microedition.io.FileConnection;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import java.io.DataInputStream;
@@ -35,13 +36,13 @@ import javax.microedition.io.Connector;
  */
 public class CommandScriptParser {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private static final String COMMAND_FILE_SUFFIX = "frcscript";
 
     public static Command parseCommand(String name) {
         final String commandFileName = "scripts/" + name + (COMMAND_FILE_SUFFIX != null && !COMMAND_FILE_SUFFIX.equals("") ? "." + COMMAND_FILE_SUFFIX : "");
         try {
-            MapEntry fileContents = loadFile(commandFileName);
+            StringMapEntry fileContents = loadFile(commandFileName);
             return getCommandGroup(fileContents.key, fileContents.value);
         } catch (IOException ex) {
             System.out.println("Command " + name + " was not found at " + commandFileName + ". Are you sure it was named and placed correctly?");
@@ -118,11 +119,11 @@ public class CommandScriptParser {
         return startIndex;
     }
 
-    private static MapEntry loadFile(final String commandFileName) throws IOException {
+    private static StringMapEntry loadFile(final String commandFileName) throws IOException {
         //initialize variables, get connection to the local file.
-        String contents = "";
-        DataInputStream commandFileStream;
-        commandFileStream = Connector.openDataInputStream("file:///" + commandFileName);
+        FileConnection commandFileConnection = (FileConnection) Connector.open("file:///" + commandFileName, Connector.READ);
+        DataInputStream commandFileStream = commandFileConnection.openDataInputStream();
+        StringBuffer contentsBuffer = new StringBuffer((int) commandFileConnection.fileSize());
         boolean reading = true;
         boolean commentedLine = false;
         String defineProgress = "";
@@ -150,7 +151,7 @@ public class CommandScriptParser {
                     }
                     //if the define statement is complete, add to the list
                     if (!key.equals("") && !entry.equals("")) {
-                        replacementMap.addElement(new MapEntry(key.trim(), entry.trim()));
+                        replacementMap.addElement(new StringMapEntry(key.trim(), entry.trim()));
                     }
                     defineProgress = "";
                     doneKey = false;
@@ -177,7 +178,7 @@ public class CommandScriptParser {
                 }
 
                 if (!commentedLine) {
-                    contents += nextChar;
+                    contentsBuffer.append(nextChar);
                 }
 
             } catch (EOFException e) {
@@ -186,10 +187,12 @@ public class CommandScriptParser {
         }
 
         commandFileStream.close();
+        commandFileConnection.close();
         String commonPackage = null;
+        String contents = contentsBuffer.toString();
         //replace the defined keys with the defined values
         for (int i = 0; i < replacementMap.size(); i++) {
-            MapEntry mapEntry = (MapEntry) replacementMap.elementAt(i);
+            StringMapEntry mapEntry = (StringMapEntry) replacementMap.elementAt(i);
             //COMMON_PACKAGE is a special case, and does not behave like other
             //  define entries
             if (mapEntry.key.equals("COMMON_PACKAGE")) {
@@ -212,7 +215,7 @@ public class CommandScriptParser {
         //  there would be a separate class for this pair of values (the file
         //  contents and the common package, if it exists), but since the MapEntry
         //  is essentially identical to this, there's no reason to do so.
-        return new MapEntry(contents, commonPackage);
+        return new StringMapEntry(contents, commonPackage);
     }
 
     private static void printIfDebug(String output) {
@@ -241,9 +244,9 @@ public class CommandScriptParser {
 
     }
 
-    private static class MapEntry {
+    private static class StringMapEntry {
 
-        public MapEntry(String key, String value) {
+        public StringMapEntry(String key, String value) {
             this.key = key;
             this.value = value;
         }

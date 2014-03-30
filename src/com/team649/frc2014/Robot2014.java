@@ -22,8 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the IterativeRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the manifest file in the resource directory.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
  */
 public class Robot2014 extends IterativeRobot {
 
@@ -43,7 +46,8 @@ public class Robot2014 extends IterativeRobot {
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
     /**
-     * This function is run when the robot is first started up and should be used for any initialization code.
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
      */
     public void robotInit() {
         // instantiate the command used for the autonomous period
@@ -55,7 +59,7 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Do Nothing Autonomous", DO_NOTHING_AUTO_NAME);
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addDefault("One Ball Short Drive Autonomous", ONE_BALL_SHORT_DRIVE_AUTO_NAME);
-   //       autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
+        //       autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
         autonomousModeChooser.addObject("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
 //        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
@@ -93,7 +97,7 @@ public class Robot2014 extends IterativeRobot {
             autonomousCommand = CommandBase.doNothingAutonomous();
         } else if (selectedAuto.equals(TWO_BALL_SHORT_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.twoBallShortDriveAutonomous();
-             } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
+        } else if (selectedAuto.equals(WAIT_AND_DRIVE_AUTO_NAME)) {
             autonomousCommand = CommandBase.waitAndDriveAutonomous();
 //      }else if (selectedAuto.equals(ONE_BALL_RUNNING_SHOT_AUTO_NAME)) {
 //            autonomousCommand = CommandBase.shootHotGoalDrivingFireAutonomous();
@@ -161,10 +165,9 @@ public class Robot2014 extends IterativeRobot {
             clawPIDSequence(ClawPivotSubsystem.PICKUP);
         } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
             clawPIDSequence(ClawPivotSubsystem.STORE);
-        } else if(CommandBase.oi.shooter.isGoalShootClawPositionButtonPressed()) {
+        } else if (CommandBase.oi.shooter.isGoalShootClawPositionButtonPressed()) {
             clawPIDSequence(ClawPivotSubsystem.GOAL_SHOOT);
-        } 
-        else {
+        } else {
             if (setClawPositionCommand != null) {
                 setClawPositionCommand.cancel();
                 setClawPositionCommand = null;
