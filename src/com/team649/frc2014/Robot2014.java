@@ -90,7 +90,13 @@ public class Robot2014 extends IterativeRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-
+        CommandBase.driveTrainSubsystem.driveFwdRot(0, 0);
+        CommandBase.driveTrainSubsystem.disablePid();
+        CommandBase.clawPivotSubsystem.getClawPID().disable();
+        CommandBase.clawPivotSubsystem.setPower(0);
+        CommandBase.clawRollerSubsystem.runMotor(0);
+        CommandBase.clawWinchSubsystem.stopMotor();
+        
         if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
         } else if (selectedAuto.equals(TWO_BALL_SHORT_DRIVE_AUTO_NAME)) {
