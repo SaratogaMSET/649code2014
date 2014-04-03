@@ -22,6 +22,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     private PIDController649 pid;
     private long onTargetStartTime;
     private ChangeableBoolean finishedChecker;
+    private double minDriveSpeed;
 
     /**
      * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused for multiple executions of the same speed/distance.
@@ -31,22 +32,23 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
      */
     public DriveSetDistanceWithPIDCommand(double distance) {
         this.distance = distance;
-        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = .25;
+        this.minDriveSpeed = 0.25;
     }
 
     public DriveSetDistanceWithPIDCommand(double distance, double minDriveSpeed) {
         this.distance = distance;
-        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
+        this.minDriveSpeed = minDriveSpeed;
     }
 
     public DriveSetDistanceWithPIDCommand(double distance, double minDriveSpeed, ChangeableBoolean finishedChecker) {
         this.distance = distance;
         this.finishedChecker = finishedChecker;
-        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
+        this.minDriveSpeed = minDriveSpeed;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
         this.pid = driveTrainSubsystem.getPID();
         pid.setPID(DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_P, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_I, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_D);
         pid.setSetpoint(distance);
@@ -86,7 +88,6 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
         Display.printToOutputStream("finished drive PID: " + DriverStation.getInstance().getMatchTime() + ", dist: " + driveTrainSubsystem.getDistance());
         pid.disable();
         driveTrainSubsystem.driveFwdRot(0, 0);
-        DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = .25;
         if (finishedChecker != null) {
             finishedChecker.bool = true;
         }

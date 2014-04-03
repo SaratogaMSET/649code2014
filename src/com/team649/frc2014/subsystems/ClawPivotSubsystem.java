@@ -37,7 +37,8 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
     public static final String[] CLAW_POT_NAMES = new String[5];
 
     static {
-        CLAW_POT_STATES[PICKUP] = 4.75;
+        CLAW_POT_STATES[PICKUP] = 4.8;
+        //42.5 degrees
         CLAW_POT_STATES[FORWARD_SHOOT] = 3.21;
         CLAW_POT_STATES[BACKWARD_SHOOT] = 1.45;
         CLAW_POT_STATES[STORE] = 2.22;
@@ -73,7 +74,6 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
         if (power < 0 && getPotValue() >= FULL_FORWARD_POSITION || power > 0 && getPotValue() < FULL_BACKWARD_POSITION || Math.abs(power) < .1) {
             power = 0;
         }
-        SmartDashboard.putNumber("clawPower", power);
         motor.set(power);
 
     }
