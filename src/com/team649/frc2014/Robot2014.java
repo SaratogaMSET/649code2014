@@ -60,7 +60,7 @@ public class Robot2014 extends IterativeRobot {
         autonomousModeChooser.addObject("Wait and Drive Autonomous", WAIT_AND_DRIVE_AUTO_NAME);
         autonomousModeChooser.addDefault("One Ball Short Drive Autonomous", ONE_BALL_SHORT_DRIVE_AUTO_NAME);
         //       autonomousModeChooser.addDefault("One Ball Driving Shot Autonomous", ONE_BALL_RUNNING_SHOT_AUTO_NAME);
-        autonomousModeChooser.addObject("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
+        autonomousModeChooser.addDefault("Two Ball Short Drive Autonomous", TWO_BALL_SHORT_DRIVE_AUTO_NAME);
 //        autonomousModeChooser.addObject("Two Ball Running Autonomous", TWO_BALL_RUNNING_SHOT_AUTO_NAME);
         SmartDashboard.putData("Autonomous", autonomousModeChooser);
         SmartDashboard.putData(new HotVisionWaitCommand());
@@ -69,8 +69,6 @@ public class Robot2014 extends IterativeRobot {
     public void disabledInit() {
         Display.clearMarquees();
         Display.marquee(1, "DISABLED MODE", 0, 5, true, true);
-        Display.marquee(2, "DISABLED MODE", 0, 5, true, false);
-        System.out.println("disabled init");
         CommandBase.driveTrainSubsystem.disablePid();
     }
 
