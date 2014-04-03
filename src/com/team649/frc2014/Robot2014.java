@@ -96,6 +96,7 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.clawPivotSubsystem.setPower(0);
         CommandBase.clawRollerSubsystem.runMotor(0);
         CommandBase.clawWinchSubsystem.stopMotor();
+        Scheduler.getInstance().removeAll();
         
         if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
