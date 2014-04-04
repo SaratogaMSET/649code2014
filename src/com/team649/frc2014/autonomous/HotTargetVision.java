@@ -82,7 +82,7 @@ public class HotTargetVision {
             }
             image.write("/colorImage.bmp");
 //            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
-            BinaryImage thresholdImage = image.thresholdHSV(70, 100, 225, 255, 60, 255);
+            BinaryImage thresholdImage = image.thresholdHSV(70, 130, 225, 255, 60, 255);
             thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
             filteredImage.write("/filteredImage.bmp");
