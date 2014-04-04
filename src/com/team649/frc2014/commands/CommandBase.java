@@ -125,7 +125,7 @@ public abstract class CommandBase extends Command {
 //        check the hot goal after .5 seconds
         if (checkHot) {
             CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
-            checkHotGoal.addSequential(new WaitCommand(1000));
+            checkHotGoal.addSequential(new WaitCommand(500));
             checkHotGoal.addSequential(new HotVisionWaitCommand());
             driveAndCheckGoal.addSequential(checkHotGoal);
         }
