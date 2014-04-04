@@ -97,7 +97,7 @@ public class Robot2014 extends IterativeRobot {
         CommandBase.clawRollerSubsystem.runMotor(0);
         CommandBase.clawWinchSubsystem.stopMotor();
         Scheduler.getInstance().removeAll();
-        
+
         if (selectedAuto.equals(DO_NOTHING_AUTO_NAME)) {
             autonomousCommand = CommandBase.doNothingAutonomous();
         } else if (selectedAuto.equals(TWO_BALL_SHORT_DRIVE_AUTO_NAME)) {
@@ -149,72 +149,75 @@ public class Robot2014 extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        getWatchdog().feed();
-        Display.clear();
-        Scheduler.getInstance().run();
-        //ClawRollerSubsystem.MOTOR_SPEED = SmartDashboard.getNumber("rollerSpeed");
-        CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
-        if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
-            CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
-            CommandBase.driveTrainSubsystem.resetEncoders();
-        } else {
-            CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
-        }
+        try {
+            getWatchdog().feed();
+            Display.clear();
+            Scheduler.getInstance().run();
+            //ClawRollerSubsystem.MOTOR_SPEED = SmartDashboard.getNumber("rollerSpeed");
+            CommandBase.driveForwardRotate(CommandBase.oi.driver.getDriveForward(), CommandBase.oi.driver.getDriveRotation()).start();
+            if (CommandBase.oi.driver.isDrivetrainLowGearButtonPressed()) {
+                CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.LOW_SPEED);
+                CommandBase.driveTrainSubsystem.resetEncoders();
+            } else {
+                CommandBase.driveTrainSubsystem.shiftDriveGear(DriveTrainSubsystem.HIGH_SPEED);
+            }
 //        CommandBase.driveTrainSubsystem.printEncoders();
 
-        if (CommandBase.oi.shooter.isBackwardShootClawPositionButtonPressed()) {
-            clawPIDSequence(ClawPivotSubsystem.BACKWARD_SHOOT);
-        } else if (CommandBase.oi.shooter.isForwardShootClawPositionButtonPressed()) {
-            clawPIDSequence(ClawPivotSubsystem.FORWARD_SHOOT);
-        } else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
-            clawPIDSequence(ClawPivotSubsystem.PICKUP);
-        } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
-            clawPIDSequence(ClawPivotSubsystem.STORE);
-        } else if (CommandBase.oi.shooter.isGoalShootClawPositionButtonPressed()) {
-            clawPIDSequence(ClawPivotSubsystem.GOAL_SHOOT);
-        } else {
-            if (setClawPositionCommand != null) {
-                setClawPositionCommand.cancel();
-                setClawPositionCommand = null;
-            }
-            if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
-                CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
+            if (CommandBase.oi.shooter.isBackwardShootClawPositionButtonPressed()) {
+                clawPIDSequence(ClawPivotSubsystem.BACKWARD_SHOOT);
+            } else if (CommandBase.oi.shooter.isForwardShootClawPositionButtonPressed()) {
+                clawPIDSequence(ClawPivotSubsystem.FORWARD_SHOOT);
+            } else if (CommandBase.oi.shooter.isPickupClawPositionButtonPressed()) {
+                clawPIDSequence(ClawPivotSubsystem.PICKUP);
+            } else if (CommandBase.oi.shooter.isStoreClawPositionButtonPressed()) {
+                clawPIDSequence(ClawPivotSubsystem.STORE);
+            } else if (CommandBase.oi.shooter.isGoalShootClawPositionButtonPressed()) {
+                clawPIDSequence(ClawPivotSubsystem.GOAL_SHOOT);
             } else {
-                CommandBase.manualDriveClaw(0).start();
+                if (setClawPositionCommand != null) {
+                    setClawPositionCommand.cancel();
+                    setClawPositionCommand = null;
+                }
+                if (CommandBase.oi.shooter.isPivotManualOverrideButtonPressed()) {
+                    CommandBase.manualDriveClaw(CommandBase.oi.shooter.getShooterJoystickY()).start();
+                } else {
+                    CommandBase.manualDriveClaw(0).start();
+                }
+
             }
 
-        }
-
-        if (shootCommand == null || !shootCommand.isRunning()) {
-            if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
-                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_PURGE_SPEED).start();
-            } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
-                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED).start();
-            } else {
-                CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED).start();
-            }
-        }
-        if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
-            coilClawWinchCommand = CommandBase.manualCoilClawWinch();
-            coilClawWinchCommand.start();
-        }
-
-        if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
             if (shootCommand == null || !shootCommand.isRunning()) {
-                shootCommand = CommandBase.shootBall();
-                shootCommand.start();
+                if (CommandBase.oi.shooter.isPurgeButtonPressed()) {
+                    CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_PURGE_SPEED).start();
+                } else if (CommandBase.oi.shooter.isPickupButtonPressed()) {
+                    CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_INTAKE_SPEED).start();
+                } else {
+                    CommandBase.runRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED).start();
+                }
             }
-        }
-//        CommandBase.driveTrainSubsystem.printEncoders();
-        Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
-        Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
-        Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
-        if (CommandBase.isCompressorRunning()) {
-            Display.queue("COMPRESSOR RUNNING");
-        }
-        Display.update();
+            if (CommandBase.oi.shooter.isWinchWindButtonPressed() && (coilClawWinchCommand == null || !coilClawWinchCommand.isRunning())) {
+                coilClawWinchCommand = CommandBase.manualCoilClawWinch();
+                coilClawWinchCommand.start();
+            }
 
-        sleep();
+            if (CommandBase.oi.shooter.isShooterTriggerButtonPressed() && CommandBase.oi.shooter.isWinchSafetyButtonPressed()) {
+                if (shootCommand == null || !shootCommand.isRunning()) {
+                    shootCommand = CommandBase.shootBall();
+                    shootCommand.start();
+                }
+            }
+//        CommandBase.driveTrainSubsystem.printEncoders();
+            Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
+            Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
+            Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
+            if (CommandBase.isCompressorRunning()) {
+                Display.queue("COMPRESSOR RUNNING");
+            }
+            Display.update();
+
+            sleep();
+        } catch (Exception e) {
+        }
     }
 
     private void clawPIDSequence(int position) {
