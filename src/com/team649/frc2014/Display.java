@@ -27,18 +27,21 @@ public class Display {
     private static DriverStationLCD display = DriverStationLCD.getInstance();
     private static OutputStream FILE_OUTPUT_STREAM;
 
-    static {
-        try {
-            //get a connection to the output file
-            FileConnection conn = (FileConnection) Connector.open("file:///output.txt", Connector.READ_WRITE);
-            if (conn.exists()) {
-                conn.delete();
+    private static final OutputStream getOutputStreamInstance() {
+        if (FILE_OUTPUT_STREAM == null) {
+            try {
+                //get a connection to the output file
+                FileConnection conn = (FileConnection) Connector.open("file:///output.txt", Connector.READ_WRITE);
+                if (conn.exists()) {
+                    conn.delete();
+                }
+                conn.create();
+                FILE_OUTPUT_STREAM = conn.openOutputStream();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            conn.create();
-            FILE_OUTPUT_STREAM = conn.openOutputStream();
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
+        return FILE_OUTPUT_STREAM;
     }
 
     /**
@@ -64,14 +67,13 @@ public class Display {
      */
     public static void printToOutputStream(Object text) {
         System.out.println(text);
-        if (FILE_OUTPUT_STREAM != null) {
-            try {
-                FILE_OUTPUT_STREAM.write((text.toString() + "\r\n").getBytes());
-                FILE_OUTPUT_STREAM.flush();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            getOutputStreamInstance().write((text.toString() + "\r\n").getBytes());
+            getOutputStreamInstance().flush();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
     }
 
     /**
