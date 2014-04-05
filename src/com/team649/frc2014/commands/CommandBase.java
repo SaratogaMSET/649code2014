@@ -26,12 +26,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The base for all commands. All atomic commands should subclass CommandBase. CommandBase stores creates and stores each control system. To access a subsystem elsewhere in your code in your code use
+ * The base for all commands. All atomic commands should subclass CommandBase.
+ * CommandBase stores creates and stores each control system. To access a
+ * subsystem elsewhere in your code in your code use
  * CommandBase.exampleSubsystem
  *
  * @author Author
  */
-
 public abstract class CommandBase extends Command {
 
     public static OI oi;
@@ -74,6 +75,7 @@ public abstract class CommandBase extends Command {
         super();
 
     }
+
     public static Command shootHotGoalShortDriveAutonomous() {
         CommandGroup driveAndCheckGoal = driveAndPrepareToShoot(true, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT, true, 2.5);
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
@@ -81,11 +83,12 @@ public abstract class CommandBase extends Command {
         mainAutonomousSequence.addSequential(setFingerPosition(ClawFingerSubsystem.DOWN));
         mainAutonomousSequence.addSequential(new SetClawWinchSolenoid(true));
         mainAutonomousSequence.addSequential(driveAndCheckGoal);
+        mainAutonomousSequence.addSequential(new WaitCommand(200));
         mainAutonomousSequence.addSequential(shootBall());
         return mainAutonomousSequence;
     }
 
-   public static Command twoBallShortDriveAutonomous() {
+    public static Command twoBallShortDriveAutonomous() {
         CommandGroup mainAutonomousSequence = new CommandGroup("mainAutoSeq");
         mainAutonomousSequence.addSequential(driveAndPrepareToShoot(false, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_SHORT, true, 1.6));
         mainAutonomousSequence.addSequential(shootBall(false));
@@ -108,6 +111,7 @@ public abstract class CommandBase extends Command {
 
         return repositionAndPickup;
     }
+
     private static CommandGroup realignBall() {
         CommandGroup realign = new CommandGroup();
         realign.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_REALIGN_SPEED));
@@ -115,13 +119,13 @@ public abstract class CommandBase extends Command {
         realign.addSequential(new RunRollers(ClawRollerSubsystem.ROLLER_SPIN_OFF_SPEED));
         return realign;
     }
-    
+
     private static CommandGroup driveAndPrepareToShoot(boolean checkHot, double driveDistance, boolean keepPidRunning, double timeout) {
         CommandGroup driveAndCheckGoal = new CommandGroup("driveAndCheck");
-        
+        driveAndCheckGoal.addSequential(driveForwardRotate(0, 0));
         driveAndCheckGoal.addParallel(setFingerPosition(ClawFingerSubsystem.DOWN));
         driveAndCheckGoal.addParallel(new SetClawWinchSolenoid(true));
-        
+
 //        check the hot goal after .5 seconds
         if (checkHot) {
             CommandGroup checkHotGoal = new CommandGroup("checkHotGoal");
@@ -130,7 +134,7 @@ public abstract class CommandBase extends Command {
             driveAndCheckGoal.addSequential(checkHotGoal);
         }
         final double minDriveSpeed = .7;
-        
+
         if (!keepPidRunning) {
             driveAndCheckGoal.addParallel(new DriveSetDistanceWithPIDCommand(driveDistance, minDriveSpeed));
             driveAndCheckGoal.addParallel(new SetClawPosition(ClawPivotSubsystem.BACKWARD_SHOOT));
@@ -141,7 +145,6 @@ public abstract class CommandBase extends Command {
         }
         return driveAndCheckGoal;
     }
-
 //    private static CommandGroup driveAndPrepareToShoot(boolean checkHot, double driveDistance) {
 //        return driveAndPrepareToShoot(checkHot, driveDistance, false);
 //    }
@@ -172,7 +175,6 @@ public abstract class CommandBase extends Command {
 //        group.addSequential(new DriveSetDistanceByTimeCommand(DriveTrainSubsystem.TimeBasedDriving.DRIVE_SPEED, DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE));
 
         group.addSequential(new DriveSetDistanceWithPIDCommand(DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
-        group.addSequential(new DriveSetDistanceWithPIDCommand(-DriveTrainSubsystem.EncoderBasedDriving.AUTONOMOUS_DRIVE_DISTANCE_LONG));
         return group;
     }
 
@@ -211,7 +213,7 @@ public abstract class CommandBase extends Command {
     public static Command manualDriveClaw(double power) {
         return new ManualDriveClawPivot(power);
     }
-    
+
 //    
 //     
 //    public static Command shootHotGoalDrivingFireAutonomous() {
@@ -236,6 +238,4 @@ public abstract class CommandBase extends Command {
 //        return mainAutonomousSequence;
 //    }
 //  
-
 }
-

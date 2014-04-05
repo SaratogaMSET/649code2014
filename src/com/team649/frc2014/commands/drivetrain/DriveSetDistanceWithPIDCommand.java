@@ -10,8 +10,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * DriveSetDistanceCommand
  *
- * Attempts to drive the robot using a trapezoidal motion profile. This means that it accelerates at a constant rate, holds that speed for a set time, and then decelerates at a constant rate. This
- * should ideally provide a much more consistent drive (in both time and distance) than a motion profile that accelerates as fast as possible to start, and has trouble finishing (i.e. a PID loop).
+ * Attempts to drive the robot using a trapezoidal motion profile. This means
+ * that it accelerates at a constant rate, holds that speed for a set time, and
+ * then decelerates at a constant rate. This should ideally provide a much more
+ * consistent drive (in both time and distance) than a motion profile that
+ * accelerates as fast as possible to start, and has trouble finishing (i.e. a
+ * PID loop).
  *
  * @author alex@renda.org
  */
@@ -25,10 +29,12 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
     private double minDriveSpeed;
 
     /**
-     * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused for multiple executions of the same speed/distance.
+     * Construct a DriveSetDistanceCommand. Immutable, but can safely be reused
+     * for multiple executions of the same speed/distance.
      *
      * @param speed The speed to drive at. Always positive.
-     * @param distance The distance in inches to drive. Negative to drive backwards.
+     * @param distance The distance in inches to drive. Negative to drive
+     * backwards.
      */
     public DriveSetDistanceWithPIDCommand(double distance) {
         this.distance = distance;
@@ -48,6 +54,7 @@ public class DriveSetDistanceWithPIDCommand extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        Display.printToOutputStream("starting drive PID: " + DriverStation.getInstance().getMatchTime() + ", dist: " + distance);
         DriveTrainSubsystem.EncoderBasedDriving.MIN_MOTOR_POWER = minDriveSpeed;
         this.pid = driveTrainSubsystem.getPID();
         pid.setPID(DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_P, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_I, DriveTrainSubsystem.EncoderBasedDriving.AUTO_DRIVE_D);

@@ -20,13 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
 
-    private static final double kP = -1;
-    private static final double kI = -.1;
-    private static final double kD = 0.0;
+    public static final double kP = -1;
+    public static final double kI = -.1;
+    public static final double kD = 0.0;
     public static final double MAX_BACKWARD_SPEED = .4;
     public static final double MAX_FORWARD_SPEED = -.6;
     public static final double FULL_BACKWARD_POSITION = .9;
-    public static final double FULL_FORWARD_POSITION = 4.931;
+    public static final double FULL_FORWARD_POSITION = 5.2;
     public static final int STORE = 3;
     public static final int FORWARD_SHOOT = 2;
     public static final int PICKUP = 1;
@@ -37,11 +37,11 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
     public static final String[] CLAW_POT_NAMES = new String[5];
 
     static {
-        CLAW_POT_STATES[PICKUP] = 4.93;
+        CLAW_POT_STATES[PICKUP] = 4.9;
         //42.5 degrees
         CLAW_POT_STATES[FORWARD_SHOOT] = 3.26;
         CLAW_POT_STATES[BACKWARD_SHOOT] = 1.67;
-        CLAW_POT_STATES[STORE] = 2.22;
+        CLAW_POT_STATES[STORE] = 2.4;
         CLAW_POT_STATES[GOAL_SHOOT] = 1.83;
         CLAW_POT_NAMES[FORWARD_SHOOT] = "FWD SHOOT";
         CLAW_POT_NAMES[BACKWARD_SHOOT] = "BCK SHOOT";

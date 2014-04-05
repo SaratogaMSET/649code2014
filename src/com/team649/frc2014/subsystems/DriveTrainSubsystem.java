@@ -111,7 +111,7 @@ public class DriveTrainSubsystem extends Subsystem implements PIDVelocitySource,
         shifterSolenoid.set(lowSpeed ? Value.kForward : Value.kReverse);
     }
 
-    public void rawDrive(double left, double right) {
+    private void rawDrive(double left, double right) {
         int i = 0;
         for (; i < motors.length / 2; i++) {
             motors[i].set(left);

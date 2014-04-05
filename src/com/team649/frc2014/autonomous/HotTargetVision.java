@@ -5,6 +5,7 @@
 package com.team649.frc2014.autonomous;
 
 import com.team649.frc2014.Display;
+import com.team649.frc2014.commands.CommandBase;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
 import edu.wpi.first.wpilibj.image.CriteriaCollection;
@@ -62,6 +63,7 @@ public class HotTargetVision {
 
     public static boolean detectHotGoal() {
         try {
+            Display.printToOutputStream("Starting hot goal detection");
             TargetReport target = new TargetReport();
             int verticalTargets[] = new int[MAX_PARTICLES];
             int horizontalTargets[] = new int[MAX_PARTICLES];
@@ -75,18 +77,15 @@ public class HotTargetVision {
              *
              */
             //ColorImage image = camera.getImage();     // comment if using stored images
-            ColorImage image;                           // next 2 lines read image from flash on cRIO
+            ColorImage image = CommandBase.cameraSubsystem.getImage();                           // next 2 lines read image from flash on cRIO
 //            image = CommandBase.cameraSubsystem.getImage();		// get the sample image from the cRIO flash
-            if (true) {
-                return false;
-            }
             image.write("/colorImage.bmp");
 //            BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
             BinaryImage thresholdImage = image.thresholdHSV(70, 130, 225, 255, 60, 255);
             thresholdImage.write("/threshold.bmp");
             BinaryImage filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles
             filteredImage.write("/filteredImage.bmp");
-
+            Display.printToOutputStream("wrote images");
             //iterate through each particle and score to see if it is a target
             Scores scores[] = new Scores[filteredImage.getNumberParticles()];
             horizontalTargetCount = verticalTargetCount = 0;
@@ -185,14 +184,10 @@ public class HotTargetVision {
 //            } catch (AxisCameraException ex) {        // this is needed if the camera.getImage() is called
 //                ex.printStackTrace();
         } catch (Exception e) {
-            Display.printToOutputStream("exception tho: " + e.getMessage());
+            Display.printToOutputStream("exception in hot goal: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
-    }
-
-    private boolean isHot() {
-        return true;
     }
 
     /**

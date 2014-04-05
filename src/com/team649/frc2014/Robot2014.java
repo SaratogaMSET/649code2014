@@ -42,9 +42,10 @@ public class Robot2014 extends IterativeRobot {
     private Command shootCommand;
     private Command autonomousCommand;
     private Command coilClawWinchCommand;
-
+    private boolean firstPeriodic;
 //    Command autonomousCommand;
 //    private SupaHotFire supaHotFire;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -79,12 +80,12 @@ public class Robot2014 extends IterativeRobot {
 
     public void autonomousInit() {
         Display.clearMarquees();
-        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true, true);
-        Display.marquee(2, "WOOOOOO", 0, 10, true, false);
-        Display.marquee(3, "GO FIISHH", 0, 2, true, true);
-        Display.marquee(4, "YEEAAHHHH", 0, 7, true, false);
-        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true, true);
-        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true, false);
+//        Display.marquee(1, "AUTONOMOUS MODE", 0, 5, true, true);
+//        Display.marquee(2, "WOOOOOO", 0, 10, true, false);
+//        Display.marquee(3, "GO FIISHH", 0, 2, true, true);
+//        Display.marquee(4, "YEEAAHHHH", 0, 7, true, false);
+//        Display.marquee(5, "AUTONOMOOSE MODE", 2, 5, true, true);
+//        Display.marquee(6, "YOU CAN DO IT!!!!", 5, 5, true, false);
         final String selectedAuto = (String) autonomousModeChooser.getSelected();
         Display.printToOutputStream("selected auto: " + selectedAuto);
         if (autonomousCommand != null) {
@@ -114,6 +115,7 @@ public class Robot2014 extends IterativeRobot {
 
         autonomousCommand.start();
         setSolenoidsToDefault();
+        firstPeriodic = true;
     }
 
     /*
@@ -123,7 +125,7 @@ public class Robot2014 extends IterativeRobot {
         Display.clear();
         Scheduler.getInstance().run();
 //        Display.queue(CommandBase.clawPivotSubsystem.getPotValue() + "");
-//        CommandBase.driveTrainSubsystem.printEncoders();
+        CommandBase.driveTrainSubsystem.printEncoders();
         Display.update();
     }
 

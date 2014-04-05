@@ -39,6 +39,11 @@ public class SetClawPosition extends CommandBase {
         final double setpoint = ClawPivotSubsystem.CLAW_POT_STATES[state];
         clawPID.setSetpoint(setpoint);
         startTime = System.currentTimeMillis();
+        if (state == ClawPivotSubsystem.PICKUP) {
+            clawPID.setPID(ClawPivotSubsystem.kP * 5. / 5, ClawPivotSubsystem.kI, ClawPivotSubsystem.kD);
+        } else {
+            clawPID.setPID(ClawPivotSubsystem.kP, ClawPivotSubsystem.kI, ClawPivotSubsystem.kD);
+        }
         Display.printToOutputStream("s: " + setpoint + ", p: " + clawPID.getP() + ", i: " + clawPID.getI() + ", d: " + clawPID.getD());
     }
 
