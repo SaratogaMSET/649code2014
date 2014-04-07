@@ -4,7 +4,8 @@ import com.sun.squawk.util.MathUtils;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * This class is the glue that binds the controls on the physical operator interface to the commands and command groups that allow control of the robot.
+ * This class is the glue that binds the controls on the physical operator
+ * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
 
@@ -48,6 +49,10 @@ public class OI {
 
         public boolean isDrivetrainLowGearButtonPressed() {
             return horizontal.getRawButton(1) || vertical.getRawButton(1);
+        }
+
+        public boolean isWinchSwitchOverrideButtonPressed() {
+            return horizontal.getRawButton(2) || vertical.getRawButton(2);
         }
     }
 
@@ -93,6 +98,10 @@ public class OI {
 
         public boolean isGoalShootClawPositionButtonPressed() {
             return shooterJoystick.getRawButton(7);
+        }
+
+        public boolean isWinchSwitchOverrideButtonPressed() {
+            return shooterJoystick.getRawButton(8);
         }
 
         public boolean isForwardShootClawPositionButtonPressed() {

@@ -17,7 +17,7 @@ public class ManualCoilClawWinch extends CommandBase {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        if (!clawWinchSubsystem.isSwitchPressed()) {
+        if (!clawWinchSubsystem.isSwitchPressed() || (oi.shooter.isWinchSwitchOverrideButtonPressed() && oi.driver.isWinchSwitchOverrideButtonPressed())) {
             clawWinchSubsystem.runMotor();
         } else {
             clawWinchSubsystem.stopMotor();
@@ -34,7 +34,7 @@ public class ManualCoilClawWinch extends CommandBase {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !oi.shooter.isWinchWindButtonPressed() || clawWinchSubsystem.isSwitchPressed();
+        return !oi.shooter.isWinchWindButtonPressed() || (clawWinchSubsystem.isSwitchPressed() && !(oi.shooter.isWinchSwitchOverrideButtonPressed() && oi.driver.isWinchSwitchOverrideButtonPressed()));
     }
 
     // Called once after isFinished returns true

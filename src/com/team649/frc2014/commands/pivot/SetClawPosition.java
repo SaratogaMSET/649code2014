@@ -22,16 +22,18 @@ public class SetClawPosition extends CommandBase {
     private final int state;
     private long startTime;
     private ChangeableBoolean driveFinishedChecker;
+    private double timeToFinish;
 
     public SetClawPosition(int state) {
         clawPID = clawPivotSubsystem.getClawPID();
         this.state = state;
+        this.timeToFinish = 0;
     }
 
-    public SetClawPosition(int state, ChangeableBoolean driveFinishedChecker) {
+    public SetClawPosition(int state, ChangeableBoolean driveFinishedChecker, double timeToFinish) {
         this(state);
         this.driveFinishedChecker = driveFinishedChecker;
-
+        this.timeToFinish = timeToFinish;
     }
 
     protected void initialize() {
@@ -54,7 +56,7 @@ public class SetClawPosition extends CommandBase {
         final long timeDiff = System.currentTimeMillis() - startTime;
         //TODO make sure things get finished (time to be on target)
 
-        return ((state != ClawPivotSubsystem.PICKUP && clawPID.onTarget() && timeDiff > 1500) || timeDiff > 4000) && (driveFinishedChecker == null || driveFinishedChecker.bool);
+        return (((state != ClawPivotSubsystem.PICKUP && clawPID.onTarget() && timeDiff > 1500) || timeDiff > 4000) && (driveFinishedChecker == null || driveFinishedChecker.bool)) && DriverStation.getInstance().getMatchTime() > timeToFinish;
     }
 
     protected void end() {
