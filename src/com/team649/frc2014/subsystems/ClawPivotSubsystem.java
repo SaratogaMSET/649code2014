@@ -37,12 +37,12 @@ public class ClawPivotSubsystem extends Subsystem implements PIDOutput {
     public static final String[] CLAW_POT_NAMES = new String[5];
 
     static {
-        CLAW_POT_STATES[PICKUP] = 4.9;
+        CLAW_POT_STATES[PICKUP] = 4.7;
         //42.5 degrees
-        CLAW_POT_STATES[FORWARD_SHOOT] = 3.26;
-        CLAW_POT_STATES[BACKWARD_SHOOT] = 1.67;
-        CLAW_POT_STATES[STORE] = 2.4;
-        CLAW_POT_STATES[GOAL_SHOOT] = 1.83;
+        CLAW_POT_STATES[FORWARD_SHOOT] = 3.06;
+        CLAW_POT_STATES[BACKWARD_SHOOT] = 1.47;
+        CLAW_POT_STATES[STORE] = 2.2;
+        CLAW_POT_STATES[GOAL_SHOOT] = 1.63;
         CLAW_POT_NAMES[FORWARD_SHOOT] = "FWD SHOOT";
         CLAW_POT_NAMES[BACKWARD_SHOOT] = "BCK SHOOT";
         CLAW_POT_NAMES[PICKUP] = "PICKUP";
