@@ -208,7 +208,7 @@ public class Robot2014 extends IterativeRobot {
                     shootCommand.start();
                 }
             }
-//        CommandBase.driveTrainSubsystem.printEncoders();
+       CommandBase.driveTrainSubsystem.printEncoders();
             Display.queue("WINCH: " + (CommandBase.clawWinchSubsystem.isSwitchPressed() ? "CHARGED" : "UNWOUND"));
             Display.queue("POT: " + CommandBase.clawPivotSubsystem.getPotValue());
             Display.queue(CommandBase.clawPivotSubsystem.getPotStateName());
